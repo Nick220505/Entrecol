@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -36,6 +36,14 @@ export class LoginComponent {
     username: ['', [Validators.required]],
     password: ['', [Validators.required]],
   });
+
+  constructor() {
+    effect(() => {
+      if (this.authService.isCredentialsInvalid()) {
+        this.loginForm.setErrors({ invalidCredentials: true });
+      }
+    });
+  }
 
   onSubmit(): void {
     this.authService.login(this.loginForm.value as LoginCredentials);
