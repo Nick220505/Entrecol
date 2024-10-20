@@ -22,7 +22,7 @@ export class AuthService {
   readonly isCredentialsInvalid = computed(
     () => this.error() === 'El usuario o la contraseña son incorrectos.'
   );
-  readonly isAuthenticated = computed(() => !!localStorage.getItem('token'));
+  readonly isAuthenticated = signal(!!localStorage.getItem('token'));
 
   login(credentials: LoginCredentials): void {
     this.isLoading.set(true);
@@ -33,6 +33,7 @@ export class AuthService {
       .subscribe({
         next: (response) => {
           localStorage.setItem('token', response.token);
+          this.isAuthenticated.set(true);
           this.snackBarService.success('Inicio de sesión exitoso');
           this.router.navigate(['/']);
         },
@@ -54,6 +55,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    this.isAuthenticated.set(false);
     this.router.navigate(['/login']);
     this.snackBarService.info('Se ha cerrado la sesión exitosamente');
   }
