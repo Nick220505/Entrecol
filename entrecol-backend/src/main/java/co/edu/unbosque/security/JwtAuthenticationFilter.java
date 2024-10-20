@@ -2,7 +2,6 @@ package co.edu.unbosque.security;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,11 +18,13 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    public JwtAuthenticationFilter(CustomUserDetailsService userDetailsService, JwtUtil jwtUtil) {
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,

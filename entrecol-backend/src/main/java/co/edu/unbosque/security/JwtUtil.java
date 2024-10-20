@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +18,11 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 
-    @Autowired
-    private JwtConfig jwtConfig;
+    private final JwtConfig jwtConfig;
+
+    public JwtUtil(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+    }
 
     private Key getSigningKey() {
         byte[] keyBytes = jwtConfig.getSecret().getBytes();

@@ -1,6 +1,5 @@
 package co.edu.unbosque.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,11 +20,13 @@ import co.edu.unbosque.security.JwtAuthenticationFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthFilter;
+    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, CustomUserDetailsService customUserDetailsService) {
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.customUserDetailsService = customUserDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

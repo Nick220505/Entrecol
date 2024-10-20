@@ -2,7 +2,6 @@ package co.edu.unbosque.service;
 
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +12,13 @@ import co.edu.unbosque.repository.UserRepository;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public User registerUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {

@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "\"user\"")  // Use double quotes to escape the reserved keyword
+@Table(name = "user") // Comment
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

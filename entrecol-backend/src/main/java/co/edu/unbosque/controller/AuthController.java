@@ -1,6 +1,5 @@
 package co.edu.unbosque.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,17 +22,20 @@ import lombok.Data;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final CustomUserDetailsService userDetailsService;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    public AuthController(AuthenticationManager authenticationManager,
+                          CustomUserDetailsService userDetailsService,
+                          UserService userService,
+                          JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
@@ -46,13 +48,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());

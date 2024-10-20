@@ -71,7 +71,7 @@ CREATE TABLE book (
     rating NUMERIC(3, 1)
 );
 
-CREATE TABLE IF NOT EXISTS "user" (
+CREATE TABLE "user" (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
