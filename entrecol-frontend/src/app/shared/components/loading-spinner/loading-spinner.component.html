@@ -1,0 +1,9 @@
+<div class="loading-container">
+  <mat-progress-spinner
+    mode="indeterminate"
+    [diameter]="diameter()"
+  ></mat-progress-spinner>
+  @if (loadingText(); as text) {
+    <p class="loading-text">{{ text }}</p>
+  }
+</div>

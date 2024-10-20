@@ -1,6 +1,7 @@
 package co.edu.unbosque.service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedAt(OffsetDateTime.now(ZoneOffset.UTC));
         return userRepository.save(user);
     }
 
@@ -39,7 +40,7 @@ public class UserService {
     }
 
     public void updateLastLogin(User user) {
-        user.setLastLogin(LocalDateTime.now());
+        user.setLastLogin(OffsetDateTime.now(ZoneOffset.UTC));
         userRepository.save(user);
     }
 }

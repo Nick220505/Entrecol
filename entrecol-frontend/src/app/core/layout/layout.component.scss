@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  margin-top: 64px;
+}
+
+@media (max-width: 599px) {
+  .main-content {
+    margin-top: 56px;
+  }
+}

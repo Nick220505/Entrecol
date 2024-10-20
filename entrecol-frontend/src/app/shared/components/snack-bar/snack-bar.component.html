@@ -1,0 +1,10 @@
+@let type = data.type;
+<div class="snack-bar" [ngClass]="type">
+  <mat-icon class="icon">
+    {{ type === 'success' ? 'check_circle' : type }}
+  </mat-icon>
+  <span class="message">{{ data.message }}</span>
+  <button mat-icon-button (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

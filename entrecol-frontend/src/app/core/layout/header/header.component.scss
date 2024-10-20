@@ -1,0 +1,67 @@
+@use '@angular/material' as mat;
+
+.nav-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  @include mat.elevation(4);
+}
+
+.nav-logo {
+  height: 40px;
+  margin-right: 16px;
+  transition: all 0.3s ease;
+}
+
+.nav-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.content-container {
+  padding-top: 64px;
+  min-height: calc(100vh - 64px);
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 599px) {
+  .content-container {
+    padding-top: 56px;
+    min-height: calc(100vh - 56px);
+  }
+}
+
+.sidenav-container {
+  display: none;
+}
+
+@media (max-width: 959px) {
+  .sidenav-container {
+    display: block;
+  }
+
+  .content-container {
+    padding-top: 56px;
+    height: calc(100vh - 56px);
+  }
+}
+
+.sidenav {
+  width: 250px;
+}
+
+:host-context(.is-scrolled) {
+  .nav-toolbar {
+    @include mat.elevation(8);
+  }
+}

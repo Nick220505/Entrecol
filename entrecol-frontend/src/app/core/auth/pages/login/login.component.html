@@ -1,0 +1,82 @@
+<div class="login-container">
+  <div class="content-wrapper">
+    <div class="banner-content">
+      <h1 class="banner-title">Bienvenido a SICMA</h1>
+      <p class="banner-subtitle">
+        Sistema Integrado de Contratos del Ministerio de Ambiente
+      </p>
+    </div>
+    <div class="login-content">
+      <mat-card class="login-card">
+        <div class="logo-container">
+          <a
+            href="https://www.minambiente.gov.co/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="assets/logo.png" alt="Ambiente Logo" class="logo" />
+          </a>
+        </div>
+        <mat-card-content>
+          <h2 class="title">Inicio de Sesión</h2>
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline">
+              <mat-label>Usuario</mat-label>
+              <input matInput formControlName="username" required />
+              <mat-icon matPrefix>person</mat-icon>
+              @if (loginForm.get('username')?.hasError('required')) {
+                <mat-error>El usuario es requerido</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Contraseña</mat-label>
+              <input
+                matInput
+                [type]="isPasswordHidden() ? 'password' : 'text'"
+                formControlName="password"
+                required
+              />
+              <mat-icon matPrefix>lock</mat-icon>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="togglePasswordVisibility($event)"
+                [attr.aria-label]="'Toggle password visibility'"
+                [attr.aria-pressed]="!isPasswordHidden()"
+                type="button"
+              >
+                <mat-icon>{{
+                  isPasswordHidden() ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+              </button>
+              @if (loginForm.get('password')?.hasError('required')) {
+                <mat-error>La contraseña es requerida</mat-error>
+              }
+            </mat-form-field>
+            @if (authService.error(); as errorMessage) {
+              <app-alert-message
+                [message]="errorMessage"
+                [type]="'error'"
+              ></app-alert-message>
+            }
+            <button
+              mat-raised-button
+              type="submit"
+              [disabled]="
+                loginForm.invalid ||
+                authService.isLoading() ||
+                authService.isCredentialsInvalid()
+              "
+            >
+              @if (authService.isLoading()) {
+                <app-loading-spinner [diameter]="20"></app-loading-spinner>
+              } @else {
+                <span>Iniciar Sesión</span>
+              }
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

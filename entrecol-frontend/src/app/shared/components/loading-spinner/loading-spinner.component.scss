@@ -1,0 +1,13 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+
+  .loading-text {
+    margin-top: 24px;
+    color: var(--mat-primary-text);
+    font-size: 18px;
+  }
+}

@@ -1,6 +1,6 @@
 package co.edu.unbosque.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "\"user\"")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +27,9 @@ public class User {
     @Column(unique = true, nullable = false, length = 100)
     private String email;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+    private OffsetDateTime createdAt;
 
     @Column(name = "last_login")
-    private LocalDateTime lastLogin;
+    private OffsetDateTime lastLogin;
 }

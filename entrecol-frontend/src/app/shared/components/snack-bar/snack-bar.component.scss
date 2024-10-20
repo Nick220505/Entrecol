@@ -1,0 +1,36 @@
+.snack-bar {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 4px;
+  color: #ffffff;
+  font-weight: 500;
+
+  .icon {
+    margin-right: 12px;
+  }
+
+  .message {
+    flex: 1;
+  }
+
+  button {
+    color: #ffffff;
+  }
+
+  &.error {
+    background-color: #d32f2f;
+  }
+
+  &.warning {
+    background-color: #f57c00;
+  }
+
+  &.success {
+    background-color: #388e3c;
+  }
+
+  &.info {
+    background-color: #1976d2;
+  }
+}
