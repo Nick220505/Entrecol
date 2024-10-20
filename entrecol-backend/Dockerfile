@@ -9,8 +9,6 @@ COPY pom.xml ./
 
 COPY src ./src
 
-RUN mvn package -DskipTests
-
 EXPOSE 8080
 
-CMD ["java", "-jar", "target/entrecol-backend-0.0.1-SNAPSHOT.jar"]
+CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'"]
