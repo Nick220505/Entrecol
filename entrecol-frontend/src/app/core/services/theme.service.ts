@@ -1,17 +1,19 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { effect, inject, Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ThemeService {
+  private document = inject(DOCUMENT);
   readonly isDarkTheme = signal(this.shouldUseDarkTheme());
 
   constructor() {
     effect(() => {
       if (this.isDarkTheme()) {
-        document.body.classList.add('dark-theme');
+        this.document.body.classList.add('dark-theme');
       } else {
-        document.body.classList.remove('dark-theme');
+        this.document.body.classList.remove('dark-theme');
       }
     });
 
