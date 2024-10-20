@@ -1,8 +1,5 @@
 package co.edu.unbosque.service;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,25 +19,27 @@ public class UserService {
     }
 
     public User registerUser(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
+        if (existsByUsername(user.getUsername())) {
             throw new UserAlreadyExistsException("Username is already taken");
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (existsByEmail(user.getEmail())) {
             throw new UserAlreadyExistsException("Email is already in use");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setCreatedAt(OffsetDateTime.now(ZoneOffset.UTC));
         return userRepository.save(user);
+    }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    public void updateLastLogin(User user) {
-        user.setLastLogin(OffsetDateTime.now(ZoneOffset.UTC));
-        userRepository.save(user);
     }
 }

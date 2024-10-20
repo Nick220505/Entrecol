@@ -1,10 +1,8 @@
 <div class="login-container">
   <div class="content-wrapper">
     <div class="banner-content">
-      <h1 class="banner-title">Bienvenido a SICMA</h1>
-      <p class="banner-subtitle">
-        Sistema Integrado de Contratos del Ministerio de Ambiente
-      </p>
+      <h1 class="banner-title">Bienvenido a ENTRECOL</h1>
+      <p class="banner-subtitle">Sistema Integrado</p>
     </div>
     <div class="login-content">
       <mat-card class="login-card">
@@ -14,7 +12,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="assets/logo.png" alt="Ambiente Logo" class="logo" />
+            <img src="assets/logo.png" alt="logo" class="logo" />
           </a>
         </div>
         <mat-card-content>
@@ -25,7 +23,7 @@
               <input matInput formControlName="username" required />
               <mat-icon matPrefix>person</mat-icon>
               @if (loginForm.get('username')?.hasError('required')) {
-                <mat-error>El usuario es requerido</mat-error>
+              <mat-error>El usuario es requerido</mat-error>
               }
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -46,18 +44,18 @@
                 type="button"
               >
                 <mat-icon>{{
-                  isPasswordHidden() ? 'visibility_off' : 'visibility'
+                  isPasswordHidden() ? "visibility_off" : "visibility"
                 }}</mat-icon>
               </button>
               @if (loginForm.get('password')?.hasError('required')) {
-                <mat-error>La contraseña es requerida</mat-error>
+              <mat-error>La contraseña es requerida</mat-error>
               }
             </mat-form-field>
             @if (authService.error(); as errorMessage) {
-              <app-alert-message
-                [message]="errorMessage"
-                [type]="'error'"
-              ></app-alert-message>
+            <app-alert-message
+              [message]="errorMessage"
+              [type]="'error'"
+            ></app-alert-message>
             }
             <button
               mat-raised-button
@@ -69,9 +67,9 @@
               "
             >
               @if (authService.isLoading()) {
-                <app-loading-spinner [diameter]="20"></app-loading-spinner>
+              <app-loading-spinner [diameter]="20"></app-loading-spinner>
               } @else {
-                <span>Iniciar Sesión</span>
+              <span>Iniciar Sesión</span>
               }
             </button>
           </form>

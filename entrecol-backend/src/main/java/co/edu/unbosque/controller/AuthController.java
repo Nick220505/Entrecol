@@ -5,75 +5,61 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.edu.unbosque.exception.UserAlreadyExistsException;
+import co.edu.unbosque.model.JwtResponse;
+import co.edu.unbosque.model.LoginRequest;
 import co.edu.unbosque.model.User;
-import co.edu.unbosque.security.CustomUserDetailsService;
 import co.edu.unbosque.security.JwtUtil;
 import co.edu.unbosque.service.UserService;
-import lombok.Data;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final CustomUserDetailsService userDetailsService;
-    private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
-    public AuthController(AuthenticationManager authenticationManager,
-                          CustomUserDetailsService userDetailsService,
-                          UserService userService,
-                          JwtUtil jwtUtil) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserService userService) {
         this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-        this.userService = userService;
         this.jwtUtil = jwtUtil;
+        this.userService = userService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String jwt = jwtUtil.generateToken(userDetails);
+
+            return ResponseEntity.ok(new JwtResponse(jwt));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
-        try {
-            userService.registerUser(user);
-            return ResponseEntity.ok("User registered successfully");
-        } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+        if (userService.existsByUsername(user.getUsername())) {
+            return ResponseEntity.badRequest().body("Error: Username is already taken!");
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails);
+        if (userService.existsByEmail(user.getEmail())) {
+            return ResponseEntity.badRequest().body("Error: Email is already in use!");
+        }
 
-        User user = userService.findByUsername(authenticationRequest.getUsername());
-        userService.updateLastLogin(user);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
-    }
-
-    @Data
-    public static class AuthenticationRequest {
-        private String username;
-        private String password;
-    }
-
-    @Data
-    public static class AuthenticationResponse {
-        private final String jwt;
+        User registeredUser = userService.registerUser(user);
+        return ResponseEntity.ok(registeredUser);
     }
 }
