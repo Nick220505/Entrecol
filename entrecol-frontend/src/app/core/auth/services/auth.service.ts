@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
 
+import { finalize } from 'rxjs';
 import { AuthResponse } from '../models/auth-response.model';
 import { LoginCredentials } from '../models/login-credentials.model';
 
@@ -28,16 +29,14 @@ export class AuthService {
     this.error.set(null);
     this.http
       .post<AuthResponse>(`${this.apiUrl}/login`, credentials)
+      .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (response) => {
           localStorage.setItem('token', response.token);
-          this.isLoading.set(false);
           this.snackBarService.success('Inicio de sesión exitoso');
           this.router.navigate(['/']);
         },
         error: (error: HttpErrorResponse) => {
-          console.error('Login error:', error);
-          this.isLoading.set(false);
           if (error.status === 401) {
             this.error.set('El usuario o la contraseña son incorrectos.');
           } else if (error.status === 0) {

@@ -80,11 +80,11 @@ import { ThemeService } from '../../services/theme.service';
             stagger('50ms', [
               animate(
                 '300ms ease-out',
-                style({ opacity: 1, transform: 'translateY(0)' }),
+                style({ opacity: 1, transform: 'translateY(0)' })
               ),
             ]),
           ],
-          { optional: true },
+          { optional: true }
         ),
       ]),
     ]),
@@ -100,14 +100,13 @@ export class HeaderComponent {
   protected readonly isMenuOpen = signal(false);
 
   protected readonly navItems = [
-    { label: 'Contratistas', route: '/contratistas', icon: 'business' },
-    { label: 'Contratos', route: '/contratos', icon: 'description' },
+    { label: 'Libros', route: '/libros', icon: 'book' },
+    { label: 'Peliculas', route: '/peliculas', icon: 'movie' },
     {
-      label: 'Supervisores',
-      route: '/supervisores',
-      icon: 'supervisor_account',
+      label: 'Nominas',
+      route: '/nominas',
+      icon: 'receipt',
     },
-    { label: 'Contratista', route: '/contratista', icon: 'person' },
   ];
 
   readonly drawer = viewChild<MatSidenav>('drawer');
