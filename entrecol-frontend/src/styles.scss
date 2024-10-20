@@ -37,3 +37,16 @@ body {
 .dark-theme {
   @include mat.all-component-colors($dark-theme);
 }
+
+.custom-snackbar {
+  &.mat-mdc-snack-bar-container {
+    .mdc-snackbar__surface {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: inherit;
+  }
+}
