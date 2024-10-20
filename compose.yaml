@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
-      - 5005:5005 # Expose debug port
+      - 5005:5005
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/entrecol-db
       - SPRING_DATASOURCE_USERNAME=root
@@ -41,6 +41,7 @@ services:
       - POSTGRES_DB=entrecol-db
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ./entrecol-backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
       test: ['CMD', 'pg_isready', '-U', 'root', '-d', 'entrecol-db']
       interval: 10s
