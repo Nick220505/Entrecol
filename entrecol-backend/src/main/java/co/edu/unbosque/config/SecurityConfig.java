@@ -22,31 +22,35 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final CustomUserDetailsService customUserDetailsService;
+    private final RequestLoggingFilter requestLoggingFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, CustomUserDetailsService customUserDetailsService) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,
+            CustomUserDetailsService customUserDetailsService,
+            RequestLoggingFilter requestLoggingFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.customUserDetailsService = customUserDetailsService;
+        this.requestLoggingFilter = requestLoggingFilter;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(requestLoggingFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
