@@ -1,36 +1,4 @@
 services:
-  frontend:
-    image: entrecol-frontend
-    build:
-      context: ./entrecol-frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./entrecol-frontend:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - 4200:4200
-    container_name: entrecol-frontend
-    depends_on:
-      - backend
-  backend:
-    image: entrecol-backend
-    build:
-      context: ./entrecol-backend
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
-      - 5005:5005
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/entrecol-db
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=123456
-    volumes:
-      - ./entrecol-backend:/app
-      - ~/.m2:/root/.m2
-    container_name: entrecol-backend
-    depends_on:
-      db:
-        condition: service_healthy
   db:
     image: postgres:latest
     ports:
@@ -59,5 +27,37 @@ services:
     container_name: entrecol-pgadmin4
     depends_on:
       - db
+  backend:
+    image: entrecol-backend
+    build:
+      context: ./entrecol-backend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+      - 5005:5005
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/entrecol-db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+    volumes:
+      - ./entrecol-backend:/app
+      - ~/.m2:/root/.m2
+    container_name: entrecol-backend
+    depends_on:
+      db:
+        condition: service_healthy
+  frontend:
+    image: entrecol-frontend
+    build:
+      context: ./entrecol-frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./entrecol-frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 4200:4200
+    container_name: entrecol-frontend
+    depends_on:
+      - backend
 volumes:
   db-data:
