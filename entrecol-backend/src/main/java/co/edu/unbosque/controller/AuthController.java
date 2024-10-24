@@ -18,6 +18,7 @@ import co.edu.unbosque.model.LoginRequest;
 import co.edu.unbosque.model.User;
 import co.edu.unbosque.security.JwtUtil;
 import co.edu.unbosque.service.UserService;
+import co.edu.unbosque.service.CaptchaService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,15 +27,21 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final CaptchaService captchaService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserService userService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserService userService, CaptchaService captchaService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userService = userService;
+        this.captchaService = captchaService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        // Verificar el Captcha
+        if (!captchaService.verifyCaptcha(loginRequest.getCaptchaResponse())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Captcha inválido");
+        }
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));

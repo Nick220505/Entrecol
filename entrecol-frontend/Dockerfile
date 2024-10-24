@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN npm i -g @angular/cli
 
-RUN npm i
+RUN npm i --legacy-peer-deps
 
 EXPOSE 4200
 
