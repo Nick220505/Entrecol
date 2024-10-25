@@ -43,6 +43,7 @@ export class LoginComponent {
   constructor() {
     effect(() => {
       if (this.authService.isCredentialsInvalid()) {
+        this.loginForm.get('captchaResponse')?.reset();
         this.loginForm.setErrors({ invalidCredentials: true });
       }
     });
