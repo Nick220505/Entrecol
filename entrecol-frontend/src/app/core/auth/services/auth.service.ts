@@ -40,6 +40,8 @@ export class AuthService {
         error: (error: HttpErrorResponse) => {
           if (error.status === 401) {
             this.error.set('El usuario o la contraseña son incorrectos.');
+          } else if (error.status === 400) {
+            this.error.set('Por favor, complete el captcha correctamente.');
           } else if (error.status === 0) {
             this.error.set(
               'No se pudo conectar al servidor. Verifique su conexión a internet.'

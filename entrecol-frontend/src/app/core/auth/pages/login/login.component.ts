@@ -5,9 +5,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { LoginCredentials } from '@core/auth/models/login-credentials.model';
 import { AlertMessageComponent } from '@shared/components/alert-message/alert-message.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
-import { RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -23,6 +24,7 @@ import { AuthService } from '../../services/auth.service';
     AlertMessageComponent,
     LoadingSpinnerComponent,
     RecaptchaModule,
+    RecaptchaFormsModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -35,9 +37,8 @@ export class LoginComponent {
   protected readonly loginForm = this.formBuilder.group({
     username: ['', [Validators.required]],
     password: ['', [Validators.required]],
+    captchaResponse: [null, Validators.required],
   });
-
-  private captchaResponse: string | null = null;
 
   constructor() {
     effect(() => {
@@ -47,23 +48,8 @@ export class LoginComponent {
     });
   }
 
-  resolvedCaptcha(captchaResponse: string | null): void {
-    this.captchaResponse = captchaResponse;
-  }
-
   onSubmit(): void {
-    if (!this.captchaResponse) {
-      return;
-    }
-
-    const { username, password } = this.loginForm.value;
-    if (username && password) {
-      this.authService.login({
-        username,
-        password,
-        captchaResponse: this.captchaResponse,
-      });
-    }
+    this.authService.login(this.loginForm.value as LoginCredentials);
   }
 
   togglePasswordVisibility(event: MouseEvent): void {

@@ -60,6 +60,10 @@
               [type]="'error'"
             ></app-alert-message>
             }
+            <re-captcha
+              formControlName="captchaResponse"
+              siteKey="6LfRG2sqAAAAAE5KKnbfqHa__A_0HdyOaABJUljN"
+            ></re-captcha>
             <button
               mat-raised-button
               type="submit"
@@ -71,7 +75,6 @@
               <span>Iniciar Sesión</span>
               }
             </button>
-            <re-captcha (resolved)="resolvedCaptcha($event)" siteKey="6LfRG2sqAAAAAE5KKnbfqHa__A_0HdyOaABJUljN"></re-captcha>
           </form>
         </mat-card-content>
       </mat-card>
