@@ -26,7 +26,21 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./core/layout/layout.component').then((m) => m.LayoutComponent),
     canActivate: [authGuard],
-    title: 'ENTRECOL - Inicio',
+    children: [
+      {
+        path: 'libros',
+        loadComponent: () =>
+          import('./features/books/pages/book-list/book-list.component').then(
+            (m) => m.BookListComponent
+          ),
+        title: 'ENTRECOL - Libros',
+      },
+      {
+        path: '',
+        redirectTo: 'libros',
+        pathMatch: 'full',
+      },
+    ],
   },
   { path: '**', redirectTo: '/login' },
 ];

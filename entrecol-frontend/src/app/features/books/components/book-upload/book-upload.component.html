@@ -1,0 +1,39 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Cargar Libros</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="file-input-container">
+      <button mat-raised-button color="primary" (click)="fileInput.click()">
+        <mat-icon>upload_file</mat-icon>
+        Seleccionar Archivo JSON
+      </button>
+      <input
+        #fileInput
+        type="file"
+        accept=".json"
+        (change)="onFileSelected($event)"
+        style="display: none"
+      />
+      @if (selectedFile) {
+      <span class="file-name">{{ selectedFile.name }}</span>
+      }
+    </div>
+
+    @if (uploading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button
+      mat-raised-button
+      color="accent"
+      [disabled]="!selectedFile || uploading"
+      (click)="uploadFile()"
+    >
+      Cargar
+    </button>
+  </mat-card-actions>
+</mat-card>
