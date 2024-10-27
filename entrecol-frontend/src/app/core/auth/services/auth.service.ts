@@ -7,6 +7,8 @@ import { environment } from '@env';
 import { finalize } from 'rxjs';
 import { AuthResponse } from '../models/auth-response.model';
 import { LoginCredentials } from '../models/login-credentials.model';
+import { RegisterCredentials } from '../models/register-credentials.model';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +25,43 @@ export class AuthService {
     () => this.error() === 'El usuario o la contraseña son incorrectos.'
   );
   readonly isAuthenticated = signal(!!localStorage.getItem('token'));
+
+  register(credentials: RegisterCredentials): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+    this.http
+      .post<User>(`${this.apiUrl}/register`, credentials)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: () => {
+          this.snackBarService.success(
+            'Registro exitoso. Por favor inicie sesión.'
+          );
+          this.router.navigate(['/login']);
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 400) {
+            if (error.error === 'Username is already taken!') {
+              this.error.set('El nombre de usuario ya está en uso.');
+            } else if (error.error === 'Email is already in use!') {
+              this.error.set('El correo electrónico ya está registrado.');
+            } else {
+              this.error.set(
+                'Por favor, complete todos los campos correctamente.'
+              );
+            }
+          } else if (error.status === 0) {
+            this.error.set(
+              'No se pudo conectar al servidor. Verifique su conexión a internet.'
+            );
+          } else {
+            this.error.set(
+              'Ocurrió un error inesperado. Intente nuevamente más tarde.'
+            );
+          }
+        },
+      });
+  }
 
   login(credentials: LoginCredentials): void {
     this.isLoading.set(true);

@@ -1,7 +1,7 @@
 <div class="login-container">
   <div class="content-wrapper">
     <div class="banner-content">
-      <h1 class="banner-title">Bienvenido a EntreCOL+</h1>
+      <h1 class="banner-title">Únete a EntreCOL+</h1>
       <p class="banner-subtitle">Sistema Integral de Gestión Empresarial</p>
       <p class="banner-description">
         Nómina | Entretenimiento | Recursos Humanos
@@ -13,16 +13,30 @@
           <img src="assets/logo.png" alt="Logo EntreCOL+" class="logo" />
         </div>
         <mat-card-content>
-          <h2 class="title">Inicio de Sesión</h2>
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <h2 class="title">Registro de Usuario</h2>
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <mat-form-field appearance="outline">
               <mat-label>Usuario</mat-label>
               <input matInput formControlName="username" required />
               <mat-icon matPrefix>person</mat-icon>
-              @if (loginForm.get('username')?.hasError('required')) {
+              @if (registerForm.get('username')?.hasError('required')) {
               <mat-error>El usuario es requerido</mat-error>
+              } @else if (registerForm.get('username')?.hasError('minlength')) {
+              <mat-error>El usuario debe tener al menos 3 caracteres</mat-error>
               }
             </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Correo Electrónico</mat-label>
+              <input matInput formControlName="email" required type="email" />
+              <mat-icon matPrefix>email</mat-icon>
+              @if (registerForm.get('email')?.hasError('required')) {
+              <mat-error>El correo electrónico es requerido</mat-error>
+              } @else if (registerForm.get('email')?.hasError('email')) {
+              <mat-error>Ingrese un correo electrónico válido</mat-error>
+              }
+            </mat-form-field>
+
             <mat-form-field appearance="outline">
               <mat-label>Contraseña</mat-label>
               <input
@@ -44,35 +58,42 @@
                   isPasswordHidden() ? "visibility_off" : "visibility"
                 }}</mat-icon>
               </button>
-              @if (loginForm.get('password')?.hasError('required')) {
+              @if (registerForm.get('password')?.hasError('required')) {
               <mat-error>La contraseña es requerida</mat-error>
+              } @else if (registerForm.get('password')?.hasError('minlength')) {
+              <mat-error
+                >La contraseña debe tener al menos 6 caracteres</mat-error
+              >
               }
             </mat-form-field>
+
             @if (authService.error(); as errorMessage) {
             <app-alert-message
               [message]="errorMessage"
               [type]="'error'"
             ></app-alert-message>
             }
+
             <re-captcha
               formControlName="captchaResponse"
               siteKey="6LfRG2sqAAAAAE5KKnbfqHa__A_0HdyOaABJUljN"
             ></re-captcha>
+
             <button
               mat-raised-button
               type="submit"
-              [disabled]="loginForm.invalid || authService.isLoading()"
+              [disabled]="registerForm.invalid || authService.isLoading()"
             >
               @if (authService.isLoading()) {
               <app-loading-spinner [diameter]="20"></app-loading-spinner>
               } @else {
-              <span>Iniciar Sesión</span>
+              <span>Registrarse</span>
               }
             </button>
           </form>
           <div class="auth-links">
-            <span>¿No tienes una cuenta?</span>
-            <a routerLink="/register">Regístrate aquí</a>
+            <span>¿Ya tienes una cuenta?</span>
+            <a routerLink="/login">Inicia sesión aquí</a>
           </div>
         </mat-card-content>
       </mat-card>

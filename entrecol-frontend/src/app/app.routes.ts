@@ -13,6 +13,15 @@ export const routes: Routes = [
     title: 'ENTRECOL - Iniciar Sesión',
   },
   {
+    path: 'register',
+    loadComponent: () =>
+      import('./core/auth/pages/register/register.component').then(
+        (m) => m.RegisterComponent
+      ),
+    canActivate: [redirectLoggedInGuard],
+    title: 'ENTRECOL - Registro',
+  },
+  {
     path: '',
     loadComponent: () =>
       import('./core/layout/layout.component').then((m) => m.LayoutComponent),
