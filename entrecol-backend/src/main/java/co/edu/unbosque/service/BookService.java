@@ -132,7 +132,7 @@ public class BookService {
                 processedBooks++;
 
             } catch (Exception e) {
-                throw new RuntimeException("Error processing book: " + e.getMessage(), e);
+                throw new RuntimeException("Error processing book: " + e.getMessage() + ", Book data: " + bookData, e);
             }
         }
 
