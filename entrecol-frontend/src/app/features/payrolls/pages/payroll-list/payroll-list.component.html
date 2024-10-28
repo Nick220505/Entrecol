@@ -29,6 +29,18 @@
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
 
+        @let displayedColumns =
+          [
+            "fullName",
+            "code",
+            "department",
+            "position",
+            "hireDate",
+            "eps",
+            "arl",
+            "pensionFund",
+            "salary",
+          ];
         <table mat-table [dataSource]="dataSource()" matSort>
           <ng-container matColumnDef="fullName">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>

@@ -79,7 +79,6 @@ export class MovieListComponent implements OnInit, AfterViewInit {
     source.sort = this.sort() ?? null;
     return source;
   });
-  protected readonly displayedColumns = ['title', 'releaseYear', 'genres'];
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
 

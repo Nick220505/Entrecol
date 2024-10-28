@@ -82,17 +82,6 @@ export class PayrollListComponent implements OnInit, AfterViewInit {
     source.sort = this.sort() ?? null;
     return source;
   });
-  protected readonly displayedColumns = [
-    'fullName',
-    'code',
-    'department',
-    'position',
-    'hireDate',
-    'eps',
-    'arl',
-    'pensionFund',
-    'salary',
-  ];
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
 

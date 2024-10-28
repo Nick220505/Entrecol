@@ -29,6 +29,7 @@
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
 
+        @let displayedColumns = ["title", "releaseYear", "genres"];
         <table mat-table [dataSource]="dataSource()" matSort>
           <ng-container matColumnDef="title">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Título</th>
