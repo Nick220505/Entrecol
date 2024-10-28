@@ -44,7 +44,7 @@
       </ng-container>
 
       <ng-container matColumnDef="genres">
-        <th mat-header-cell *matHeaderCellDef>Géneros</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Géneros</th>
         <td mat-cell *matCellDef="let movie">
           {{ getGenreNames(movie) | empty }}
         </td>
