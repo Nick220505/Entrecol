@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -39,22 +37,13 @@ public class MovieService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Page<Movie> getAllMovies(int page, int size) {
-        return movieRepository.findAll(PageRequest.of(page, size));
-    }
-
-    public Page<Movie> searchMovies(String title, Integer year, Long genreId, int page, int size) {
-        return movieRepository.searchMovies(title, year, genreId, PageRequest.of(page, size));
-    }
-
-    public List<Integer> getAllYears() {
-        return movieRepository.findAllYears();
+    public List<Movie> getAllMovies() {
+        return movieRepository.findAll();
     }
 
     @Transactional
     @SuppressWarnings("unchecked")
     public int processMovieUpload(List<Map<String, Object>> moviesData) {
-        // First, collect all unique genres
         Set<String> uniqueGenres = new HashSet<>();
         for (Map<String, Object> movieData : moviesData) {
             List<Map<String, String>> genreList = (List<Map<String, String>>) movieData.get("genres");
@@ -63,7 +52,6 @@ public class MovieService {
             }
         }
 
-        // Insert all new genres in a single batch
         Map<String, Long> genreNameToId = new HashMap<>();
         List<Genre> existingGenres = genreRepository.findAll();
         for (Genre genre : existingGenres) {
@@ -79,7 +67,6 @@ public class MovieService {
             }
             jdbcTemplate.batchUpdate(genreInsertSql, genreBatch);
 
-            // Get IDs of newly inserted genres
             String getGenreIdsSql = "SELECT id, name FROM genre WHERE name IN (" +
                     String.join(",", Collections.nCopies(uniqueGenres.size(), "?")) + ")";
             List<GenreMapping> newGenres = jdbcTemplate.query(
@@ -91,7 +78,6 @@ public class MovieService {
             }
         }
 
-        // Insert movies in batches
         String movieInsertSql = "INSERT INTO movie (original_id, title, release_year) VALUES (?, ?, ?)";
         String movieGenreInsertSql = "INSERT INTO movie_genre (movie_id, genre_id) VALUES (?, ?)";
 
@@ -131,7 +117,6 @@ public class MovieService {
 
         int[] results = jdbcTemplate.batchUpdate(movieInsertSql, movieBatch);
 
-        // Get IDs of newly inserted movies
         String getMovieIdsSql = "SELECT id, original_id FROM movie WHERE original_id IN (" +
                 String.join(",", Collections.nCopies(movieBatch.size(), "?")) + ")";
 
@@ -147,7 +132,6 @@ public class MovieService {
             originalIdToId.put(movie.originalId(), movie.id());
         }
 
-        // Create movie-genre relationships
         for (Object[] movie : movieBatch) {
             Long movieId = originalIdToId.get(Long.valueOf(movie[0].toString()));
             if (!(movieData.get("genres") instanceof List<?>)) {

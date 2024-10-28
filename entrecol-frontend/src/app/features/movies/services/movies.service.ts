@@ -4,13 +4,6 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
 import { Movie } from '../models/movie.model';
 
-interface PaginatedResponse<T> {
-  content: T[];
-  currentPage: number;
-  totalItems: number;
-  totalPages: number;
-}
-
 interface State<T> {
   data: T;
   loading: boolean;
@@ -25,12 +18,6 @@ export class MoviesService {
   private readonly http = inject(HttpClient);
   private readonly snackBar = inject(SnackBarService);
 
-  readonly movie = signal<State<Movie | null>>({
-    data: null,
-    loading: false,
-    initialLoad: true,
-  });
-
   readonly movies = signal<State<Movie[]>>({
     data: [],
     loading: false,
@@ -38,23 +25,21 @@ export class MoviesService {
   });
   readonly uploading = signal(false);
 
-  getAll(page = 0, size = 10): void {
+  getAll(): void {
     this.movies.update((state) => ({ ...state, loading: true }));
-    this.http
-      .get<PaginatedResponse<Movie>>(`${this.apiUrl}?page=${page}&size=${size}`)
-      .subscribe({
-        next: (response) => {
-          this.movies.set({
-            data: response.content,
-            loading: false,
-            initialLoad: false,
-          });
-        },
-        error: () => {
-          this.movies.update((state) => ({ ...state, loading: false }));
-          this.snackBar.error('Error al cargar las películas');
-        },
-      });
+    this.http.get<Movie[]>(this.apiUrl).subscribe({
+      next: (movies) => {
+        this.movies.set({
+          data: movies,
+          loading: false,
+          initialLoad: false,
+        });
+      },
+      error: () => {
+        this.movies.update((state) => ({ ...state, loading: false }));
+        this.snackBar.error('Error al cargar las películas');
+      },
+    });
   }
 
   uploadMovies(movies: Movie[]): void {

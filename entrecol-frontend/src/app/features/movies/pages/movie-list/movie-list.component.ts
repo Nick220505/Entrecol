@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, computed, inject, OnInit, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +20,7 @@ import { MoviesService } from '../../services/movies.service';
   selector: 'app-movie-list',
   standalone: true,
   imports: [
+    CommonModule,
     DatePipe,
     FormsModule,
     MatButtonModule,
@@ -42,12 +43,12 @@ export class MovieListComponent implements OnInit {
   protected readonly moviesService = inject(MoviesService);
   protected readonly movies = computed(() => this.moviesService.movies());
   protected readonly dataSource = computed(() => {
-    const data = this.moviesService.movies().data;
-    const source = new MatTableDataSource<Movie>(data);
+    const source = new MatTableDataSource<Movie>(this.movies().data);
     source.paginator = this.paginator() ?? null;
     source.sort = this.sort() ?? null;
     return source;
   });
+  protected readonly displayedColumns = ['title', 'releaseYear', 'genres'];
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
 
