@@ -35,29 +35,20 @@
   </nav>
   } @if (authService.isAuthenticated()) {
   <button
-    mat-button
-    [matMenuTriggerFor]="userMenu"
-    class="user-menu-button"
+    mat-icon-button
+    (click)="logout()"
+    class="logout-button"
     [@fadeAnimation]="'in'"
+    matTooltip="Cerrar Sesión"
   >
-    <mat-icon class="user-icon">account_circle</mat-icon>
-    <mat-icon>arrow_drop_down</mat-icon>
+    <mat-icon>exit_to_app</mat-icon>
   </button>
-  <mat-menu #userMenu="matMenu">
-    <button mat-menu-item routerLink="/profile">
-      <mat-icon>person</mat-icon>
-      <span>Perfil</span>
-    </button>
-    <button mat-menu-item (click)="logout()">
-      <mat-icon>exit_to_app</mat-icon>
-      <span>Cerrar Sesión</span>
-    </button>
-  </mat-menu>
   }
   <mat-slide-toggle
     [checked]="themeService.isDarkTheme()"
     (change)="toggleTheme()"
     color="accent"
+    class="theme-toggle"
   >
     <mat-icon>{{
       themeService.isDarkTheme() ? "dark_mode" : "light_mode"
