@@ -132,3 +132,28 @@ CREATE TABLE `employee_record` (
 CREATE INDEX idx_employee_code ON `employee`(code);
 CREATE INDEX idx_employee_record_date ON `employee_record`(record_date);
 CREATE INDEX idx_employee_record_employee ON `employee_record`(employee_id);
+
+-- Movie related tables
+CREATE TABLE `movie` (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    original_id BIGINT UNIQUE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    release_year INT NOT NULL
+);
+
+CREATE TABLE `genre` (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE `movie_genre` (
+    movie_id BIGINT NOT NULL,
+    genre_id BIGINT NOT NULL,
+    PRIMARY KEY (movie_id, genre_id),
+    FOREIGN KEY (movie_id) REFERENCES `movie`(id),
+    FOREIGN KEY (genre_id) REFERENCES `genre`(id)
+);
+
+-- Index for better performance
+CREATE INDEX idx_movie_original_id ON `movie`(original_id);
+CREATE INDEX idx_movie_year ON `movie`(release_year);

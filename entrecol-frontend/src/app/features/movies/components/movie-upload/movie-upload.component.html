@@ -1,0 +1,63 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Cargar Películas</mat-card-title>
+    <mat-card-subtitle>Arrastra o selecciona un archivo .dat</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div
+      class="upload-area"
+      [class.dragging]="isDragging"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      <input
+        #fileInput
+        type="file"
+        accept=".dat"
+        (change)="onFileSelected($event)"
+        class="file-input"
+      />
+
+      <div class="upload-content">
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        <div class="upload-text">
+          <p>Arrastra un archivo aquí o</p>
+          <button mat-stroked-button (click)="fileInput.click()">
+            Selecciona un archivo
+          </button>
+        </div>
+
+        @if (selectedFile) {
+        <div class="file-info">
+          <span>{{ selectedFile.name }}</span>
+          <button
+            mat-icon-button
+            (click)="selectedFile = null"
+            matTooltip="Eliminar archivo"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+
+    @if (moviesService.uploading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!selectedFile || moviesService.uploading()"
+      (click)="uploadFile()"
+    >
+      <mat-icon>upload</mat-icon>
+      Cargar Películas
+    </button>
+  </mat-card-actions>
+</mat-card>

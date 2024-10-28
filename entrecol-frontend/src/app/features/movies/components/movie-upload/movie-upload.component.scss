@@ -1,0 +1,76 @@
+:host {
+  display: block;
+  margin: 1rem;
+}
+
+mat-card {
+  max-width: 800px;
+  margin: 0 auto;
+
+  mat-card-header {
+    margin-bottom: 1rem;
+  }
+}
+
+.upload-area {
+  border: 2px dashed var(--mat-card-subtitle-text-color);
+  border-radius: 4px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  position: relative;
+
+  &.dragging {
+    border-color: var(--mat-card-title-text-color);
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  .upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .upload-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    p {
+      margin: 0;
+      color: var(--mat-card-subtitle-text-color);
+    }
+  }
+
+  .file-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.04);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+mat-card-actions {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+mat-progress-bar {
+  margin-top: 1rem;
+}
+
+.upload-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
