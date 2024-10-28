@@ -16,6 +16,12 @@
   transition: all 0.3s ease;
 }
 
+:host-context(.dark-theme) {
+  .nav-logo {
+    filter: brightness(0) invert(1);
+  }
+}
+
 .spacer {
   flex: 1 1 auto;
 }
