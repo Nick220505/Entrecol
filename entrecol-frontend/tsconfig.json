@@ -25,6 +25,9 @@
       "@core/*": ["app/core/*"],
       "@shared/*": ["app/shared/*"],
       "@env": ["environments/environment"],
+      "@books/*": ["app/features/books/*"],
+      "@movies/*": ["app/features/movies/*"],
+      "@payrolls/*": ["app/features/payrolls/*"],
       "@app/*": ["app/*"]
     }
   },
