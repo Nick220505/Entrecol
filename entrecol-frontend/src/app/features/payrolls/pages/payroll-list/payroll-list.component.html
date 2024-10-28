@@ -36,9 +36,7 @@
           <p>
             <strong>Salario:</strong>
             {{
-              employee.salary
-                | number : "1.0-0"
-                | currency : "COP" : "symbol-narrow" : "1.0-0"
+              +employee.salary | currency : "COP" : "symbol-narrow" : "1.0-0"
             }}
           </p>
         </mat-card-content>

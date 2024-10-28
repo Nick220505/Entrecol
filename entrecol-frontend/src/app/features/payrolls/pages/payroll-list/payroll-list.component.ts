@@ -15,9 +15,9 @@ import { PayrollsService } from '../../services/payrolls.service';
   selector: 'app-payroll-list',
   standalone: true,
   imports: [
-    CurrencyPipe,
     DatePipe,
     DecimalPipe,
+    CurrencyPipe,
     MatCardModule,
     MatButtonModule,
     MatIconModule,

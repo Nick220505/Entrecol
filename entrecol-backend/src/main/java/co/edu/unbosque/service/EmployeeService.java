@@ -2,6 +2,8 @@ package co.edu.unbosque.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -190,11 +192,9 @@ public class EmployeeService {
     @Transactional
     public Map<String, Object> processEmployeeUpload(MultipartFile file) {
         try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
-            // Process employee data from first sheet
             Sheet employeeSheet = workbook.getSheetAt(0);
             Map<String, Employee> processedEmployees = processEmployeeSheet(employeeSheet);
 
-            // Process employee records from second sheet
             Sheet recordSheet = workbook.getSheetAt(1);
             int processedRecords = processEmployeeRecordSheet(recordSheet, processedEmployees);
 
@@ -241,75 +241,138 @@ public class EmployeeService {
 
         for (Row row : sheet) {
             if (row.getRowNum() == 0)
-                continue; // Skip header row
+                continue;
 
-            String code = row.getCell(0).getStringCellValue();
-            if (employeeRepository.existsByCode(code)) {
-                continue; // Skip existing employees
+            try {
+                Cell codeCell = row.getCell(0);
+                String code;
+                if (codeCell == null) {
+                    throw new RuntimeException("Employee code is required");
+                }
+
+                try {
+                    if (codeCell.getCellType() == CellType.NUMERIC) {
+                        code = String.format("%.0f", codeCell.getNumericCellValue());
+                    } else if (codeCell.getCellType() == CellType.STRING) {
+                        code = codeCell.getStringCellValue();
+                    } else {
+                        throw new RuntimeException("Invalid employee code format");
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException("Error processing employee code: " + e.getMessage());
+                }
+
+                if (code == null || code.trim().isEmpty()) {
+                    throw new RuntimeException("Employee code cannot be empty");
+                }
+
+                if (employeeRepository.existsByCode(code)) {
+                    continue;
+                }
+
+                Employee employee = new Employee();
+                employee.setCode(code);
+                employee.setFullName(row.getCell(1).getStringCellValue());
+
+                String departmentName = row.getCell(2).getStringCellValue();
+                Department department = departmentRepository.findByName(departmentName)
+                        .orElseGet(() -> {
+                            Department newDepartment = new Department();
+                            newDepartment.setName(departmentName);
+                            return departmentRepository.save(newDepartment);
+                        });
+                employee.setDepartment(department);
+
+                String positionName = row.getCell(3).getStringCellValue();
+                Position position = positionRepository.findByName(positionName)
+                        .orElseGet(() -> {
+                            Position newPosition = new Position();
+                            newPosition.setName(positionName);
+                            return positionRepository.save(newPosition);
+                        });
+                employee.setPosition(position);
+
+                Cell hireDateCell = row.getCell(4);
+                if (hireDateCell != null) {
+                    try {
+                        if (hireDateCell.getCellType() == CellType.NUMERIC) {
+                            String dateStr = String.valueOf((long) hireDateCell.getNumericCellValue());
+
+                            int year = Integer.parseInt(dateStr.substring(0, 4));
+                            int month = Integer.parseInt(dateStr.substring(4, 6));
+                            int day = Integer.parseInt(dateStr.substring(6));
+
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(year, month - 1, day);
+                            Date hireDate = calendar.getTime();
+
+                            employee.setHireDate(hireDate);
+                        } else if (hireDateCell.getCellType() == CellType.STRING) {
+                            String dateStr = hireDateCell.getStringCellValue();
+
+                            try {
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                                Date parsedDate = sdf.parse(dateStr);
+                                employee.setHireDate(parsedDate);
+                            } catch (Exception e1) {
+                                try {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                                    Date parsedDate = sdf.parse(dateStr);
+                                    employee.setHireDate(parsedDate);
+                                } catch (Exception e2) {
+                                    throw new RuntimeException("Invalid date format. Expected YYYYMMDD or DD/MM/YYYY");
+                                }
+                            }
+                        } else {
+                            throw new RuntimeException("Invalid hire date cell type for employee code: " + code);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException("Invalid date format in hire date for employee code: " + code
+                                + ". Error: " + e.getMessage());
+                    }
+                } else {
+                    throw new RuntimeException("Hire date is required for employee code: " + code);
+                }
+
+                String epsName = row.getCell(5).getStringCellValue();
+                EPS eps = epsRepository.findByName(epsName)
+                        .orElseGet(() -> {
+                            EPS newEps = new EPS();
+                            newEps.setName(epsName);
+                            return epsRepository.save(newEps);
+                        });
+                employee.setEps(eps);
+
+                String arlName = row.getCell(6).getStringCellValue();
+                ARL arl = arlRepository.findByName(arlName)
+                        .orElseGet(() -> {
+                            ARL newArl = new ARL();
+                            newArl.setName(arlName);
+                            return arlRepository.save(newArl);
+                        });
+                employee.setArl(arl);
+
+                String pensionName = row.getCell(7).getStringCellValue();
+                PensionFund pensionFund = pensionFundRepository.findByName(pensionName)
+                        .orElseGet(() -> {
+                            PensionFund newPensionFund = new PensionFund();
+                            newPensionFund.setName(pensionName);
+                            return pensionFundRepository.save(newPensionFund);
+                        });
+                employee.setPensionFund(pensionFund);
+
+                Cell salaryCell = row.getCell(8);
+                if (salaryCell != null && salaryCell.getCellType() == CellType.NUMERIC) {
+                    double salaryValue = salaryCell.getNumericCellValue();
+                    employee.setSalary(BigDecimal.valueOf(salaryValue));
+                }
+
+                Employee savedEmployee = employeeRepository.save(employee);
+                processedEmployees.put(code, savedEmployee);
+
+            } catch (Exception e) {
+                throw new RuntimeException("Error processing row " + (row.getRowNum() + 1) + ": " + e.getMessage());
             }
-
-            Employee employee = new Employee();
-            employee.setCode(code);
-            employee.setFullName(row.getCell(1).getStringCellValue());
-
-            // Process Department
-            String departmentName = row.getCell(2).getStringCellValue();
-            Department department = departmentRepository.findByName(departmentName)
-                    .orElseGet(() -> {
-                        Department newDepartment = new Department();
-                        newDepartment.setName(departmentName);
-                        return departmentRepository.save(newDepartment);
-                    });
-            employee.setDepartment(department);
-
-            // Process Position
-            String positionName = row.getCell(3).getStringCellValue();
-            Position position = positionRepository.findByName(positionName)
-                    .orElseGet(() -> {
-                        Position newPosition = new Position();
-                        newPosition.setName(positionName);
-                        return positionRepository.save(newPosition);
-                    });
-            employee.setPosition(position);
-
-            // Process hire date
-            employee.setHireDate(row.getCell(4).getDateCellValue());
-
-            // Process EPS
-            String epsName = row.getCell(5).getStringCellValue();
-            EPS eps = epsRepository.findByName(epsName)
-                    .orElseGet(() -> {
-                        EPS newEps = new EPS();
-                        newEps.setName(epsName);
-                        return epsRepository.save(newEps);
-                    });
-            employee.setEps(eps);
-
-            // Process ARL
-            String arlName = row.getCell(6).getStringCellValue();
-            ARL arl = arlRepository.findByName(arlName)
-                    .orElseGet(() -> {
-                        ARL newArl = new ARL();
-                        newArl.setName(arlName);
-                        return arlRepository.save(newArl);
-                    });
-            employee.setArl(arl);
-
-            // Process Pension Fund
-            String pensionName = row.getCell(7).getStringCellValue();
-            PensionFund pensionFund = pensionFundRepository.findByName(pensionName)
-                    .orElseGet(() -> {
-                        PensionFund newPensionFund = new PensionFund();
-                        newPensionFund.setName(pensionName);
-                        return pensionFundRepository.save(newPensionFund);
-                    });
-            employee.setPensionFund(pensionFund);
-
-            // Process salary
-            employee.setSalary(BigDecimal.valueOf(row.getCell(8).getNumericCellValue()));
-
-            Employee savedEmployee = employeeRepository.save(employee);
-            processedEmployees.put(code, savedEmployee);
         }
 
         return processedEmployees;
@@ -320,63 +383,95 @@ public class EmployeeService {
 
         for (Row row : sheet) {
             if (row.getRowNum() == 0)
-                continue; // Skip header row
+                continue;
 
-            String employeeCode = row.getCell(0).getStringCellValue();
-            Employee employee = employees.get(employeeCode);
-            if (employee == null)
-                continue; // Skip records for non-existent employees
+            try {
+                Cell codeCell = row.getCell(0);
+                String employeeCode;
+                if (codeCell.getCellType() == CellType.NUMERIC) {
+                    employeeCode = String.format("%.0f", codeCell.getNumericCellValue());
+                } else {
+                    employeeCode = codeCell.getStringCellValue();
+                }
 
-            EmployeeRecord record = new EmployeeRecord();
-            record.setEmployee(employee);
+                Employee employee = employees.get(employeeCode);
+                if (employee == null) {
+                    continue;
+                }
 
-            // Process disability record
-            Cell disabilityCell = row.getCell(1);
-            record.setDisabilityRecord(disabilityCell != null && !disabilityCell.getStringCellValue().isEmpty());
+                EmployeeRecord record = new EmployeeRecord();
+                record.setEmployee(employee);
 
-            // Process vacation record
-            Cell vacationCell = row.getCell(2);
-            record.setVacationRecord(vacationCell != null && !vacationCell.getStringCellValue().isEmpty());
+                Cell disabilityCell = row.getCell(1);
+                record.setDisabilityRecord(disabilityCell != null && disabilityCell.getCellType() == CellType.STRING
+                        && !disabilityCell.getStringCellValue().isEmpty());
 
-            // Process worked days
-            record.setWorkedDays((int) row.getCell(3).getNumericCellValue());
+                Cell vacationCell = row.getCell(2);
+                record.setVacationRecord(vacationCell != null && vacationCell.getCellType() == CellType.STRING
+                        && !vacationCell.getStringCellValue().isEmpty());
 
-            // Process disability days
-            record.setDisabilityDays((int) row.getCell(4).getNumericCellValue());
+                Cell workedDaysCell = row.getCell(3);
+                if (workedDaysCell != null && workedDaysCell.getCellType() == CellType.NUMERIC) {
+                    record.setWorkedDays((int) workedDaysCell.getNumericCellValue());
+                }
 
-            // Process vacation days
-            record.setVacationDays((int) row.getCell(5).getNumericCellValue());
+                Cell disabilityDaysCell = row.getCell(4);
+                if (disabilityDaysCell != null && disabilityDaysCell.getCellType() == CellType.NUMERIC) {
+                    record.setDisabilityDays((int) disabilityDaysCell.getNumericCellValue());
+                }
 
-            // Process dates
-            Cell vacationStartCell = row.getCell(6);
-            if (vacationStartCell != null && vacationStartCell.getCellType() != CellType.BLANK) {
-                record.setVacationStartDate(vacationStartCell.getDateCellValue());
+                Cell vacationDaysCell = row.getCell(5);
+                if (vacationDaysCell != null && vacationDaysCell.getCellType() == CellType.NUMERIC) {
+                    record.setVacationDays((int) vacationDaysCell.getNumericCellValue());
+                }
+
+                Cell vacationStartCell = row.getCell(6);
+                if (vacationStartCell != null && vacationStartCell.getCellType() == CellType.NUMERIC) {
+                    double excelDate = vacationStartCell.getNumericCellValue();
+                    Date javaDate = org.apache.poi.ss.usermodel.DateUtil.getJavaDate(excelDate);
+                    record.setVacationStartDate(javaDate);
+                }
+
+                Cell vacationEndCell = row.getCell(7);
+                if (vacationEndCell != null && vacationEndCell.getCellType() == CellType.NUMERIC) {
+                    double excelDate = vacationEndCell.getNumericCellValue();
+                    Date javaDate = org.apache.poi.ss.usermodel.DateUtil.getJavaDate(excelDate);
+                    record.setVacationEndDate(javaDate);
+                }
+
+                Cell disabilityStartCell = row.getCell(8);
+                if (disabilityStartCell != null && disabilityStartCell.getCellType() == CellType.NUMERIC) {
+                    double excelDate = disabilityStartCell.getNumericCellValue();
+                    Date javaDate = org.apache.poi.ss.usermodel.DateUtil.getJavaDate(excelDate);
+                    record.setDisabilityStartDate(javaDate);
+                }
+
+                Cell disabilityEndCell = row.getCell(9);
+                if (disabilityEndCell != null && disabilityEndCell.getCellType() == CellType.NUMERIC) {
+                    double excelDate = disabilityEndCell.getNumericCellValue();
+                    Date javaDate = org.apache.poi.ss.usermodel.DateUtil.getJavaDate(excelDate);
+                    record.setDisabilityEndDate(javaDate);
+                }
+
+                Cell bonusCell = row.getCell(10);
+                if (bonusCell != null && bonusCell.getCellType() == CellType.NUMERIC) {
+                    record.setBonus(BigDecimal.valueOf(bonusCell.getNumericCellValue()));
+                }
+
+                Cell transportCell = row.getCell(11);
+                if (transportCell != null && transportCell.getCellType() == CellType.NUMERIC) {
+                    record.setTransportAllowance(BigDecimal.valueOf(transportCell.getNumericCellValue()));
+                }
+
+                record.setRecordDate(new Date());
+
+                employeeRecordRepository.save(record);
+                processedRecords++;
+
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Error processing record row " + (row.getRowNum() + 1) + ": " + e.getMessage());
             }
-
-            Cell vacationEndCell = row.getCell(7);
-            if (vacationEndCell != null && vacationEndCell.getCellType() != CellType.BLANK) {
-                record.setVacationEndDate(vacationEndCell.getDateCellValue());
-            }
-
-            Cell disabilityStartCell = row.getCell(8);
-            if (disabilityStartCell != null && disabilityStartCell.getCellType() != CellType.BLANK) {
-                record.setDisabilityStartDate(disabilityStartCell.getDateCellValue());
-            }
-
-            Cell disabilityEndCell = row.getCell(9);
-            if (disabilityEndCell != null && disabilityEndCell.getCellType() != CellType.BLANK) {
-                record.setDisabilityEndDate(disabilityEndCell.getDateCellValue());
-            }
-
-            // Process bonus and transport allowance
-            record.setBonus(BigDecimal.valueOf(row.getCell(10).getNumericCellValue()));
-            record.setTransportAllowance(BigDecimal.valueOf(row.getCell(11).getNumericCellValue()));
-
-            // Set record date
-            record.setRecordDate(new Date()); // Or extract from filename/metadata if needed
-
-            employeeRecordRepository.save(record);
-            processedRecords++;
         }
 
         return processedRecords;
