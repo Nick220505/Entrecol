@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
+import { Book } from '@app/features/books/models/book.model';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
-import { Book } from '@app/features/books/models/book.model';
 
 interface State<T> {
   data: T;
@@ -49,7 +49,7 @@ export class BookService {
     });
   }
 
-  uploadBooks(books: any[]): void {
+  uploadBooks(books: Book[]): void {
     this.uploading.set(true);
     this.http
       .post<{ message: string; processedCount: number }>(

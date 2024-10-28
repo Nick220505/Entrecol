@@ -4,13 +4,6 @@ import { Employee } from '@app/features/payrolls/models/payroll.model';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
 
-interface PaginatedResponse<T> {
-  content: T[];
-  currentPage: number;
-  totalItems: number;
-  totalPages: number;
-}
-
 interface State<T> {
   data: T;
   loading: boolean;

@@ -84,7 +84,7 @@ export class BookUploadComponent {
         const content = e.target?.result as string;
         const books = JSON.parse(content);
         this.bookService.uploadBooks(books);
-      } catch (error) {
+      } catch {
         this.snackBar.error('El archivo JSON no es válido');
       }
     };

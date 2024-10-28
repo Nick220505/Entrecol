@@ -5,8 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { MovieService } from '@app/features/movies/services/movie.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { Movie } from '@movies/models/movie.model';
 
 @Component({
   selector: 'app-movie-upload',
@@ -84,7 +85,7 @@ export class MovieUploadComponent {
         const content = e.target?.result as string;
         const movies = this.parseMovieData(content);
         this.moviesService.uploadMovies(movies);
-      } catch (error) {
+      } catch {
         this.snackBar.error('Error al procesar el archivo');
       }
     };
@@ -96,7 +97,7 @@ export class MovieUploadComponent {
     reader.readAsText(this.selectedFile);
   }
 
-  private parseMovieData(content: string): any[] {
+  private parseMovieData(content: string): Movie[] {
     return content
       .split('\n')
       .filter((line) => line.trim())

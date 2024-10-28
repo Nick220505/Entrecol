@@ -1,9 +1,9 @@
 import { Genre } from './genre.model';
 
 export interface Movie {
-  id: number;
+  id?: number;
   originalId: number;
   title: string;
-  releaseYear: number;
+  releaseYear: number | null;
   genres: Genre[];
 }
