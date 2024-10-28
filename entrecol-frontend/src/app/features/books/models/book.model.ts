@@ -1,3 +1,8 @@
+import { Author } from './author.model';
+import { Language } from './language.model';
+import { Publisher } from './publisher.model';
+import { Rating } from './rating.model';
+
 export interface Book {
   id: number;
   originalId: number;
@@ -11,25 +16,4 @@ export interface Book {
   publicationDate: Date;
   authors: Author[];
   rating: Rating;
-}
-
-export interface Language {
-  id: number;
-  code: string;
-}
-
-export interface Publisher {
-  id: number;
-  name: string;
-}
-
-export interface Author {
-  id: number;
-  name: string;
-}
-
-export interface Rating {
-  id: number;
-  ratingsCount: number;
-  textReviewsCount: number;
 }

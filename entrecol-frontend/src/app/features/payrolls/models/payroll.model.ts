@@ -1,27 +1,8 @@
-export interface Department {
-  id: number;
-  name: string;
-}
-
-export interface Position {
-  id: number;
-  name: string;
-}
-
-export interface EPS {
-  id: number;
-  name: string;
-}
-
-export interface ARL {
-  id: number;
-  name: string;
-}
-
-export interface PensionFund {
-  id: number;
-  name: string;
-}
+import { ARL } from './arl.model';
+import { Department } from './department.model';
+import { EPS } from './eps.model';
+import { PensionFund } from './pension-fund.model';
+import { Position } from './position.model';
 
 export interface Employee {
   id: number;
@@ -34,21 +15,4 @@ export interface Employee {
   arl: ARL;
   pensionFund: PensionFund;
   salary: number;
-}
-
-export interface EmployeeRecord {
-  id: number;
-  employee: Employee;
-  disabilityRecord: boolean;
-  vacationRecord: boolean;
-  workedDays: number;
-  disabilityDays: number;
-  vacationDays: number;
-  vacationStartDate?: Date;
-  vacationEndDate?: Date;
-  disabilityStartDate?: Date;
-  disabilityEndDate?: Date;
-  bonus: number;
-  transportAllowance: number;
-  recordDate: Date;
 }
