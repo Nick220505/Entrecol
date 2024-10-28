@@ -84,6 +84,7 @@ export class BooksService {
       )
       .subscribe({
         next: () => {
+          this.uploading.set(false);
           this.snackBar.success('Libros cargados exitosamente');
           this.getAll();
         },
