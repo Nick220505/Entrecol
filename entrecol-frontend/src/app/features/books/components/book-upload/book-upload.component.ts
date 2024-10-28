@@ -20,10 +20,9 @@ import { BooksService } from '../../services/books.service';
   styleUrl: './book-upload.component.scss',
 })
 export class BookUploadComponent {
-  private readonly booksService = inject(BooksService);
+  protected readonly booksService = inject(BooksService);
 
   selectedFile: File | null = null;
-  uploading = false;
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -35,20 +34,13 @@ export class BookUploadComponent {
   uploadFile(): void {
     if (!this.selectedFile) return;
 
-    this.uploading = true;
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      try {
-        const content = e.target?.result as string;
-        const books = JSON.parse(content);
+      const content = e.target?.result as string;
+      const books = JSON.parse(content);
 
-        this.booksService.uploadBooks(books);
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
-      } finally {
-        this.uploading = false;
-      }
+      this.booksService.uploadBooks(books);
     };
 
     reader.readAsText(this.selectedFile);

@@ -21,7 +21,7 @@
       }
     </div>
 
-    @if (uploading) {
+    @if (booksService.uploading()) {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     }
   </mat-card-content>
@@ -30,7 +30,7 @@
     <button
       mat-raised-button
       color="accent"
-      [disabled]="!selectedFile || uploading"
+      [disabled]="!selectedFile || booksService.uploading()"
       (click)="uploadFile()"
     >
       Cargar

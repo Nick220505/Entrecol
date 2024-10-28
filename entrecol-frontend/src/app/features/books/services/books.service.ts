@@ -4,6 +4,13 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
 import { Book } from '../models/book.model';
 
+interface PaginatedResponse<T> {
+  content: T[];
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
+}
+
 interface State<T> {
   data: T;
   loading: boolean;
@@ -29,22 +36,25 @@ export class BooksService {
     loading: false,
     initialLoad: true,
   });
+  readonly uploading = signal(false);
 
   getAll(page = 0, size = 10): void {
     this.books.update((state) => ({ ...state, loading: true }));
-    this.http.get<any>(`${this.apiUrl}?page=${page}&size=${size}`).subscribe({
-      next: (response) => {
-        this.books.set({
-          data: response.content,
-          loading: false,
-          initialLoad: false,
-        });
-      },
-      error: () => {
-        this.books.update((state) => ({ ...state, loading: false }));
-        this.snackBar.error('Error al cargar los libros');
-      },
-    });
+    this.http
+      .get<PaginatedResponse<Book>>(`${this.apiUrl}?page=${page}&size=${size}`)
+      .subscribe({
+        next: (response) => {
+          this.books.set({
+            data: response.content,
+            loading: false,
+            initialLoad: false,
+          });
+        },
+        error: () => {
+          this.books.update((state) => ({ ...state, loading: false }));
+          this.snackBar.error('Error al cargar los libros');
+        },
+      });
   }
 
   getById(id: number): void {
@@ -65,16 +75,23 @@ export class BooksService {
   }
 
   uploadBooks(books: Book[]): void {
+    this.uploading.set(true);
     this.books.update((state) => ({ ...state, loading: true }));
-    this.http.post<any>(`${this.apiUrl}/upload`, books).subscribe({
-      next: (response) => {
-        this.snackBar.success('Libros cargados exitosamente');
-        this.getAll();
-      },
-      error: () => {
-        this.books.update((state) => ({ ...state, loading: false }));
-        this.snackBar.error('Error al cargar los libros');
-      },
-    });
+    this.http
+      .post<{ message: string; processedCount: number }>(
+        `${this.apiUrl}/upload`,
+        books
+      )
+      .subscribe({
+        next: () => {
+          this.snackBar.success('Libros cargados exitosamente');
+          this.getAll();
+        },
+        error: () => {
+          this.books.update((state) => ({ ...state, loading: false }));
+          this.uploading.set(false);
+          this.snackBar.error('Error al cargar los libros');
+        },
+      });
   }
 }
