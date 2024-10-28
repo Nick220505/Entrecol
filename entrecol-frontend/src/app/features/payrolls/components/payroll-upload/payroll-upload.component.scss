@@ -1,0 +1,112 @@
+:host {
+  display: block;
+  margin: 1rem;
+}
+
+mat-card {
+  max-width: 800px;
+  margin: 0 auto;
+
+  mat-card-header {
+    margin-bottom: 1rem;
+  }
+}
+
+.upload-area {
+  position: relative;
+  border: 2px dashed var(--mat-card-subtle-divider);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  background-color: var(--mat-card-subtle-overlay);
+  cursor: pointer;
+
+  &:hover,
+  &.dragging {
+    border-color: var(--mat-primary-500);
+    background-color: var(--mat-primary-overlay);
+  }
+
+  .file-input {
+    display: none;
+  }
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.upload-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: var(--mat-primary-500);
+}
+
+.upload-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  p {
+    margin: 0;
+    color: var(--mat-card-text);
+  }
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--mat-card-subtle-overlay);
+  border-radius: 4px;
+  max-width: 100%;
+
+  mat-icon {
+    color: var(--mat-primary-500);
+  }
+
+  .file-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--mat-card-text);
+  }
+}
+
+mat-progress-bar {
+  margin-top: 1rem;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem !important;
+}
+
+@media (max-width: 600px) {
+  :host {
+    margin: 0.5rem;
+  }
+
+  .upload-area {
+    padding: 1rem;
+  }
+
+  .upload-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .file-info {
+    padding: 0.25rem 0.5rem;
+  }
+}

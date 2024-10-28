@@ -36,6 +36,22 @@ export const routes: Routes = [
         title: 'ENTRECOL - Libros',
       },
       {
+        path: 'peliculas',
+        loadComponent: () =>
+          import(
+            './features/movies/pages/movie-list/movie-list.component'
+          ).then((m) => m.MovieListComponent),
+        title: 'ENTRECOL - Películas',
+      },
+      {
+        path: 'nominas',
+        loadComponent: () =>
+          import(
+            './features/payrolls/pages/payroll-list/payroll-list.component'
+          ).then((m) => m.PayrollListComponent),
+        title: 'ENTRECOL - Nóminas',
+      },
+      {
         path: '',
         redirectTo: 'libros',
         pathMatch: 'full',

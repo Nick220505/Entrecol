@@ -23,3 +23,15 @@ mat-card {
     width: 100%;
   }
 }
+
+.no-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+
+  p {
+    color: var(--mat-card-text);
+    font-size: 1.1rem;
+  }
+}

@@ -1,1 +1,59 @@
-<p>payroll-list works!</p>
+<app-payroll-upload></app-payroll-upload>
+
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Lista de Empleados</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (employees().initialLoad && employees().loading) {
+    <app-loading-spinner
+      loadingText="Cargando empleados..."
+    ></app-loading-spinner>
+    } @else { @if (employees().data.length === 0) {
+    <div class="no-data">
+      <p>No hay empleados registrados</p>
+    </div>
+    } @else {
+    <div class="employee-list">
+      @for (employee of employees().data; track employee.id) {
+      <mat-card class="employee-card">
+        <mat-card-header>
+          <mat-card-title>{{ employee.fullName }}</mat-card-title>
+          <mat-card-subtitle>{{ employee.code }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Departamento:</strong> {{ employee.department.name }}</p>
+          <p><strong>Cargo:</strong> {{ employee.position.name }}</p>
+          <p>
+            <strong>Fecha de Ingreso:</strong> {{ employee.hireDate | date }}
+          </p>
+          <p><strong>EPS:</strong> {{ employee.eps.name }}</p>
+          <p><strong>ARL:</strong> {{ employee.arl.name }}</p>
+          <p>
+            <strong>Fondo de Pensión:</strong> {{ employee.pensionFund.name }}
+          </p>
+          <p>
+            <strong>Salario:</strong>
+            {{
+              employee.salary
+                | number : "1.0-0"
+                | currency : "COP" : "symbol-narrow" : "1.0-0"
+            }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+      }
+    </div>
+
+    <mat-paginator
+      [length]="employees().data.length"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="onPageChange($event)"
+      aria-label="Seleccionar página"
+    >
+    </mat-paginator>
+    } }
+  </mat-card-content>
+</mat-card>

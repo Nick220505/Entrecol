@@ -8,6 +8,10 @@
   <mat-card-content>
     @if (books().initialLoad && books().loading) {
     <app-loading-spinner loadingText="Cargando libros..."></app-loading-spinner>
+    } @else { @if (books().data.length === 0) {
+    <div class="no-data">
+      <p>No hay libros registrados</p>
+    </div>
     } @else {
     <mat-form-field appearance="outline">
       <mat-label>Filtrar</mat-label>
@@ -70,6 +74,7 @@
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      @if (dataSource().filter) {
       <tr *matNoDataRow>
         <td [attr.colspan]="displayedColumns.length">
           No se encontraron datos que coincidan con el filtro "{{
@@ -77,12 +82,13 @@
           }}"
         </td>
       </tr>
+      }
     </table>
 
     <mat-paginator
       [pageSizeOptions]="[5, 10, 25, 100]"
       showFirstLastButtons
     ></mat-paginator>
-    }
+    } }
   </mat-card-content>
 </mat-card>

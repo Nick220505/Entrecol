@@ -1,0 +1,39 @@
+.actions {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+}
+
+mat-card {
+  margin: 24px;
+  padding: 24px;
+
+  mat-card-header {
+    margin-bottom: 24px;
+  }
+}
+
+.employee-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.employee-card {
+  mat-card-content {
+    margin-top: 16px;
+
+    p {
+      margin: 8px 0;
+    }
+  }
+}
+
+.loading,
+.no-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
