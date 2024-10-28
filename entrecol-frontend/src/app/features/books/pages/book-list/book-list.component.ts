@@ -5,6 +5,7 @@ import {
   computed,
   ElementRef,
   inject,
+  Injectable,
   OnInit,
   viewChild,
 } from '@angular/core';
@@ -14,15 +15,36 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorIntl,
+  MatPaginatorModule,
+} from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BookService } from '@app/features/books/services/book.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
 import { BookUploadComponent } from '../../components/book-upload/book-upload.component';
 import { Book } from '../../models/book.model';
-import { BookService } from '@app/features/books/services/book.service';
+
+@Injectable()
+export class CustomPaginatorIntl extends MatPaginatorIntl {
+  override itemsPerPageLabel = 'Elementos por página';
+  override nextPageLabel = 'Siguiente';
+  override previousPageLabel = 'Anterior';
+  override firstPageLabel = 'Primera página';
+  override lastPageLabel = 'Última página';
+
+  override getRangeLabel = (page: number, pageSize: number, length: number) => {
+    if (length === 0) {
+      return 'Página 1 de 1';
+    }
+    const amountPages = Math.ceil(length / pageSize);
+    return `Página ${page + 1} de ${amountPages}`;
+  };
+}
 
 @Component({
   selector: 'app-book-list',
@@ -44,6 +66,7 @@ import { BookService } from '@app/features/books/services/book.service';
     EmptyPipe,
     BookUploadComponent,
   ],
+  providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.scss',
 })

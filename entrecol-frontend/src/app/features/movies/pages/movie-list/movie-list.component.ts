@@ -5,6 +5,7 @@ import {
   computed,
   ElementRef,
   inject,
+  Injectable,
   OnInit,
   viewChild,
 } from '@angular/core';
@@ -14,7 +15,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorIntl,
+  MatPaginatorModule,
+} from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -23,6 +28,23 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
 import { MovieUploadComponent } from '../../components/movie-upload/movie-upload.component';
 import { Movie } from '../../models/movie.model';
+
+@Injectable()
+export class CustomPaginatorIntl extends MatPaginatorIntl {
+  override itemsPerPageLabel = 'Elementos por página';
+  override nextPageLabel = 'Siguiente';
+  override previousPageLabel = 'Anterior';
+  override firstPageLabel = 'Primera página';
+  override lastPageLabel = 'Última página';
+
+  override getRangeLabel = (page: number, pageSize: number, length: number) => {
+    if (length === 0) {
+      return 'Página 1 de 1';
+    }
+    const amountPages = Math.ceil(length / pageSize);
+    return `Página ${page + 1} de ${amountPages}`;
+  };
+}
 
 @Component({
   selector: 'app-movie-list',
@@ -44,6 +66,7 @@ import { Movie } from '../../models/movie.model';
     EmptyPipe,
     MovieUploadComponent,
   ],
+  providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
   templateUrl: './movie-list.component.html',
   styleUrl: './movie-list.component.scss',
 })
