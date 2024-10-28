@@ -8,9 +8,8 @@ describe('PayrollUploadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PayrollUploadComponent]
-    })
-    .compileComponents();
+      imports: [PayrollUploadComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PayrollUploadComponent);
     component = fixture.componentInstance;

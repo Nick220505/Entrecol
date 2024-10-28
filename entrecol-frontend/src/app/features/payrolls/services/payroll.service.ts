@@ -74,10 +74,10 @@ export class PayrollService {
     formData.append('file', file);
 
     this.http
-      .post<{ message: string; processedCount: number }>(
-        `${this.apiUrl}/upload`,
-        formData
-      )
+      .post<{
+        message: string;
+        processedCount: number;
+      }>(`${this.apiUrl}/upload`, formData)
       .subscribe({
         next: () => {
           this.snackBar.success('Empleados cargados exitosamente');

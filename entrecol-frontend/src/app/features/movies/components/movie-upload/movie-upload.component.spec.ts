@@ -8,9 +8,8 @@ describe('MovieUploadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MovieUploadComponent]
-    })
-    .compileComponents();
+      imports: [MovieUploadComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MovieUploadComponent);
     component = fixture.componentInstance;

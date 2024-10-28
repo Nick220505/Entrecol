@@ -19,8 +19,8 @@
               <mat-label>Usuario</mat-label>
               <input matInput formControlName="username" required />
               <mat-icon matPrefix>person</mat-icon>
-              @if (loginForm.get('username')?.hasError('required')) {
-              <mat-error>El usuario es requerido</mat-error>
+              @if (loginForm.get("username")?.hasError("required")) {
+                <mat-error>El usuario es requerido</mat-error>
               }
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -44,15 +44,15 @@
                   isPasswordHidden() ? "visibility_off" : "visibility"
                 }}</mat-icon>
               </button>
-              @if (loginForm.get('password')?.hasError('required')) {
-              <mat-error>La contraseña es requerida</mat-error>
+              @if (loginForm.get("password")?.hasError("required")) {
+                <mat-error>La contraseña es requerida</mat-error>
               }
             </mat-form-field>
             @if (authService.error(); as errorMessage) {
-            <app-alert-message
-              [message]="errorMessage"
-              [type]="'error'"
-            ></app-alert-message>
+              <app-alert-message
+                [message]="errorMessage"
+                [type]="'error'"
+              ></app-alert-message>
             }
             <re-captcha
               formControlName="captchaResponse"
@@ -65,9 +65,9 @@
               [disabled]="loginForm.invalid || authService.isLoading()"
             >
               @if (authService.isLoading()) {
-              <app-loading-spinner [diameter]="20"></app-loading-spinner>
+                <app-loading-spinner [diameter]="20"></app-loading-spinner>
               } @else {
-              <span>Iniciar Sesión</span>
+                <span>Iniciar Sesión</span>
               }
             </button>
           </form>

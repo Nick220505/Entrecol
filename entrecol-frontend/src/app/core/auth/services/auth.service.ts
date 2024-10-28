@@ -35,7 +35,7 @@ export class AuthService {
       .subscribe({
         next: () => {
           this.snackBarService.success(
-            'Registro exitoso. Por favor inicie sesión.'
+            'Registro exitoso. Por favor inicie sesión.',
           );
           this.router.navigate(['/login']);
         },
@@ -47,17 +47,17 @@ export class AuthService {
               this.error.set('El correo electrónico ya está registrado.');
             } else {
               this.error.set(
-                'Por favor, complete todos los campos correctamente.'
+                'Por favor, complete todos los campos correctamente.',
               );
             }
             this.isRegisterInvalid.set(true);
           } else if (error.status === 0) {
             this.error.set(
-              'No se pudo conectar al servidor. Verifique su conexión a internet.'
+              'No se pudo conectar al servidor. Verifique su conexión a internet.',
             );
           } else {
             this.error.set(
-              'Ocurrió un error inesperado. Intente nuevamente más tarde.'
+              'Ocurrió un error inesperado. Intente nuevamente más tarde.',
             );
           }
         },
@@ -86,11 +86,11 @@ export class AuthService {
             this.error.set('Por favor, complete el captcha correctamente.');
           } else if (error.status === 0) {
             this.error.set(
-              'No se pudo conectar al servidor. Verifique su conexión a internet.'
+              'No se pudo conectar al servidor. Verifique su conexión a internet.',
             );
           } else {
             this.error.set(
-              'Ocurrió un error inesperado. Intente nuevamente más tarde.'
+              'Ocurrió un error inesperado. Intente nuevamente más tarde.',
             );
           }
         },

@@ -74,7 +74,7 @@ export class CustomPaginatorIntl extends MatPaginatorIntl {
 export class PayrollListComponent implements OnInit, AfterViewInit {
   protected readonly payrollService = inject(PayrollService);
   protected readonly employees = computed(() =>
-    this.payrollService.employees()
+    this.payrollService.employees(),
   );
   protected readonly dataSource = computed(() => {
     const source = new MatTableDataSource<Employee>(this.employees().data);

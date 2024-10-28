@@ -52,10 +52,10 @@ export class BookService {
   uploadBooks(books: Book[]): void {
     this.uploading.set(true);
     this.http
-      .post<{ message: string; processedCount: number }>(
-        `${this.apiUrl}/upload`,
-        books
-      )
+      .post<{
+        message: string;
+        processedCount: number;
+      }>(`${this.apiUrl}/upload`, books)
       .subscribe({
         next: () => {
           this.uploading.set(false);

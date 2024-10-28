@@ -106,7 +106,8 @@ mat-card {
   &.dragging {
     border-color: var(--mat-primary-500);
     transform: scale(1.03);
-    box-shadow: 0 0 0 1px var(--mat-primary-500),
+    box-shadow:
+      0 0 0 1px var(--mat-primary-500),
       0 0 20px rgba(var(--mat-primary-500-rgb), 0.2);
 
     &::before {

@@ -4,13 +4,13 @@
   [@toolbarAnimation]="isScrolled() ? 'scrolled' : 'top'"
 >
   @if (isHandset()) {
-  <button
-    mat-icon-button
-    (click)="toggleSidenav()"
-    [@rotateAnimation]="isMenuOpen() ? 'open' : 'closed'"
-  >
-    <mat-icon>menu</mat-icon>
-  </button>
+    <button
+      mat-icon-button
+      (click)="toggleSidenav()"
+      [@rotateAnimation]="isMenuOpen() ? 'open' : 'closed'"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
   }
   <img
     src="assets/logo.png"
@@ -20,29 +20,30 @@
   />
   <span class="spacer"></span>
   @if (!isHandset()) {
-  <nav class="nav-links" [@staggerAnimation]="navItems.length">
-    @for (item of navItems; track item) {
-    <a
-      mat-button
-      [routerLink]="item.route"
-      routerLinkActive="active"
-      class="nav-link"
+    <nav class="nav-links" [@staggerAnimation]="navItems.length">
+      @for (item of navItems; track item) {
+        <a
+          mat-button
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  }
+  @if (authService.isAuthenticated()) {
+    <button
+      mat-icon-button
+      (click)="logout()"
+      class="logout-button"
+      [@fadeAnimation]="'in'"
+      matTooltip="Cerrar Sesión"
     >
-      <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
-      <span>{{ item.label }}</span>
-    </a>
-    }
-  </nav>
-  } @if (authService.isAuthenticated()) {
-  <button
-    mat-icon-button
-    (click)="logout()"
-    class="logout-button"
-    [@fadeAnimation]="'in'"
-    matTooltip="Cerrar Sesión"
-  >
-    <mat-icon>exit_to_app</mat-icon>
-  </button>
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
   }
   <mat-slide-toggle
     [checked]="themeService.isDarkTheme()"
@@ -57,24 +58,24 @@
 </mat-toolbar>
 
 @if (isHandset()) {
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav
-    #drawer
-    class="sidenav"
-    fixedInViewport
-    [attr.role]="isHandset() ? 'dialog' : 'navigation'"
-    [mode]="isHandset() ? 'over' : 'side'"
-    [opened]="!isHandset()"
-  >
-    <mat-toolbar>Menu</mat-toolbar>
-    <mat-nav-list>
-      @for (item of navItems; track item) {
-      <a mat-list-item [routerLink]="item.route" routerLinkActive="active">
-        <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
-        <span>{{ item.label }}</span>
-      </a>
-      }
-    </mat-nav-list>
-  </mat-sidenav>
-</mat-sidenav-container>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #drawer
+      class="sidenav"
+      fixedInViewport
+      [attr.role]="isHandset() ? 'dialog' : 'navigation'"
+      [mode]="isHandset() ? 'over' : 'side'"
+      [opened]="!isHandset()"
+    >
+      <mat-toolbar>Menu</mat-toolbar>
+      <mat-nav-list>
+        @for (item of navItems; track item) {
+          <a mat-list-item [routerLink]="item.route" routerLinkActive="active">
+            <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+  </mat-sidenav-container>
 }

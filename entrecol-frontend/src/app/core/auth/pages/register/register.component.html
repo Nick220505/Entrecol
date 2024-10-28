@@ -19,10 +19,12 @@
               <mat-label>Usuario</mat-label>
               <input matInput formControlName="username" required />
               <mat-icon matPrefix>person</mat-icon>
-              @if (registerForm.get('username')?.hasError('required')) {
-              <mat-error>El usuario es requerido</mat-error>
-              } @else if (registerForm.get('username')?.hasError('minlength')) {
-              <mat-error>El usuario debe tener al menos 3 caracteres</mat-error>
+              @if (registerForm.get("username")?.hasError("required")) {
+                <mat-error>El usuario es requerido</mat-error>
+              } @else if (registerForm.get("username")?.hasError("minlength")) {
+                <mat-error
+                  >El usuario debe tener al menos 3 caracteres</mat-error
+                >
               }
             </mat-form-field>
 
@@ -30,10 +32,10 @@
               <mat-label>Correo Electrónico</mat-label>
               <input matInput formControlName="email" required type="email" />
               <mat-icon matPrefix>email</mat-icon>
-              @if (registerForm.get('email')?.hasError('required')) {
-              <mat-error>El correo electrónico es requerido</mat-error>
-              } @else if (registerForm.get('email')?.hasError('email')) {
-              <mat-error>Ingrese un correo electrónico válido</mat-error>
+              @if (registerForm.get("email")?.hasError("required")) {
+                <mat-error>El correo electrónico es requerido</mat-error>
+              } @else if (registerForm.get("email")?.hasError("email")) {
+                <mat-error>Ingrese un correo electrónico válido</mat-error>
               }
             </mat-form-field>
 
@@ -58,20 +60,20 @@
                   isPasswordHidden() ? "visibility_off" : "visibility"
                 }}</mat-icon>
               </button>
-              @if (registerForm.get('password')?.hasError('required')) {
-              <mat-error>La contraseña es requerida</mat-error>
-              } @else if (registerForm.get('password')?.hasError('minlength')) {
-              <mat-error
-                >La contraseña debe tener al menos 6 caracteres</mat-error
-              >
+              @if (registerForm.get("password")?.hasError("required")) {
+                <mat-error>La contraseña es requerida</mat-error>
+              } @else if (registerForm.get("password")?.hasError("minlength")) {
+                <mat-error
+                  >La contraseña debe tener al menos 6 caracteres</mat-error
+                >
               }
             </mat-form-field>
 
             @if (authService.error(); as errorMessage) {
-            <app-alert-message
-              [message]="errorMessage"
-              [type]="'error'"
-            ></app-alert-message>
+              <app-alert-message
+                [message]="errorMessage"
+                [type]="'error'"
+              ></app-alert-message>
             }
 
             <re-captcha
@@ -86,9 +88,9 @@
               [disabled]="registerForm.invalid || authService.isLoading()"
             >
               @if (authService.isLoading()) {
-              <app-loading-spinner [diameter]="20"></app-loading-spinner>
+                <app-loading-spinner [diameter]="20"></app-loading-spinner>
               } @else {
-              <span>Registrarse</span>
+                <span>Registrarse</span>
               }
             </button>
           </form>

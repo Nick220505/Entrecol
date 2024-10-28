@@ -7,7 +7,7 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () =>
       import('./core/auth/pages/login/login.component').then(
-        (m) => m.LoginComponent
+        (m) => m.LoginComponent,
       ),
     canActivate: [redirectLoggedInGuard],
     title: 'ENTRECOL - Iniciar Sesión',
@@ -16,7 +16,7 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () =>
       import('./core/auth/pages/register/register.component').then(
-        (m) => m.RegisterComponent
+        (m) => m.RegisterComponent,
       ),
     canActivate: [redirectLoggedInGuard],
     title: 'ENTRECOL - Registro',
@@ -31,7 +31,7 @@ export const routes: Routes = [
         path: 'libros',
         loadComponent: () =>
           import('./features/books/pages/book-list/book-list.component').then(
-            (m) => m.BookListComponent
+            (m) => m.BookListComponent,
           ),
         title: 'ENTRECOL - Libros',
       },

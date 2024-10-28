@@ -46,10 +46,10 @@ export class MovieService {
     this.uploading.set(true);
     this.movies.update((state) => ({ ...state, loading: true }));
     this.http
-      .post<{ message: string; processedCount: number }>(
-        `${this.apiUrl}/upload`,
-        movies
-      )
+      .post<{
+        message: string;
+        processedCount: number;
+      }>(`${this.apiUrl}/upload`, movies)
       .subscribe({
         next: () => {
           this.uploading.set(false);

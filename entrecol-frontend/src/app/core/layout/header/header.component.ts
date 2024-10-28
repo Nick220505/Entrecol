@@ -82,11 +82,11 @@ import { ThemeService } from '../../services/theme.service';
             stagger('50ms', [
               animate(
                 '300ms ease-out',
-                style({ opacity: 1, transform: 'translateY(0)' })
+                style({ opacity: 1, transform: 'translateY(0)' }),
               ),
             ]),
           ],
-          { optional: true }
+          { optional: true },
         ),
       ]),
     ]),

@@ -36,26 +36,26 @@
         </div>
 
         @if (selectedFile) {
-        <div class="file-info">
-          <mat-icon>description</mat-icon>
-          <span class="file-name" [matTooltip]="selectedFile.name">{{
-            selectedFile.name
-          }}</span>
-          <button
-            mat-icon-button
-            color="warn"
-            (click)="selectedFile = null"
-            [disabled]="moviesService.uploading()"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
+          <div class="file-info">
+            <mat-icon>description</mat-icon>
+            <span class="file-name" [matTooltip]="selectedFile.name">{{
+              selectedFile.name
+            }}</span>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="selectedFile = null"
+              [disabled]="moviesService.uploading()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
         }
       </div>
     </div>
 
     @if (moviesService.uploading()) {
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     }
   </mat-card-content>
 
