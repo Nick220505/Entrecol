@@ -10,7 +10,7 @@ import { LoginCredentials } from '@core/auth/models/login-credentials.model';
 import { ThemeService } from '@core/services/theme.service';
 import { AlertMessageComponent } from '@shared/components/alert-message/alert-message.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
-import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha-2';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
