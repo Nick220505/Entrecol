@@ -18,11 +18,11 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PayrollService } from '@app/features/payrolls/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
 import { PayrollUploadComponent } from '../../components/payroll-upload/payroll-upload.component';
 import { Employee } from '../../models/payroll.model';
-import { PayrollsService } from '../../services/payrolls.service';
 
 @Component({
   selector: 'app-payroll-list',
@@ -49,9 +49,9 @@ import { PayrollsService } from '../../services/payrolls.service';
   styleUrl: './payroll-list.component.scss',
 })
 export class PayrollListComponent implements OnInit, AfterViewInit {
-  protected readonly payrollsService = inject(PayrollsService);
+  protected readonly payrollService = inject(PayrollService);
   protected readonly employees = computed(() =>
-    this.payrollsService.employees()
+    this.payrollService.employees()
   );
   protected readonly dataSource = computed(() => {
     const source = new MatTableDataSource<Employee>(this.employees().data);
@@ -76,7 +76,7 @@ export class PayrollListComponent implements OnInit, AfterViewInit {
   constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
-    this.payrollsService.getAll();
+    this.payrollService.getAll();
   }
 
   ngAfterViewInit() {

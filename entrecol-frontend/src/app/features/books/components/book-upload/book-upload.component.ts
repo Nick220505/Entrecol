@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { BooksService } from '../../services/books.service';
+import { BookService } from '../../services/book.service';
 
 @Component({
   selector: 'app-book-upload',
@@ -24,7 +24,7 @@ import { BooksService } from '../../services/books.service';
 })
 export class BookUploadComponent {
   private readonly snackBar = inject(SnackBarService);
-  protected readonly booksService = inject(BooksService);
+  protected readonly bookService = inject(BookService);
   protected readonly maxFileSize = 10 * 1024 * 1024; // 10MB
 
   selectedFile: File | null = null;
@@ -83,7 +83,7 @@ export class BookUploadComponent {
       try {
         const content = e.target?.result as string;
         const books = JSON.parse(content);
-        this.booksService.uploadBooks(books);
+        this.bookService.uploadBooks(books);
       } catch (error) {
         this.snackBar.error('El archivo JSON no es válido');
       }

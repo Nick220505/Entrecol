@@ -18,11 +18,11 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MovieService } from '@app/features/movies/services/movie.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
 import { MovieUploadComponent } from '../../components/movie-upload/movie-upload.component';
 import { Movie } from '../../models/movie.model';
-import { MoviesService } from '../../services/movies.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -48,8 +48,8 @@ import { MoviesService } from '../../services/movies.service';
   styleUrl: './movie-list.component.scss',
 })
 export class MovieListComponent implements OnInit, AfterViewInit {
-  protected readonly moviesService = inject(MoviesService);
-  protected readonly movies = computed(() => this.moviesService.movies());
+  protected readonly movieService = inject(MovieService);
+  protected readonly movies = computed(() => this.movieService.movies());
   protected readonly dataSource = computed(() => {
     const source = new MatTableDataSource<Movie>(this.movies().data);
     source.paginator = this.paginator() ?? null;
@@ -63,7 +63,7 @@ export class MovieListComponent implements OnInit, AfterViewInit {
   constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
-    this.moviesService.getAll();
+    this.movieService.getAll();
   }
 
   ngAfterViewInit() {

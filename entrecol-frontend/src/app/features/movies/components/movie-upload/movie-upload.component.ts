@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { MoviesService } from '../../services/movies.service';
+import { MovieService } from '@app/features/movies/services/movie.service';
 
 @Component({
   selector: 'app-movie-upload',
@@ -24,7 +24,7 @@ import { MoviesService } from '../../services/movies.service';
 })
 export class MovieUploadComponent {
   private readonly snackBar = inject(SnackBarService);
-  protected readonly moviesService = inject(MoviesService);
+  protected readonly moviesService = inject(MovieService);
   protected readonly maxFileSize = 10 * 1024 * 1024; // 10MB
 
   selectedFile: File | null = null;

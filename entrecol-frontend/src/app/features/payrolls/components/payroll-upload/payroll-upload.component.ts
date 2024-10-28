@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { PayrollsService } from '../../services/payrolls.service';
+import { PayrollService } from '@app/features/payrolls/services/payroll.service';
 
 @Component({
   selector: 'app-payroll-upload',
@@ -22,7 +22,7 @@ import { PayrollsService } from '../../services/payrolls.service';
 })
 export class PayrollUploadComponent {
   private readonly snackBar = inject(SnackBarService);
-  protected readonly payrollsService = inject(PayrollsService);
+  protected readonly payrollsService = inject(PayrollService);
   protected readonly maxFileSize = 10 * 1024 * 1024; // 10MB
 
   selectedFile: File | null = null;

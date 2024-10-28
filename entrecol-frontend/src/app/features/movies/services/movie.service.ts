@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
-import { Movie } from '../models/movie.model';
+import { Movie } from '@app/features/movies/models/movie.model';
 
 interface State<T> {
   data: T;
@@ -13,7 +13,7 @@ interface State<T> {
 @Injectable({
   providedIn: 'root',
 })
-export class MoviesService {
+export class MovieService {
   private readonly apiUrl = `${environment.apiUrl}/movies`;
   private readonly http = inject(HttpClient);
   private readonly snackBar = inject(SnackBarService);

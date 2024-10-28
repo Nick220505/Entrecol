@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
+import { Employee } from '@app/features/payrolls/models/payroll.model';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
-import { Employee } from '../models/payroll.model';
 
 interface PaginatedResponse<T> {
   content: T[];
@@ -20,7 +20,7 @@ interface State<T> {
 @Injectable({
   providedIn: 'root',
 })
-export class PayrollsService {
+export class PayrollService {
   private readonly apiUrl = `${environment.apiUrl}/employees`;
   private readonly http = inject(HttpClient);
   private readonly snackBar = inject(SnackBarService);

@@ -22,7 +22,7 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
 import { BookUploadComponent } from '../../components/book-upload/book-upload.component';
 import { Book } from '../../models/book.model';
-import { BooksService } from '../../services/books.service';
+import { BookService } from '@app/features/books/services/book.service';
 
 @Component({
   selector: 'app-book-list',
@@ -48,7 +48,7 @@ import { BooksService } from '../../services/books.service';
   styleUrl: './book-list.component.scss',
 })
 export class BookListComponent implements OnInit, AfterViewInit {
-  protected readonly booksService = inject(BooksService);
+  protected readonly booksService = inject(BookService);
   protected readonly books = computed(() => this.booksService.books());
   protected readonly dataSource = computed(() => {
     const data = this.booksService.books().data;
