@@ -1,5 +1,13 @@
-import { DatePipe } from '@angular/common';
-import { Component, computed, inject, OnInit, viewChild } from '@angular/core';
+import { DatePipe, DecimalPipe } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnInit,
+  viewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -21,6 +29,7 @@ import { BooksService } from '../../services/books.service';
   standalone: true,
   imports: [
     DatePipe,
+    DecimalPipe,
     FormsModule,
     MatButtonModule,
     MatCardModule,
@@ -38,7 +47,7 @@ import { BooksService } from '../../services/books.service';
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.scss',
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent implements OnInit, AfterViewInit {
   protected readonly booksService = inject(BooksService);
   protected readonly books = computed(() => this.booksService.books());
   protected readonly dataSource = computed(() => {
@@ -51,8 +60,25 @@ export class BookListComponent implements OnInit {
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
 
+  constructor(private elementRef: ElementRef) {}
+
   ngOnInit(): void {
     this.booksService.getAll();
+  }
+
+  ngAfterViewInit() {
+    const card = this.elementRef.nativeElement.querySelector('mat-card');
+
+    if (card) {
+      card.addEventListener('mousemove', (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        card.style.setProperty('--mouse-x', `${x}%`);
+        card.style.setProperty('--mouse-y', `${y}%`);
+      });
+    }
   }
 
   applyFilter(event: Event): void {
@@ -63,5 +89,12 @@ export class BookListComponent implements OnInit {
 
   getAuthorsNames(book: Book): string {
     return book.authors?.map((a) => a.name).join(', ') ?? '';
+  }
+
+  getRatingColor(rating: number): string {
+    if (rating >= 4.5) return 'var(--mat-green-500)';
+    if (rating >= 4) return 'var(--mat-lime-500)';
+    if (rating >= 3) return 'var(--mat-orange-500)';
+    return 'var(--mat-red-500)';
   }
 }
