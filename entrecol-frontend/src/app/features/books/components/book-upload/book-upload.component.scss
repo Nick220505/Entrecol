@@ -14,18 +14,18 @@ mat-card {
 
 .upload-area {
   position: relative;
-  border: 2px dashed rgba(0, 0, 0, 0.12);
+  border: 2px dashed var(--mat-card-subtle-divider);
   border-radius: 8px;
   padding: 2rem;
   text-align: center;
   transition: all 0.3s ease;
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: var(--mat-card-subtle-overlay);
   cursor: pointer;
 
   &:hover,
   &.dragging {
     border-color: var(--mat-primary-500);
-    background-color: rgba(var(--mat-primary-500), 0.04);
+    background-color: var(--mat-primary-overlay);
   }
 
   .file-input {
@@ -55,7 +55,7 @@ mat-card {
 
   p {
     margin: 0;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-card-text);
   }
 }
 
@@ -64,7 +64,7 @@ mat-card {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--mat-card-subtle-overlay);
   border-radius: 4px;
   max-width: 100%;
 
@@ -77,7 +77,7 @@ mat-card {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-card-text);
   }
 }
 
