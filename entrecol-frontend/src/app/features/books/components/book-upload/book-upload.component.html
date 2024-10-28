@@ -1,24 +1,56 @@
 <mat-card appearance="outlined">
   <mat-card-header>
     <mat-card-title>Cargar Libros</mat-card-title>
+    <mat-card-subtitle>Arrastra o selecciona un archivo JSON</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
-    <div class="file-input-container">
-      <button mat-raised-button color="primary" (click)="fileInput.click()">
-        <mat-icon>upload_file</mat-icon>
-        Seleccionar Archivo JSON
-      </button>
+    <div
+      class="upload-area"
+      [class.dragging]="isDragging"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
       <input
         #fileInput
         type="file"
-        accept=".json"
+        accept=".json,application/json"
         (change)="onFileSelected($event)"
-        style="display: none"
+        class="file-input"
       />
-      @if (selectedFile) {
-      <span class="file-name">{{ selectedFile.name }}</span>
-      }
+
+      <div class="upload-content">
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        <div class="upload-text">
+          <p>Arrastra y suelta tu archivo JSON aquí</p>
+          <p>o</p>
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="fileInput.click()"
+            [disabled]="booksService.uploading()"
+          >
+            Seleccionar Archivo
+          </button>
+        </div>
+        @if (selectedFile) {
+        <div class="file-info">
+          <mat-icon>description</mat-icon>
+          <span class="file-name" [matTooltip]="selectedFile.name">{{
+            selectedFile.name
+          }}</span>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="selectedFile = null"
+            [disabled]="booksService.uploading()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        }
+      </div>
     </div>
 
     @if (booksService.uploading()) {
@@ -29,11 +61,12 @@
   <mat-card-actions>
     <button
       mat-raised-button
-      color="accent"
+      color="primary"
       [disabled]="!selectedFile || booksService.uploading()"
       (click)="uploadFile()"
     >
-      Cargar
+      <mat-icon>upload</mat-icon>
+      Cargar Libros
     </button>
   </mat-card-actions>
 </mat-card>
