@@ -111,7 +111,7 @@ export class BookListComponent implements OnInit, AfterViewInit {
   }
 
   getAuthorsNames(book: Book): string {
-    return book.authors?.map((a) => a.name).join(', ') ?? '';
+    return book.authors?.map((a) => a.name).join(', ');
   }
 
   getRatingColor(rating: number): string {
