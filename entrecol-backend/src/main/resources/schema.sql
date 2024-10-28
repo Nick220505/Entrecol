@@ -66,7 +66,6 @@ CREATE TABLE `book_author` (
     FOREIGN KEY (author_id) REFERENCES `author`(id)
 );
 
--- Payroll related tables
 CREATE TABLE `department` (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
@@ -128,12 +127,10 @@ CREATE TABLE `employee_record` (
     FOREIGN KEY (employee_id) REFERENCES `employee`(id)
 );
 
--- Indexes for better performance
 CREATE INDEX idx_employee_code ON `employee`(code);
 CREATE INDEX idx_employee_record_date ON `employee_record`(record_date);
 CREATE INDEX idx_employee_record_employee ON `employee_record`(employee_id);
 
--- Movie related tables
 CREATE TABLE `movie` (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     original_id BIGINT UNIQUE NOT NULL,
@@ -154,7 +151,6 @@ CREATE TABLE `movie_genre` (
     FOREIGN KEY (genre_id) REFERENCES `genre`(id)
 );
 
--- Index for better performance
 CREATE INDEX idx_movie_original_id ON `movie`(original_id);
 CREATE INDEX idx_movie_year ON `movie`(release_year);
 CREATE INDEX idx_genre_name ON `genre`(name);
