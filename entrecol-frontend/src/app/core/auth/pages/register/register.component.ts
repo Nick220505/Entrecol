@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -44,6 +44,15 @@ export class RegisterComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
     captchaResponse: [null, Validators.required],
   });
+
+  constructor() {
+    effect(() => {
+      if (this.authService.isRegisterInvalid()) {
+        this.registerForm.get('captchaResponse')?.reset();
+        this.registerForm.setErrors({ invalidCredentials: true });
+      }
+    });
+  }
 
   onSubmit(): void {
     this.authService.register(this.registerForm.value as RegisterCredentials);

@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
@@ -21,14 +21,14 @@ export class AuthService {
 
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
-  readonly isCredentialsInvalid = computed(
-    () => this.error() === 'El usuario o la contraseña son incorrectos.'
-  );
+  readonly isLoginInvalid = signal(false);
+  readonly isRegisterInvalid = signal(false);
   readonly isAuthenticated = signal(!!localStorage.getItem('token'));
 
   register(credentials: RegisterCredentials): void {
     this.isLoading.set(true);
     this.error.set(null);
+    this.isRegisterInvalid.set(false);
     this.http
       .post<User>(`${this.apiUrl}/register`, credentials)
       .pipe(finalize(() => this.isLoading.set(false)))
@@ -50,6 +50,7 @@ export class AuthService {
                 'Por favor, complete todos los campos correctamente.'
               );
             }
+            this.isRegisterInvalid.set(true);
           } else if (error.status === 0) {
             this.error.set(
               'No se pudo conectar al servidor. Verifique su conexión a internet.'
@@ -66,6 +67,7 @@ export class AuthService {
   login(credentials: LoginCredentials): void {
     this.isLoading.set(true);
     this.error.set(null);
+    this.isLoginInvalid.set(false);
     this.http
       .post<AuthResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(finalize(() => this.isLoading.set(false)))
@@ -79,6 +81,7 @@ export class AuthService {
         error: (error: HttpErrorResponse) => {
           if (error.status === 401) {
             this.error.set('El usuario o la contraseña son incorrectos.');
+            this.isLoginInvalid.set(true);
           } else if (error.status === 400) {
             this.error.set('Por favor, complete el captcha correctamente.');
           } else if (error.status === 0) {
