@@ -57,6 +57,7 @@
             <re-captcha
               formControlName="captchaResponse"
               siteKey="6LfRG2sqAAAAAE5KKnbfqHa__A_0HdyOaABJUljN"
+              [theme]="themeService.isDarkTheme() ? 'dark' : 'light'"
             ></re-captcha>
             <button
               mat-raised-button

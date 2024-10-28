@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { RegisterCredentials } from '@core/auth/models/register-credentials.model';
+import { ThemeService } from '@core/services/theme.service';
 import { AlertMessageComponent } from '@shared/components/alert-message/alert-message.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
@@ -35,6 +36,7 @@ export class RegisterComponent {
   private readonly formBuilder = inject(FormBuilder);
 
   protected readonly authService = inject(AuthService);
+  protected readonly themeService = inject(ThemeService);
   protected readonly isPasswordHidden = signal(true);
   protected readonly registerForm = this.formBuilder.group({
     username: ['', [Validators.required, Validators.minLength(3)]],
