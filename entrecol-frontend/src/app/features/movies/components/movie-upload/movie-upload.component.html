@@ -23,19 +23,29 @@
       <div class="upload-content">
         <mat-icon class="upload-icon">cloud_upload</mat-icon>
         <div class="upload-text">
-          <p>Arrastra un archivo aquí o</p>
-          <button mat-stroked-button (click)="fileInput.click()">
-            Selecciona un archivo
+          <p>Arrastra y suelta tu archivo .dat aquí</p>
+          <p>o</p>
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="fileInput.click()"
+            [disabled]="moviesService.uploading()"
+          >
+            Seleccionar Archivo
           </button>
         </div>
 
         @if (selectedFile) {
         <div class="file-info">
-          <span>{{ selectedFile.name }}</span>
+          <mat-icon>description</mat-icon>
+          <span class="file-name" [matTooltip]="selectedFile.name">{{
+            selectedFile.name
+          }}</span>
           <button
             mat-icon-button
+            color="warn"
             (click)="selectedFile = null"
-            matTooltip="Eliminar archivo"
+            [disabled]="moviesService.uploading()"
           >
             <mat-icon>close</mat-icon>
           </button>

@@ -67,6 +67,8 @@ mat-card {
   background-color: var(--mat-card-subtle-overlay);
   border-radius: 4px;
   max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 
   mat-icon {
     color: var(--mat-primary-500);
@@ -89,6 +91,7 @@ mat-card-actions {
   display: flex;
   justify-content: flex-end;
   padding: 1rem !important;
+  gap: 0.5rem;
 }
 
 @media (max-width: 600px) {
