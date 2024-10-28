@@ -1,6 +1,7 @@
 package co.edu.unbosque.controller;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import co.edu.unbosque.model.Employee;
 import co.edu.unbosque.service.EmployeeService;
 
 @RestController
@@ -25,18 +27,15 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllEmployees(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "asc") String sort) {
-        return ResponseEntity.ok(employeeService.getAllEmployees(page, size, sort));
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
-    @GetMapping("/department/{departmentId}")
+    @GetMapping("/department/{id}")
     public ResponseEntity<Map<String, Object>> getEmployeesByDepartment(
-            @PathVariable Long departmentId,
+            @PathVariable Long id,
             @RequestParam(defaultValue = "asc") String sort) {
-        return ResponseEntity.ok(employeeService.getEmployeesByDepartment(departmentId, sort));
+        return ResponseEntity.ok(employeeService.getEmployeesByDepartment(id, sort));
     }
 
     @GetMapping("/department/{departmentId}/position/{positionId}")
@@ -47,37 +46,27 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getEmployeesByDepartmentAndPosition(departmentId, positionId, sort));
     }
 
-    @GetMapping("/statistics/department")
+    @GetMapping("/count/department")
     public ResponseEntity<Map<String, Long>> getEmployeeCountByDepartment() {
         return ResponseEntity.ok(employeeService.getEmployeeCountByDepartment());
     }
 
-    @GetMapping("/statistics/department/position")
+    @GetMapping("/count/department/position")
     public ResponseEntity<Map<String, Map<String, Long>>> getEmployeeCountByDepartmentAndPosition() {
         return ResponseEntity.ok(employeeService.getEmployeeCountByDepartmentAndPosition());
     }
 
-    @GetMapping("/statistics/eps")
+    @GetMapping("/count/eps")
     public ResponseEntity<Map<String, Long>> getEmployeeCountByEPS() {
         return ResponseEntity.ok(employeeService.getEmployeeCountByEPS());
     }
 
-    @GetMapping("/statistics/pension")
+    @GetMapping("/count/pension-fund")
     public ResponseEntity<Map<String, Long>> getEmployeeCountByPensionFund() {
         return ResponseEntity.ok(employeeService.getEmployeeCountByPensionFund());
     }
 
-    @GetMapping("/statistics/eps/department")
-    public ResponseEntity<Map<String, Map<String, Long>>> getEmployeeCountByEPSAndDepartment() {
-        return ResponseEntity.ok(employeeService.getEmployeeCountByEPSAndDepartment());
-    }
-
-    @GetMapping("/statistics/pension/department")
-    public ResponseEntity<Map<String, Map<String, Long>>> getEmployeeCountByPensionFundAndDepartment() {
-        return ResponseEntity.ok(employeeService.getEmployeeCountByPensionFundAndDepartment());
-    }
-
-    @GetMapping("/{id}/records")
+    @GetMapping("/records/{id}")
     public ResponseEntity<Map<String, Object>> getEmployeeRecords(
             @PathVariable Long id,
             @RequestParam @DateTimeFormat(pattern = "MM/yyyy") Date startDate,

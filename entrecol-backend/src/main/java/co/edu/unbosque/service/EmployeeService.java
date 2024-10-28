@@ -16,7 +16,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -65,17 +64,8 @@ public class EmployeeService {
         this.pensionFundRepository = pensionFundRepository;
     }
 
-    public Map<String, Object> getAllEmployees(int page, int size, String sort) {
-        Page<Employee> employeePage = employeeRepository.findAll(
-                PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sort), "fullName")));
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", employeePage.getContent());
-        response.put("currentPage", employeePage.getNumber());
-        response.put("totalItems", employeePage.getTotalElements());
-        response.put("totalPages", employeePage.getTotalPages());
-
-        return response;
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll(Sort.by(Sort.Direction.ASC, "fullName"));
     }
 
     public Map<String, Object> getEmployeesByDepartment(Long departmentId, String sort) {

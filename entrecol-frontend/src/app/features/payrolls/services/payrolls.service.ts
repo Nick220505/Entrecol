@@ -39,25 +39,21 @@ export class PayrollsService {
 
   readonly uploading = signal(false);
 
-  getAll(page = 0, size = 10): void {
+  getAll(): void {
     this.employees.update((state) => ({ ...state, loading: true }));
-    this.http
-      .get<PaginatedResponse<Employee>>(
-        `${this.apiUrl}?page=${page}&size=${size}`
-      )
-      .subscribe({
-        next: (response) => {
-          this.employees.set({
-            data: response.content,
-            loading: false,
-            initialLoad: false,
-          });
-        },
-        error: () => {
-          this.employees.update((state) => ({ ...state, loading: false }));
-          this.snackBar.error('Error al cargar los empleados');
-        },
-      });
+    this.http.get<Employee[]>(this.apiUrl).subscribe({
+      next: (employees) => {
+        this.employees.set({
+          data: employees,
+          loading: false,
+          initialLoad: false,
+        });
+      },
+      error: () => {
+        this.employees.update((state) => ({ ...state, loading: false }));
+        this.snackBar.error('Error al cargar los empleados');
+      },
+    });
   }
 
   getById(id: number): void {

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,18 +29,8 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllBooks(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<Book> bookPage = bookService.getAllBooks(page, size);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", bookPage.getContent());
-        response.put("currentPage", bookPage.getNumber());
-        response.put("totalItems", bookPage.getTotalElements());
-        response.put("totalPages", bookPage.getTotalPages());
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<List<Book>> getAllBooks() {
+        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
     @GetMapping("/{id}")
@@ -66,25 +55,6 @@ public class BookController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         return ResponseEntity.ok(bookService.getBookPublicationFrequency(startDate, endDate));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<Map<String, Object>> searchBooks(
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) Long authorId,
-            @RequestParam(required = false) Long publisherId,
-            @RequestParam(required = false) Long languageId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<Book> bookPage = bookService.searchBooks(title, authorId, publisherId, languageId, page, size);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", bookPage.getContent());
-        response.put("currentPage", bookPage.getNumber());
-        response.put("totalItems", bookPage.getTotalElements());
-        response.put("totalPages", bookPage.getTotalPages());
-
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/upload")

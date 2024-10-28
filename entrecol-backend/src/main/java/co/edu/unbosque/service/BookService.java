@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +45,8 @@ public class BookService {
         this.languageRepository = languageRepository;
     }
 
-    public Page<Book> getAllBooks(int page, int size) {
-        return bookRepository.findAll(PageRequest.of(page, size));
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll(Sort.by(Sort.Direction.ASC, "title"));
     }
 
     public Optional<Book> getBookById(Long id) {

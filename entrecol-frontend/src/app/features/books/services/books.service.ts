@@ -4,13 +4,6 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
 import { Book } from '../models/book.model';
 
-interface PaginatedResponse<T> {
-  content: T[];
-  currentPage: number;
-  totalItems: number;
-  totalPages: number;
-}
-
 interface State<T> {
   data: T;
   loading: boolean;
@@ -36,47 +29,28 @@ export class BooksService {
     loading: false,
     initialLoad: true,
   });
+
   readonly uploading = signal(false);
 
-  getAll(page = 0, size = 10): void {
+  getAll(): void {
     this.books.update((state) => ({ ...state, loading: true }));
-    this.http
-      .get<PaginatedResponse<Book>>(`${this.apiUrl}?page=${page}&size=${size}`)
-      .subscribe({
-        next: (response) => {
-          this.books.set({
-            data: response.content,
-            loading: false,
-            initialLoad: false,
-          });
-        },
-        error: () => {
-          this.books.update((state) => ({ ...state, loading: false }));
-          this.snackBar.error('Error al cargar los libros');
-        },
-      });
-  }
-
-  getById(id: number): void {
-    this.book.update((state) => ({ ...state, loading: true }));
-    this.http.get<Book>(`${this.apiUrl}/${id}`).subscribe({
-      next: (book) => {
-        this.book.set({
-          data: book,
+    this.http.get<Book[]>(this.apiUrl).subscribe({
+      next: (books) => {
+        this.books.set({
+          data: books,
           loading: false,
           initialLoad: false,
         });
       },
       error: () => {
-        this.book.update((state) => ({ ...state, loading: false }));
-        this.snackBar.error('Error al cargar el libro');
+        this.books.update((state) => ({ ...state, loading: false }));
+        this.snackBar.error('Error al cargar los libros');
       },
     });
   }
 
-  uploadBooks(books: Book[]): void {
+  uploadBooks(books: any[]): void {
     this.uploading.set(true);
-    this.books.update((state) => ({ ...state, loading: true }));
     this.http
       .post<{ message: string; processedCount: number }>(
         `${this.apiUrl}/upload`,
