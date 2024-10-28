@@ -157,3 +157,4 @@ CREATE TABLE `movie_genre` (
 -- Index for better performance
 CREATE INDEX idx_movie_original_id ON `movie`(original_id);
 CREATE INDEX idx_movie_year ON `movie`(release_year);
+CREATE INDEX idx_genre_name ON `genre`(name);

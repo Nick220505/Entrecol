@@ -67,13 +67,14 @@ export class MoviesService {
       )
       .subscribe({
         next: () => {
+          this.uploading.set(false);
           this.movies.update((state) => ({ ...state, loading: false }));
           this.snackBar.success('Películas cargadas exitosamente');
           this.getAll();
         },
         error: () => {
-          this.movies.update((state) => ({ ...state, loading: false }));
           this.uploading.set(false);
+          this.movies.update((state) => ({ ...state, loading: false }));
           this.snackBar.error('Error al cargar las películas');
         },
       });
