@@ -63,7 +63,7 @@ export class BookListComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource().filter = filterValue.trim().toLowerCase();
-    this.dataSource().paginator?.firstPage();
+    this.dataSource().paginator.firstPage();
   }
 
   getAuthorsNames(book: Book): string {
