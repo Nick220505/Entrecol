@@ -60,7 +60,7 @@ export class BookListComponent implements OnInit {
     this.booksService.getAll();
   }
 
-  applyFilter(event: Event): void {
+  applyFilter(event: KeyboardEvent): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource().filter = filterValue.trim().toLowerCase();
     this.dataSource().paginator.firstPage();

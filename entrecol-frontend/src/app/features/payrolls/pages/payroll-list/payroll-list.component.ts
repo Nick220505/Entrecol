@@ -60,7 +60,7 @@ export class PayrollListComponent implements OnInit {
     this.payrollService.getAll();
   }
 
-  applyFilter(event: Event): void {
+  applyFilter(event: KeyboardEvent): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource().filter = filterValue.trim().toLowerCase();
     this.dataSource().paginator.firstPage();
