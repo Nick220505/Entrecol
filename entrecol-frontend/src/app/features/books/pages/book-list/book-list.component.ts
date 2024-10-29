@@ -67,6 +67,6 @@ export class BookListComponent implements OnInit {
   }
 
   getAuthorsNames(book: Book): string {
-    return book.authors?.map((a) => a.name).join(', ');
+    return book.authors.map((a) => a.name).join(', ');
   }
 }

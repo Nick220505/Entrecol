@@ -64,6 +64,6 @@ export class MovieListComponent implements OnInit {
   }
 
   getGenreNames(movie: Movie): string {
-    return movie.genres?.map((g) => g.name).join(', ') ?? '';
+    return movie.genres.map((g) => g.name).join(', ');
   }
 }
