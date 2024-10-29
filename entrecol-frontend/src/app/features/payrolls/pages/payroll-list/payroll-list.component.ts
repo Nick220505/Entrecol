@@ -5,7 +5,6 @@ import {
   computed,
   ElementRef,
   inject,
-  Injectable,
   OnInit,
   viewChild,
 } from '@angular/core';
@@ -25,26 +24,10 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PayrollService } from '@app/features/payrolls/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
+import { CustomPaginatorIntl } from '@shared/config/paginator-intl.config';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
 import { PayrollUploadComponent } from '../../components/payroll-upload/payroll-upload.component';
 import { Employee } from '../../models/payroll.model';
-
-@Injectable()
-export class CustomPaginatorIntl extends MatPaginatorIntl {
-  override itemsPerPageLabel = 'Elementos por página';
-  override nextPageLabel = 'Siguiente';
-  override previousPageLabel = 'Anterior';
-  override firstPageLabel = 'Primera página';
-  override lastPageLabel = 'Última página';
-
-  override getRangeLabel = (page: number, pageSize: number, length: number) => {
-    if (length === 0) {
-      return 'Página 1 de 1';
-    }
-    const amountPages = Math.ceil(length / pageSize);
-    return `Página ${page + 1} de ${amountPages}`;
-  };
-}
 
 @Component({
   selector: 'app-payroll-list',
