@@ -1,13 +1,5 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  computed,
-  ElementRef,
-  inject,
-  OnInit,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -53,8 +45,7 @@ import { Employee } from '../../models/payroll.model';
   templateUrl: './payroll-list.component.html',
   styleUrl: './payroll-list.component.scss',
 })
-export class PayrollListComponent implements OnInit, AfterViewInit {
-  private readonly elementRef = inject(ElementRef);
+export class PayrollListComponent implements OnInit {
   protected readonly payrollService = inject(PayrollService);
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
@@ -69,31 +60,9 @@ export class PayrollListComponent implements OnInit, AfterViewInit {
     this.payrollService.getAll();
   }
 
-  ngAfterViewInit(): void {
-    const card = this.elementRef.nativeElement.querySelector('mat-card');
-
-    if (card) {
-      card.addEventListener('mousemove', (e: MouseEvent): void => {
-        const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-        card.style.setProperty('--mouse-x', `${x}%`);
-        card.style.setProperty('--mouse-y', `${y}%`);
-      });
-    }
-  }
-
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource().filter = filterValue.trim().toLowerCase();
     this.dataSource().paginator?.firstPage();
-  }
-
-  getSalaryColor(salary: number): string {
-    if (salary >= 5000000) return 'var(--mat-green-500)';
-    if (salary >= 3000000) return 'var(--mat-lime-500)';
-    if (salary >= 2000000) return 'var(--mat-orange-500)';
-    return 'var(--mat-red-500)';
   }
 }

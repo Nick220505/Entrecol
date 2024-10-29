@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  computed,
-  ElementRef,
-  inject,
-  OnInit,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -50,8 +42,7 @@ import { Movie } from '../../models/movie.model';
   templateUrl: './movie-list.component.html',
   styleUrl: './movie-list.component.scss',
 })
-export class MovieListComponent implements OnInit, AfterViewInit {
-  private readonly elementRef = inject(ElementRef);
+export class MovieListComponent implements OnInit {
   protected readonly movieService = inject(MovieService);
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
@@ -66,21 +57,6 @@ export class MovieListComponent implements OnInit, AfterViewInit {
     this.movieService.getAll();
   }
 
-  ngAfterViewInit(): void {
-    const card = this.elementRef.nativeElement.querySelector('mat-card');
-
-    if (card) {
-      card.addEventListener('mousemove', (e: MouseEvent): void => {
-        const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-        card.style.setProperty('--mouse-x', `${x}%`);
-        card.style.setProperty('--mouse-y', `${y}%`);
-      });
-    }
-  }
-
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource().filter = filterValue.trim().toLowerCase();
@@ -89,13 +65,5 @@ export class MovieListComponent implements OnInit, AfterViewInit {
 
   getGenreNames(movie: Movie): string {
     return movie.genres?.map((g) => g.name).join(', ') ?? '';
-  }
-
-  getYearColor(year: number): string {
-    const currentYear = new Date().getFullYear();
-    if (year >= currentYear - 1) return 'var(--mat-green-500)';
-    if (year >= currentYear - 5) return 'var(--mat-lime-500)';
-    if (year >= currentYear - 10) return 'var(--mat-orange-500)';
-    return 'var(--mat-red-500)';
   }
 }

@@ -40,9 +40,7 @@
           <ng-container matColumnDef="releaseYear">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Año</th>
             <td mat-cell *matCellDef="let movie">
-              <span [style.color]="getYearColor(movie.releaseYear)">
-                {{ movie.releaseYear }}
-              </span>
+              <span>{{ movie.releaseYear }}</span>
             </td>
           </ng-container>
 
