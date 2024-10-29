@@ -1,4 +1,5 @@
 @use "@angular/material" as mat;
+@use "styles/components/mat-form-field-theme" as mat-form-field-theme;
 
 @include mat.core();
 
@@ -27,6 +28,7 @@ body {
 
 html {
   @include mat.all-component-themes($light-theme);
+  @include mat-form-field-theme.theme($light-theme);
 }
 
 body {
@@ -36,6 +38,7 @@ body {
 
 .dark-theme {
   @include mat.all-component-colors($dark-theme);
+  @include mat-form-field-theme.color($dark-theme);
 }
 
 .custom-snackbar {

@@ -1,0 +1,54 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin color($theme) {
+  mat-form-field {
+    width: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    mat-icon {
+      color: var(--mat-primary-500);
+      transition:
+        transform 0.3s ease,
+        color 0.3s ease;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    &.mat-focused mat-icon {
+      transform: scale(1.1);
+      animation: iconGrow 0.5s ease-in-out forwards;
+    }
+  }
+}
+
+@mixin typography($theme) {
+  mat-form-field {
+    input {
+      font-family: mat.get-theme-typography($theme, body-medium, font-family);
+    }
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
+  }
+}
+
+@keyframes iconGrow {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
