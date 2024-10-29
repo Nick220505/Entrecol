@@ -33,8 +33,6 @@ import { Book } from '../../models/book.model';
   selector: 'app-book-list',
   standalone: true,
   imports: [
-    DatePipe,
-    DecimalPipe,
     FormsModule,
     MatButtonModule,
     MatCardModule,
@@ -45,9 +43,11 @@ import { Book } from '../../models/book.model';
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
+    DatePipe,
+    DecimalPipe,
     LoadingSpinnerComponent,
-    EmptyPipe,
     BookUploadComponent,
+    EmptyPipe,
   ],
   providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
   templateUrl: './book-list.component.html',
@@ -56,26 +56,24 @@ import { Book } from '../../models/book.model';
 export class BookListComponent implements OnInit, AfterViewInit {
   private readonly elementRef = inject(ElementRef);
   protected readonly booksService = inject(BookService);
-  protected readonly books = computed(() => this.booksService.books());
-  protected readonly dataSource = computed(() => {
-    const data = this.booksService.books().data;
-    const source = new MatTableDataSource<Book>(data);
-    source.paginator = this.paginator() ?? null;
-    source.sort = this.sort() ?? null;
-    return source;
-  });
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
+  protected readonly dataSource = computed(() =>
+    Object.assign(
+      new MatTableDataSource<Book>(this.booksService.books().data),
+      { paginator: this.paginator(), sort: this.sort() },
+    ),
+  );
 
   ngOnInit(): void {
     this.booksService.getAll();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     const card = this.elementRef.nativeElement.querySelector('mat-card');
 
     if (card) {
-      card.addEventListener('mousemove', (e: MouseEvent) => {
+      card.addEventListener('mousemove', (e: MouseEvent): void => {
         const rect = card.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;

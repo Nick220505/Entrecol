@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -33,9 +33,6 @@ import { Employee } from '../../models/payroll.model';
   selector: 'app-payroll-list',
   standalone: true,
   imports: [
-    DatePipe,
-    DecimalPipe,
-    CurrencyPipe,
     FormsModule,
     MatCardModule,
     MatButtonModule,
@@ -46,9 +43,11 @@ import { Employee } from '../../models/payroll.model';
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
+    CurrencyPipe,
+    DatePipe,
     LoadingSpinnerComponent,
-    EmptyPipe,
     PayrollUploadComponent,
+    EmptyPipe,
   ],
   providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
   templateUrl: './payroll-list.component.html',
@@ -57,27 +56,24 @@ import { Employee } from '../../models/payroll.model';
 export class PayrollListComponent implements OnInit, AfterViewInit {
   private readonly elementRef = inject(ElementRef);
   protected readonly payrollService = inject(PayrollService);
-  protected readonly employees = computed(() =>
-    this.payrollService.employees(),
-  );
-  protected readonly dataSource = computed(() => {
-    const source = new MatTableDataSource<Employee>(this.employees().data);
-    source.paginator = this.paginator() ?? null;
-    source.sort = this.sort() ?? null;
-    return source;
-  });
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
+  protected readonly dataSource = computed(() =>
+    Object.assign(
+      new MatTableDataSource<Employee>(this.payrollService.employees().data),
+      { paginator: this.paginator(), sort: this.sort() },
+    ),
+  );
 
   ngOnInit(): void {
     this.payrollService.getAll();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     const card = this.elementRef.nativeElement.querySelector('mat-card');
 
     if (card) {
-      card.addEventListener('mousemove', (e: MouseEvent) => {
+      card.addEventListener('mousemove', (e: MouseEvent): void => {
         const rect = card.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;

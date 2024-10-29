@@ -6,12 +6,13 @@
   </mat-card-header>
 
   <mat-card-content>
-    @if (movies().initialLoad && movies().loading) {
+    @let movies = movieService.movies();
+    @if (movies.initialLoad && movies.loading) {
       <app-loading-spinner
         loadingText="Cargando películas..."
       ></app-loading-spinner>
     } @else {
-      @if (movies().data.length === 0) {
+      @if (movies.data.length === 0) {
         <div class="no-data">
           <mat-icon>movie</mat-icon>
           <p>No hay películas registradas</p>

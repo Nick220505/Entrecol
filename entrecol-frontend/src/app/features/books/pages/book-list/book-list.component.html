@@ -6,12 +6,13 @@
   </mat-card-header>
 
   <mat-card-content>
-    @if (books().initialLoad && books().loading) {
+    @let books = booksService.books();
+    @if (books.initialLoad && books.loading) {
       <app-loading-spinner
         loadingText="Cargando libros..."
       ></app-loading-spinner>
     } @else {
-      @if (books().data.length === 0) {
+      @if (books.data.length === 0) {
         <div class="no-data">
           <mat-icon>menu_book</mat-icon>
           <p>No hay libros registrados</p>

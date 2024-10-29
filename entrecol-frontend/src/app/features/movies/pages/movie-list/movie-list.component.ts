@@ -1,4 +1,3 @@
-import { CommonModule, DatePipe } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -33,8 +32,6 @@ import { Movie } from '../../models/movie.model';
   selector: 'app-movie-list',
   standalone: true,
   imports: [
-    CommonModule,
-    DatePipe,
     FormsModule,
     MatButtonModule,
     MatCardModule,
@@ -46,8 +43,8 @@ import { Movie } from '../../models/movie.model';
     MatTableModule,
     MatTooltipModule,
     LoadingSpinnerComponent,
-    EmptyPipe,
     MovieUploadComponent,
+    EmptyPipe,
   ],
   providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
   templateUrl: './movie-list.component.html',
@@ -56,25 +53,24 @@ import { Movie } from '../../models/movie.model';
 export class MovieListComponent implements OnInit, AfterViewInit {
   private readonly elementRef = inject(ElementRef);
   protected readonly movieService = inject(MovieService);
-  protected readonly movies = computed(() => this.movieService.movies());
-  protected readonly dataSource = computed(() => {
-    const source = new MatTableDataSource<Movie>(this.movies().data);
-    source.paginator = this.paginator() ?? null;
-    source.sort = this.sort() ?? null;
-    return source;
-  });
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
+  protected readonly dataSource = computed(() =>
+    Object.assign(
+      new MatTableDataSource<Movie>(this.movieService.movies().data),
+      { paginator: this.paginator(), sort: this.sort() },
+    ),
+  );
 
   ngOnInit(): void {
     this.movieService.getAll();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     const card = this.elementRef.nativeElement.querySelector('mat-card');
 
     if (card) {
-      card.addEventListener('mousemove', (e: MouseEvent) => {
+      card.addEventListener('mousemove', (e: MouseEvent): void => {
         const rect = card.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;

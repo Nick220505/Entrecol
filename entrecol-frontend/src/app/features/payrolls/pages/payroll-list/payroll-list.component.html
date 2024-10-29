@@ -6,12 +6,13 @@
   </mat-card-header>
 
   <mat-card-content>
-    @if (employees().initialLoad && employees().loading) {
+    @let employees = payrollService.employees();
+    @if (employees.initialLoad && employees.loading) {
       <app-loading-spinner
         loadingText="Cargando empleados..."
       ></app-loading-spinner>
     } @else {
-      @if (employees().data.length === 0) {
+      @if (employees.data.length === 0) {
         <div class="no-data">
           <mat-icon>people</mat-icon>
           <p>No hay empleados registrados</p>
