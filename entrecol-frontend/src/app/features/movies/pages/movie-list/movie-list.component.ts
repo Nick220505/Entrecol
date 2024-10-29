@@ -54,6 +54,7 @@ import { Movie } from '../../models/movie.model';
   styleUrl: './movie-list.component.scss',
 })
 export class MovieListComponent implements OnInit, AfterViewInit {
+  private readonly elementRef = inject(ElementRef);
   protected readonly movieService = inject(MovieService);
   protected readonly movies = computed(() => this.movieService.movies());
   protected readonly dataSource = computed(() => {
@@ -64,8 +65,6 @@ export class MovieListComponent implements OnInit, AfterViewInit {
   });
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
-
-  constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
     this.movieService.getAll();

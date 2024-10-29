@@ -54,6 +54,7 @@ import { Book } from '../../models/book.model';
   styleUrl: './book-list.component.scss',
 })
 export class BookListComponent implements OnInit, AfterViewInit {
+  private readonly elementRef = inject(ElementRef);
   protected readonly booksService = inject(BookService);
   protected readonly books = computed(() => this.booksService.books());
   protected readonly dataSource = computed(() => {
@@ -65,8 +66,6 @@ export class BookListComponent implements OnInit, AfterViewInit {
   });
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
-
-  constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
     this.booksService.getAll();

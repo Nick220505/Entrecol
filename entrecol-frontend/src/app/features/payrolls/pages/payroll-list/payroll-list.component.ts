@@ -55,6 +55,7 @@ import { Employee } from '../../models/payroll.model';
   styleUrl: './payroll-list.component.scss',
 })
 export class PayrollListComponent implements OnInit, AfterViewInit {
+  private readonly elementRef = inject(ElementRef);
   protected readonly payrollService = inject(PayrollService);
   protected readonly employees = computed(() =>
     this.payrollService.employees(),
@@ -67,8 +68,6 @@ export class PayrollListComponent implements OnInit, AfterViewInit {
   });
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
-
-  constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
     this.payrollService.getAll();
