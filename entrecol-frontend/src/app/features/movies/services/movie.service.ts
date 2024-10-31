@@ -54,8 +54,8 @@ export class MovieService {
       .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
         next: () => {
-          this.movies.update((state) => ({ ...state, initialLoad: true }));
           this.snackBar.success('Películas subidas exitosamente');
+          this.movies.update((state) => ({ ...state, initialLoad: true }));
           this.getAll();
         },
         error: () => {
