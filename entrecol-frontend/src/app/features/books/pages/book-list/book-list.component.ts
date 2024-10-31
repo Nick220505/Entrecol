@@ -46,18 +46,18 @@ import { Book } from '../../models/book.model';
   styleUrl: './book-list.component.scss',
 })
 export class BookListComponent implements OnInit {
-  protected readonly booksService = inject(BookService);
+  protected readonly bookService = inject(BookService);
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
   protected readonly dataSource = computed(() =>
-    Object.assign(
-      new MatTableDataSource<Book>(this.booksService.books().data),
-      { paginator: this.paginator(), sort: this.sort() },
-    ),
+    Object.assign(new MatTableDataSource<Book>(this.bookService.books().data), {
+      paginator: this.paginator(),
+      sort: this.sort(),
+    }),
   );
 
   ngOnInit(): void {
-    this.booksService.getAll();
+    this.bookService.getAll();
   }
 
   applyFilter(event: KeyboardEvent): void {

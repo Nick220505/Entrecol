@@ -3,9 +3,9 @@
   [subtitle]="'Arrastra o selecciona un archivo JSON'"
   [acceptAttribute]="'.json'"
   [acceptedFileTypes]="['application/json']"
-  [isUploading]="booksService.uploading()"
+  [isUploading]="bookService.uploading()"
   [uploadButtonText]="'Cargar Libros'"
-  (fileUpload)="booksService.uploadBookFile($event)"
+  (fileUpload)="bookService.uploadBookFile($event)"
 >
 </app-file-upload>
 
@@ -15,7 +15,7 @@
   </mat-card-header>
 
   <mat-card-content>
-    @let books = booksService.books();
+    @let books = bookService.books();
     @if (books.initialLoad && books.loading) {
       <app-loading-spinner
         loadingText="Cargando libros..."
