@@ -1,0 +1,10 @@
+<app-file-upload
+  [title]="'Cargar Libros'"
+  [subtitle]="'Arrastra o selecciona un archivo JSON'"
+  [acceptAttribute]="'.json'"
+  [acceptedFileTypes]="['application/json']"
+  [isUploading]="bookService.uploading()"
+  [uploadButtonText]="'Cargar Libros'"
+  (fileUpload)="bookService.uploadBookFile($event)"
+>
+</app-file-upload>
