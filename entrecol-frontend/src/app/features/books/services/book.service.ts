@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Book } from '@app/features/books/models/book.model';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
+import { finalize } from 'rxjs';
 
 interface State<T> {
   data: T;
@@ -56,16 +57,16 @@ export class BookService {
         message: string;
         processedCount: number;
       }>(`${this.apiUrl}/upload`, books)
+      .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
         next: () => {
-          this.uploading.set(false);
-          this.snackBar.success('Libros cargados exitosamente');
+          this.snackBar.success('Libros subidos exitosamente');
+          this.books.update((state) => ({ ...state, initialLoad: true }));
           this.getAll();
         },
         error: () => {
           this.books.update((state) => ({ ...state, loading: false }));
-          this.uploading.set(false);
-          this.snackBar.error('Error al cargar los libros');
+          this.snackBar.error('Error al subir los libros');
         },
       });
   }

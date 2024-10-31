@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
+import { Movie } from '@app/features/movies/models/movie.model';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
-import { Movie } from '@app/features/movies/models/movie.model';
+import { finalize } from 'rxjs';
 
 interface State<T> {
   data: T;
@@ -50,17 +51,16 @@ export class MovieService {
         message: string;
         processedCount: number;
       }>(`${this.apiUrl}/upload`, movies)
+      .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
         next: () => {
-          this.uploading.set(false);
-          this.movies.update((state) => ({ ...state, loading: false }));
-          this.snackBar.success('Películas cargadas exitosamente');
+          this.movies.update((state) => ({ ...state, initialLoad: true }));
+          this.snackBar.success('Películas subidas exitosamente');
           this.getAll();
         },
         error: () => {
-          this.uploading.set(false);
           this.movies.update((state) => ({ ...state, loading: false }));
-          this.snackBar.error('Error al cargar las películas');
+          this.snackBar.error('Error al subir las películas');
         },
       });
   }

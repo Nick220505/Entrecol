@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Employee } from '@app/features/payrolls/models/payroll.model';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
+import { finalize } from 'rxjs';
 
 interface State<T> {
   data: T;
@@ -78,18 +79,16 @@ export class PayrollService {
         message: string;
         processedCount: number;
       }>(`${this.apiUrl}/upload`, formData)
+      .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
         next: () => {
-          this.snackBar.success('Empleados cargados exitosamente');
+          this.snackBar.success('Empleados subidos exitosamente');
+          this.employees.update((state) => ({ ...state, initialLoad: true }));
           this.getAll();
         },
         error: () => {
           this.employees.update((state) => ({ ...state, loading: false }));
-          this.uploading.set(false);
-          this.snackBar.error('Error al cargar los empleados');
-        },
-        complete: () => {
-          this.uploading.set(false);
+          this.snackBar.error('Error al subir los empleados');
         },
       });
   }
