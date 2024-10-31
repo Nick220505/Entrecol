@@ -1,0 +1,75 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Lista de Películas</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    @let movies = movieService.movies();
+    @if (movies.initialLoad && movies.loading) {
+      <app-loading-spinner
+        loadingText="Cargando películas..."
+      ></app-loading-spinner>
+    } @else {
+      @if (movies.data.length === 0) {
+        <div class="no-data">
+          <mat-icon>movie</mat-icon>
+          <p>No hay películas registradas</p>
+          <p>Sube algunas películas para comenzar</p>
+        </div>
+      } @else {
+        <mat-form-field appearance="outline">
+          <mat-label>Filtrar películas</mat-label>
+          <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Buscar por título, año, género..."
+            #filterInput
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        @let displayedColumns = ["title", "releaseYear", "genres"];
+        <table mat-table [dataSource]="dataSource()" matSort>
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Título</th>
+            <td mat-cell *matCellDef="let movie">{{ movie.title }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="releaseYear">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Año</th>
+            <td mat-cell *matCellDef="let movie">
+              <span>{{ movie.releaseYear }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="genres">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Géneros</th>
+            <td mat-cell *matCellDef="let movie">
+              {{ getGenreNames(movie) | empty }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          @if (dataSource().filter) {
+            <tr class="mat-mdc-no-data-row">
+              <td [attr.colspan]="displayedColumns.length">
+                No se encontraron películas que coincidan con "{{
+                  filterInput.value
+                }}"
+              </td>
+            </tr>
+          }
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          [pageSize]="10"
+          showFirstLastButtons
+          aria-label="Seleccionar página de películas"
+        ></mat-paginator>
+      }
+    }
+  </mat-card-content>
+</mat-card>

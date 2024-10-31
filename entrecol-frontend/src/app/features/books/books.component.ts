@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { BookListComponent } from './components/book-list/book-list.component';
-import { BookUploadComponent } from './components/book-upload/book-upload.component';
+import { BookFileUploadComponent } from './components/book-file-upload/book-file-upload.component';
 
 @Component({
   selector: 'app-books',
   standalone: true,
-  imports: [BookUploadComponent, BookListComponent],
+  imports: [BookFileUploadComponent, BookListComponent],
   templateUrl: './books.component.html',
   styleUrl: './books.component.scss',
 })

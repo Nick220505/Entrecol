@@ -1,0 +1,10 @@
+<app-file-upload
+  [title]="'Cargar Películas'"
+  [subtitle]="'Arrastra o selecciona un archivo DAT'"
+  [acceptAttribute]="'.dat'"
+  [acceptedFileTypes]="['text/plain', 'dat']"
+  [isUploading]="movieService.uploading()"
+  [uploadButtonText]="'Cargar Películas'"
+  (fileUpload)="movieService.uploadMovieFile($event)"
+>
+</app-file-upload>
