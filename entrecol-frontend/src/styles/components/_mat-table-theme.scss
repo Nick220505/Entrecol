@@ -1,0 +1,232 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin color($theme) {
+  table {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--mat-card-subtle-divider);
+    animation: fadeIn 0.5s ease-out;
+    background: linear-gradient(
+      180deg,
+      var(--mat-card-subtle-overlay) 0%,
+      transparent 100%
+    );
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    border-spacing: 0;
+    border-collapse: separate;
+
+    thead {
+      background: linear-gradient(
+        to right,
+        var(--mat-card-subtle-overlay),
+        transparent 50%,
+        var(--mat-card-subtle-overlay)
+      );
+      border-bottom: 2px solid var(--mat-primary-100);
+    }
+
+    th {
+      background-color: transparent;
+      color: var(--mat-primary-600);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      border-bottom: 2px solid var(--mat-primary-100);
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--mat-primary-500);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+        border-radius: 4px 4px 0 0;
+      }
+
+      &:hover {
+        background-color: color-mix(
+          in srgb,
+          var(--mat-primary-500) 8%,
+          transparent
+        );
+        color: var(--mat-primary-800);
+
+        &::after {
+          transform: scaleX(0.8);
+        }
+      }
+
+      &.mat-sort-header-sorted {
+        color: var(--mat-primary-800);
+        background-color: color-mix(
+          in srgb,
+          var(--mat-primary-500) 12%,
+          transparent
+        );
+
+        &::after {
+          transform: scaleX(0.8);
+        }
+      }
+
+      .mat-sort-header-arrow {
+        color: var(--mat-primary-500);
+      }
+
+      .mat-sort-header-content {
+        letter-spacing: 1.5px;
+      }
+    }
+
+    td {
+      padding: 1.25rem 1.5rem;
+      font-size: 1rem;
+      color: var(--mat-card-text);
+      border-bottom: 1px solid var(--mat-card-subtle-divider);
+      transition: all 0.3s ease;
+      line-height: 1.6;
+      vertical-align: middle;
+    }
+
+    tr {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      background-color: transparent;
+      height: 4rem;
+
+      &:hover {
+        background: linear-gradient(
+          to right,
+          color-mix(in srgb, var(--mat-primary-500) 8%, transparent),
+          color-mix(in srgb, var(--mat-primary-500) 4%, transparent)
+        );
+        transform: translateX(4px) translateY(-2px);
+        box-shadow: -4px 8px 16px rgba(0, 0, 0, 0.08);
+        z-index: 1;
+
+        td {
+          color: var(--mat-primary-900);
+          padding-top: 1.5rem;
+          padding-bottom: 1.5rem;
+          background-color: color-mix(
+            in srgb,
+            var(--mat-primary-500) 1%,
+            transparent
+          );
+
+          &:first-child {
+            position: relative;
+
+            &::before {
+              content: "";
+              position: absolute;
+              left: 0;
+              top: 0;
+              height: 100%;
+              width: 4px;
+              background: linear-gradient(
+                to bottom,
+                var(--mat-primary-500),
+                var(--mat-primary-200)
+              );
+              transform: scaleY(0.8);
+              border-radius: 0 4px 4px 0;
+              box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            }
+          }
+        }
+
+        & + tr td {
+          border-top: 1px solid var(--mat-primary-100);
+        }
+      }
+
+      &.mat-mdc-row {
+        height: auto;
+      }
+
+      &:nth-child(even) {
+        background-color: color-mix(
+          in srgb,
+          var(--mat-primary-500) 2%,
+          transparent
+        );
+
+        &:hover {
+          background: linear-gradient(
+            to right,
+            color-mix(in srgb, var(--mat-primary-500) 10%, transparent),
+            color-mix(in srgb, var(--mat-primary-500) 6%, transparent)
+          );
+        }
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+
+    .mat-mdc-no-data-row {
+      td {
+        padding: 4rem;
+        text-align: center;
+        color: var(--mat-card-subtitle-text-color);
+        font-style: italic;
+        font-size: 1.1rem;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          var(--mat-card-subtle-overlay) 50%,
+          transparent
+        );
+        border-bottom: none;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    table {
+      th,
+      td {
+        padding: 1rem;
+        font-size: 0.9rem;
+      }
+
+      th {
+        letter-spacing: 1px;
+      }
+    }
+  }
+}
+
+@mixin typography($theme) {
+  table {
+    th {
+      font-family: mat.get-theme-typography($theme, title-medium, font-family);
+    }
+    td {
+      font-family: mat.get-theme-typography($theme, body-medium, font-family);
+    }
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
+  }
+}

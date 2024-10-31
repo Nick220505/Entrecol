@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 @use "components/mat-form-field-theme" as mat-form-field-theme;
 @use "components/mat-paginator-theme" as mat-paginator-theme;
+@use "components/mat-table-theme" as mat-table-theme;
 @use "themes/theme" as theme;
 
 @include mat.core();
@@ -14,6 +15,7 @@ html {
   @include mat.all-component-themes(theme.$light-theme);
   @include mat-form-field-theme.theme(theme.$light-theme);
   @include mat-paginator-theme.theme(theme.$light-theme);
+  @include mat-table-theme.theme(theme.$light-theme);
 }
 
 body {
@@ -25,6 +27,7 @@ body {
   @include mat.all-component-colors(theme.$dark-theme);
   @include mat-form-field-theme.color(theme.$dark-theme);
   @include mat-paginator-theme.color(theme.$dark-theme);
+  @include mat-table-theme.color(theme.$dark-theme);
 }
 
 .custom-snackbar {
