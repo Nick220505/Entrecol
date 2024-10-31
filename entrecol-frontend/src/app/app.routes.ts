@@ -30,25 +30,25 @@ export const routes: Routes = [
       {
         path: 'libros',
         loadComponent: () =>
-          import('./features/books/pages/book-list/book-list.component').then(
-            (m) => m.BookListComponent,
+          import('./features/books/books.component').then(
+            (m) => m.BooksComponent,
           ),
         title: 'ENTRECOL - Libros',
       },
       {
         path: 'peliculas',
         loadComponent: () =>
-          import(
-            './features/movies/pages/movie-list/movie-list.component'
-          ).then((m) => m.MovieListComponent),
+          import('./features/movies/movies.component').then(
+            (m) => m.MoviesComponent,
+          ),
         title: 'ENTRECOL - Películas',
       },
       {
         path: 'nominas',
         loadComponent: () =>
-          import(
-            './features/payrolls/pages/payroll-list/payroll-list.component'
-          ).then((m) => m.PayrollListComponent),
+          import('./features/payrolls/payrolls.component').then(
+            (m) => m.PayrollsComponent,
+          ),
         title: 'ENTRECOL - Nóminas',
       },
       {
