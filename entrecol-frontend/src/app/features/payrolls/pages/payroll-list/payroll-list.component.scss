@@ -113,64 +113,6 @@ mat-card {
 
   mat-card-content {
     padding: 0 1.5rem 1.5rem;
-
-    mat-form-field {
-      width: 100%;
-      margin-bottom: 1.5rem;
-      transform-style: preserve-3d;
-      transition: transform 0.3s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-      }
-
-      .mat-mdc-form-field-subscript-wrapper {
-        display: none;
-      }
-
-      .mat-mdc-text-field-wrapper {
-        background-color: var(--mat-card-subtle-overlay);
-        transition: all 0.3s ease;
-        border-radius: 8px;
-        border: 1px solid transparent;
-
-        &:hover {
-          background-color: color-mix(
-            in srgb,
-            var(--mat-primary-500) 5%,
-            var(--mat-card-subtle-overlay)
-          );
-          border-color: var(--mat-primary-200);
-        }
-      }
-
-      input {
-        transition: all 0.3s ease;
-
-        &:focus {
-          transform: scale(1.01);
-        }
-      }
-
-      mat-icon {
-        color: var(--mat-primary-500);
-        transition: all 0.3s ease;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-      }
-
-      &.mat-focused {
-        mat-icon {
-          transform: scale(1.1) rotate(10deg);
-          filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-          animation: bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .mat-mdc-text-field-wrapper {
-          border-color: var(--mat-primary-500);
-          box-shadow: 0 0 0 1px var(--mat-primary-200);
-        }
-      }
-    }
   }
 
   table {
