@@ -359,25 +359,6 @@ mat-card {
   }
 }
 
-mat-paginator {
-  background: transparent;
-  border-top: 1px solid var(--mat-card-subtle-divider);
-  margin-top: 1rem;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: color-mix(
-      in srgb,
-      var(--mat-primary-500) 2%,
-      transparent
-    );
-  }
-
-  .mat-mdc-paginator-container {
-    padding: 0.5rem 1rem;
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;

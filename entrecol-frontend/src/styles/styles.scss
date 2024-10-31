@@ -1,0 +1,41 @@
+@use "@angular/material" as mat;
+@use "components/mat-form-field-theme" as mat-form-field-theme;
+@use "components/mat-paginator-theme" as mat-paginator-theme;
+@use "themes/theme" as theme;
+
+@include mat.core();
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  @include mat.all-component-themes(theme.$light-theme);
+  @include mat-form-field-theme.theme(theme.$light-theme);
+  @include mat-paginator-theme.theme(theme.$light-theme);
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.dark-theme {
+  @include mat.all-component-colors(theme.$dark-theme);
+  @include mat-form-field-theme.color(theme.$dark-theme);
+  @include mat-paginator-theme.color(theme.$dark-theme);
+}
+
+.custom-snackbar {
+  &.mat-mdc-snack-bar-container {
+    .mdc-snackbar__surface {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: inherit;
+  }
+}
