@@ -83,6 +83,8 @@ public class BookService {
 
     @Transactional
     public int processBookUpload(List<Map<String, Object>> booksData) {
+        clearExistingData();
+
         Set<String> uniqueLanguages = new HashSet<>();
         Map<String, Long> languageCodeToId = new HashMap<>();
         for (Map<String, Object> bookData : booksData) {
@@ -147,7 +149,7 @@ public class BookService {
                         bookData.get("isbn13"),
                         Integer.parseInt(bookData.get("num_pages").toString()),
                         Double.parseDouble(bookData.get("average_rating").toString()),
-                        new java.sql.Date(publicationDate.getTime()),
+                        new Date(publicationDate.getTime()),
                         languageCodeToId.get(bookData.get("language_code")),
                         publisherNameToId.get(bookData.get("publisher"))
                 });
@@ -293,6 +295,15 @@ public class BookService {
         jdbcTemplate.batchUpdate(bookAuthorSql, bookAuthorBatch);
 
         return results.length;
+    }
+
+    private void clearExistingData() {
+        jdbcTemplate.execute("DELETE FROM book_author");
+        jdbcTemplate.execute("DELETE FROM rating");
+        jdbcTemplate.execute("DELETE FROM book");
+        jdbcTemplate.execute("DELETE FROM author");
+        jdbcTemplate.execute("DELETE FROM publisher");
+        jdbcTemplate.execute("DELETE FROM language");
     }
 
     private record IdMapping(Long id, String name) {
