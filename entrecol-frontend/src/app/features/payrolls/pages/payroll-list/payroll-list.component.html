@@ -1,4 +1,16 @@
-<app-payroll-upload></app-payroll-upload>
+<app-file-upload
+  [title]="'Cargar Nómina'"
+  [subtitle]="'Arrastra o selecciona un archivo Excel'"
+  [acceptAttribute]="'.xlsx,.xls'"
+  [acceptedFileTypes]="[
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel',
+  ]"
+  [isUploading]="payrollService.uploading()"
+  [uploadButtonText]="'Cargar Nómina'"
+  (fileUpload)="payrollService.uploadEmployeeFile($event)"
+>
+</app-file-upload>
 
 <mat-card appearance="outlined">
   <mat-card-header>

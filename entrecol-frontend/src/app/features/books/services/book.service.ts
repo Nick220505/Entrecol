@@ -70,4 +70,24 @@ export class BookService {
         },
       });
   }
+
+  uploadBookFile(file: File): void {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const books = JSON.parse(content);
+        this.uploadBooks(books);
+      } catch {
+        this.snackBar.error('El archivo JSON no es válido');
+      }
+    };
+
+    reader.onerror = () => {
+      this.snackBar.error('Error al leer el archivo');
+    };
+
+    reader.readAsText(file);
+  }
 }

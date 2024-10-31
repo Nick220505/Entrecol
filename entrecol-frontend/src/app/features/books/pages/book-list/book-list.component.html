@@ -1,4 +1,13 @@
-<app-book-upload></app-book-upload>
+<app-file-upload
+  [title]="'Cargar Libros'"
+  [subtitle]="'Arrastra o selecciona un archivo JSON'"
+  [acceptAttribute]="'.json'"
+  [acceptedFileTypes]="['application/json']"
+  [isUploading]="booksService.uploading()"
+  [uploadButtonText]="'Cargar Libros'"
+  (fileUpload)="booksService.uploadBookFile($event)"
+>
+</app-file-upload>
 
 <mat-card appearance="outlined">
   <mat-card-header>

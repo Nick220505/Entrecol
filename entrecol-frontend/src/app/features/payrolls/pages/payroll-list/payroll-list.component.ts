@@ -15,10 +15,10 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PayrollService } from '@app/features/payrolls/services/payroll.service';
+import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { CustomPaginatorIntl } from '@shared/config/paginator-intl.config';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
-import { PayrollUploadComponent } from '../../components/payroll-upload/payroll-upload.component';
 import { Employee } from '../../models/payroll.model';
 
 @Component({
@@ -38,7 +38,7 @@ import { Employee } from '../../models/payroll.model';
     CurrencyPipe,
     DatePipe,
     LoadingSpinnerComponent,
-    PayrollUploadComponent,
+    FileUploadComponent,
     EmptyPipe,
   ],
   providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],

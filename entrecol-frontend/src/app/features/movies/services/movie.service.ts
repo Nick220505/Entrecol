@@ -64,4 +64,44 @@ export class MovieService {
         },
       });
   }
+
+  uploadMovieFile(file: File): void {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const movies = this.parseMovieData(content);
+        this.uploadMovies(movies);
+      } catch {
+        this.snackBar.error('Error al procesar el archivo');
+      }
+    };
+
+    reader.onerror = () => {
+      this.snackBar.error('Error al leer el archivo');
+    };
+
+    reader.readAsText(file);
+  }
+
+  private parseMovieData(content: string): Movie[] {
+    return content
+      .split('\n')
+      .filter((line) => line.trim())
+      .map((line) => {
+        const [id, title, genresStr] = line.split('::');
+        const genres = genresStr.split('|').map((name) => ({ name }));
+        const yearMatch = title.match(/\((\d{4})\)/);
+        const year = yearMatch ? parseInt(yearMatch[1]) : null;
+        const cleanTitle = title.replace(/\(\d{4}\)/, '').trim();
+
+        return {
+          originalId: parseInt(id),
+          title: cleanTitle,
+          releaseYear: year,
+          genres,
+        };
+      });
+  }
 }

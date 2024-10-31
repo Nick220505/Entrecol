@@ -14,10 +14,10 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MovieService } from '@app/features/movies/services/movie.service';
+import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { CustomPaginatorIntl } from '@shared/config/paginator-intl.config';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
-import { MovieUploadComponent } from '../../components/movie-upload/movie-upload.component';
 import { Movie } from '../../models/movie.model';
 
 @Component({
@@ -35,7 +35,7 @@ import { Movie } from '../../models/movie.model';
     MatTableModule,
     MatTooltipModule,
     LoadingSpinnerComponent,
-    MovieUploadComponent,
+    FileUploadComponent,
     EmptyPipe,
   ],
   providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],

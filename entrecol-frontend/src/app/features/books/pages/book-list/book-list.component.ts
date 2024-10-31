@@ -15,10 +15,10 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BookService } from '@app/features/books/services/book.service';
+import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { CustomPaginatorIntl } from '@shared/config/paginator-intl.config';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
-import { BookUploadComponent } from '../../components/book-upload/book-upload.component';
 import { Book } from '../../models/book.model';
 
 @Component({
@@ -38,7 +38,7 @@ import { Book } from '../../models/book.model';
     DatePipe,
     DecimalPipe,
     LoadingSpinnerComponent,
-    BookUploadComponent,
+    FileUploadComponent,
     EmptyPipe,
   ],
   providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
