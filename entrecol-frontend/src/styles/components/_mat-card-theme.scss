@@ -2,7 +2,7 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  mat-card {
+  .mat-mdc-card {
     margin: 1.5rem;
     border-radius: 16px;
     overflow: hidden;
@@ -42,7 +42,7 @@
       }
     }
 
-    mat-card-header {
+    .mat-mdc-card-header {
       padding: 1.5rem 1.5rem 1rem;
       position: relative;
       overflow: hidden;
@@ -72,7 +72,11 @@
         animation: shimmer 3s infinite;
       }
 
-      mat-card-title {
+      .mat-mdc-card-header-text {
+        width: 100%;
+      }
+
+      .mat-mdc-card-title {
         font-size: 1.75rem;
         font-weight: 600;
         color: var(--mat-card-title-text-color);
@@ -80,6 +84,9 @@
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         position: relative;
         display: inline-block;
+        margin: 0;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
 
         &::after {
           content: "";
@@ -104,7 +111,7 @@
       }
     }
 
-    mat-card-content {
+    .mat-mdc-card-content {
       padding: 0 1.5rem 1.5rem;
     }
   }
@@ -167,19 +174,19 @@
   }
 
   @media (max-width: 600px) {
-    mat-card {
+    .mat-mdc-card {
       margin: 1rem;
       border-radius: 12px;
 
-      mat-card-header {
+      .mat-mdc-card-header {
         padding: 1rem 1rem 0.75rem;
 
-        mat-card-title {
+        .mat-mdc-card-title {
           font-size: 1.5rem;
         }
       }
 
-      mat-card-content {
+      .mat-mdc-card-content {
         padding: 0 1rem 1rem;
       }
     }
@@ -227,15 +234,15 @@
 }
 
 @mixin typography($theme) {
-  mat-card {
-    mat-card-title {
+  .mat-mdc-card {
+    .mat-mdc-card-title {
       font-family: mat.get-theme-typography(
         $theme,
         headline-small,
         font-family
       );
     }
-    mat-card-content {
+    .mat-mdc-card-content {
       font-family: mat.get-theme-typography($theme, body-medium, font-family);
     }
   }
