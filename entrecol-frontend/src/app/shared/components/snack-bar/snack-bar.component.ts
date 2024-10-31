@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -20,6 +20,7 @@ interface SnackBarData {
   imports: [NgClass, MatButtonModule, MatIconModule],
   templateUrl: './snack-bar.component.html',
   styleUrl: './snack-bar.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class SnackBarComponent {
   protected readonly snackBarRef = inject(MatSnackBarRef);
