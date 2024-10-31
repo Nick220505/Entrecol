@@ -3,6 +3,7 @@
 @use "components/mat-paginator-theme" as mat-paginator-theme;
 @use "components/mat-table-theme" as mat-table-theme;
 @use "components/mat-card-theme" as mat-card-theme;
+@use "components/mat-upload-theme" as mat-upload-theme;
 @use "themes/theme" as theme;
 
 @include mat.core();
@@ -18,6 +19,7 @@ html {
   @include mat-paginator-theme.theme(theme.$light-theme);
   @include mat-table-theme.theme(theme.$light-theme);
   @include mat-card-theme.theme(theme.$light-theme);
+  @include mat-upload-theme.theme(theme.$light-theme);
 }
 
 body {
@@ -31,6 +33,7 @@ body {
   @include mat-paginator-theme.color(theme.$dark-theme);
   @include mat-table-theme.color(theme.$dark-theme);
   @include mat-card-theme.color(theme.$dark-theme);
+  @include mat-upload-theme.color(theme.$dark-theme);
 }
 
 .custom-snackbar {
