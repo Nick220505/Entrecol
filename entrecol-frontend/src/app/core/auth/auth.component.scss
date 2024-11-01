@@ -67,16 +67,12 @@
 
 .auth-card {
   backdrop-filter: blur(5px);
-  padding: 2rem 2rem 2.5rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
   transition: all 0.3s ease;
   background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -173,12 +169,6 @@ form {
 :host-context(.dark-theme) {
   .auth-card {
     background: rgba(30, 30, 30, 0.9);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-    &:hover {
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-    }
   }
 
   .logo {
