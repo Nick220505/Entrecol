@@ -6,12 +6,35 @@
     .mat-mdc-form-field {
       width: 75px;
     }
+
+    .mat-mdc-select-value,
+    .mat-mdc-select-arrow,
+    .mat-mdc-paginator-range-label,
+    .mat-mdc-icon-button {
+      color: var(--mat-app-text-primary);
+      font-size: 0.9375rem;
+    }
+
+    .mat-mdc-paginator-range-label {
+      margin: 0 24px;
+    }
+
+    .mat-mdc-icon-button {
+      .mat-icon {
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        line-height: 1.5rem;
+      }
+    }
   }
 }
 
 @mixin typography($theme) {
   .mat-mdc-paginator {
     font-family: mat.get-theme-typography($theme, body-medium, font-family);
+    font-size: 0.9375rem;
+    line-height: 1.5;
   }
 }
 
