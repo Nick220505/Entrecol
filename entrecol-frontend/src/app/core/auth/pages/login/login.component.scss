@@ -68,12 +68,15 @@
 .login-card {
   backdrop-filter: blur(5px);
   padding: 2rem 2rem 2.5rem;
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -94,8 +97,38 @@
 }
 
 :host-context(.dark-theme) {
+  .login-card {
+    background: rgba(30, 30, 30, 0.9);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    }
+  }
+
   .logo {
     filter: brightness(0) invert(1);
+  }
+
+  .title {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .auth-links {
+    color: rgba(255, 255, 255, 0.9);
+
+    span {
+      opacity: 0.7;
+    }
+
+    a {
+      color: var(--mat-primary-300);
+
+      &:hover {
+        color: var(--mat-primary-200);
+      }
+    }
   }
 }
 
@@ -106,6 +139,7 @@
   font-size: 1.75rem;
   letter-spacing: 0.5px;
   line-height: 1.2;
+  color: var(--mat-app-text-primary);
 }
 
 form {
@@ -222,6 +256,7 @@ form {
 .auth-links {
   margin-top: 1rem;
   text-align: center;
+  color: var(--mat-app-text-secondary);
 
   span {
     margin-right: 0.5rem;
@@ -229,12 +264,13 @@ form {
   }
 
   a {
-    color: inherit;
+    color: var(--mat-primary-500);
     text-decoration: none;
     font-weight: 500;
 
     &:hover {
       text-decoration: underline;
+      color: var(--mat-primary-700);
     }
   }
 }
