@@ -40,19 +40,9 @@ export class AuthComponent {
   protected readonly authService = inject(AuthService);
   protected readonly themeService = inject(ThemeService);
   protected readonly isPasswordHidden = signal(true);
-
   protected readonly isRegisterMode = computed(
     () => this.router.url === '/registro',
   );
-
-  protected readonly pageTitle = computed(() =>
-    this.isRegisterMode() ? 'Registro de Usuario' : 'Inicio de Sesión',
-  );
-
-  protected readonly bannerTitle = computed(() =>
-    this.isRegisterMode() ? 'Únete a EntreCOL+' : 'Bienvenido a EntreCOL+',
-  );
-
   protected readonly authForm = this.formBuilder.group({
     username: [
       '',

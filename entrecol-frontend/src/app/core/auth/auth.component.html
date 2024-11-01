@@ -1,7 +1,9 @@
 <div class="auth-container">
   <div class="content-wrapper">
     <div class="banner-content">
-      <h1 class="banner-title">{{ bannerTitle() }}</h1>
+      <h1 class="banner-title">
+        {{ isRegisterMode() ? "Únete a EntreCOL+" : "Bienvenido a EntreCOL+" }}
+      </h1>
       <p class="banner-subtitle">Sistema Integral de Gestión Empresarial</p>
       <p class="banner-description">
         Nómina | Entretenimiento | Recursos Humanos
@@ -13,7 +15,9 @@
           <img src="assets/logo.png" alt="Logo EntreCOL+" class="logo" />
         </div>
         <mat-card-content>
-          <h2 class="title">{{ pageTitle() }}</h2>
+          <h2 class="title">
+            {{ isRegisterMode() ? "Registro de Usuario" : "Inicio de Sesión" }}
+          </h2>
           <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
             <mat-form-field appearance="outline">
               <mat-label>Usuario</mat-label>
