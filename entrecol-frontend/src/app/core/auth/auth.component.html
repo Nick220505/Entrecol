@@ -1,0 +1,116 @@
+<div class="auth-container">
+  <div class="content-wrapper">
+    <div class="banner-content">
+      <h1 class="banner-title">{{ bannerTitle() }}</h1>
+      <p class="banner-subtitle">Sistema Integral de Gestión Empresarial</p>
+      <p class="banner-description">
+        Nómina | Entretenimiento | Recursos Humanos
+      </p>
+    </div>
+    <div class="auth-content">
+      <mat-card class="auth-card">
+        <div class="logo-container">
+          <img src="assets/logo.png" alt="Logo EntreCOL+" class="logo" />
+        </div>
+        <mat-card-content>
+          <h2 class="title">{{ pageTitle() }}</h2>
+          <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline">
+              <mat-label>Usuario</mat-label>
+              <input matInput formControlName="username" required />
+              <mat-icon matPrefix>person</mat-icon>
+              @if (authForm.get("username")?.hasError("required")) {
+                <mat-error>El usuario es requerido</mat-error>
+              } @else if (authForm.get("username")?.hasError("minlength")) {
+                <mat-error
+                  >El usuario debe tener al menos 3 caracteres</mat-error
+                >
+              }
+            </mat-form-field>
+
+            @if (isRegisterMode()) {
+              <mat-form-field appearance="outline">
+                <mat-label>Correo Electrónico</mat-label>
+                <input matInput formControlName="email" required type="email" />
+                <mat-icon matPrefix>email</mat-icon>
+                @if (authForm.get("email")?.hasError("required")) {
+                  <mat-error>El correo electrónico es requerido</mat-error>
+                } @else if (authForm.get("email")?.hasError("email")) {
+                  <mat-error
+                    >La dirección de correo electrónico no es válida</mat-error
+                  >
+                }
+              </mat-form-field>
+            }
+
+            <mat-form-field appearance="outline">
+              <mat-label>Contraseña</mat-label>
+              <input
+                matInput
+                [type]="isPasswordHidden() ? 'password' : 'text'"
+                formControlName="password"
+                required
+              />
+              <mat-icon matPrefix>lock</mat-icon>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="togglePasswordVisibility($event)"
+                [attr.aria-label]="'Alternar visibilidad de la contraseña'"
+                [attr.aria-pressed]="!isPasswordHidden()"
+                type="button"
+              >
+                <mat-icon>{{
+                  isPasswordHidden() ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+              @if (authForm.get("password")?.hasError("required")) {
+                <mat-error>La contraseña es requerida</mat-error>
+              } @else if (authForm.get("password")?.hasError("minlength")) {
+                <mat-error
+                  >La contraseña debe tener al menos 6 caracteres</mat-error
+                >
+              }
+            </mat-form-field>
+
+            @if (authService.error(); as errorMessage) {
+              <app-alert-message
+                [message]="errorMessage"
+                [type]="'error'"
+              ></app-alert-message>
+            }
+
+            <re-captcha
+              formControlName="captchaResponse"
+              siteKey="6LfRG2sqAAAAAE5KKnbfqHa__A_0HdyOaABJUljN"
+              [theme]="themeService.isDarkTheme() ? 'dark' : 'light'"
+            ></re-captcha>
+
+            <button
+              mat-raised-button
+              type="submit"
+              [disabled]="authForm.invalid || authService.isLoading()"
+            >
+              @if (authService.isLoading()) {
+                <app-loading-spinner [diameter]="20"></app-loading-spinner>
+              } @else {
+                <span>{{
+                  isRegisterMode() ? "Registrarse" : "Iniciar Sesión"
+                }}</span>
+              }
+            </button>
+          </form>
+          <div class="auth-links">
+            @if (isRegisterMode()) {
+              <span>¿Ya tienes una cuenta?</span>
+              <a routerLink="/iniciar-sesion">Inicia sesión aquí</a>
+            } @else {
+              <span>¿No tienes una cuenta?</span>
+              <a routerLink="/registro">Regístrate aquí</a>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

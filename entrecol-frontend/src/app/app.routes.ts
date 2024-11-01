@@ -4,20 +4,16 @@ import { redirectLoggedInGuard } from '@core/auth/guards/redirect-logged-in.guar
 
 export const routes: Routes = [
   {
-    path: 'login',
+    path: 'iniciar-sesion',
     loadComponent: () =>
-      import('./core/auth/pages/login/login.component').then(
-        (m) => m.LoginComponent,
-      ),
+      import('./core/auth/auth.component').then((m) => m.AuthComponent),
     canActivate: [redirectLoggedInGuard],
     title: 'ENTRECOL - Iniciar Sesión',
   },
   {
-    path: 'register',
+    path: 'registro',
     loadComponent: () =>
-      import('./core/auth/pages/register/register.component').then(
-        (m) => m.RegisterComponent,
-      ),
+      import('./core/auth/auth.component').then((m) => m.AuthComponent),
     canActivate: [redirectLoggedInGuard],
     title: 'ENTRECOL - Registro',
   },
@@ -58,5 +54,5 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '**', redirectTo: '/login' },
+  { path: '**', redirectTo: '/iniciar-sesion' },
 ];

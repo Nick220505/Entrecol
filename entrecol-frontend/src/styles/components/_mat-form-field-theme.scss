@@ -4,44 +4,44 @@
 @mixin color($theme) {
   mat-form-field {
     width: 100%;
-    margin-bottom: 1.5rem;
-    transform-style: preserve-3d;
-    transition: transform 0.3s ease;
+    // margin-bottom: 1.5rem;
+    // transform-style: preserve-3d;
+    // transition: transform 0.3s ease;
 
-    &:hover {
-      transform: translateY(-2px);
-    }
+    // &:hover {
+    //   transform: translateY(-2px);
+    // }
 
-    mat-icon {
-      color: var(--mat-primary-500);
-      transition: all 0.3s ease;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-    }
+    // mat-icon {
+    //   color: var(--mat-primary-500);
+    //   transition: all 0.3s ease;
+    //   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    // }
 
-    &.mat-focused {
-      mat-icon {
-        transform: scale(1.1);
-        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-        animation: bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
+    // &.mat-focused {
+    //   mat-icon {
+    //     transform: scale(1.1);
+    //     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    //     animation: bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    //   }
 
-      .mat-mdc-text-field-wrapper {
-        border-color: var(--mat-primary-500);
-        box-shadow: 0 0 0 1px var(--mat-primary-200);
-      }
-    }
+    //   .mat-mdc-text-field-wrapper {
+    //     border-color: var(--mat-primary-500);
+    //     box-shadow: 0 0 0 1px var(--mat-primary-200);
+    //   }
+    // }
 
-    .mat-mdc-form-field-subscript-wrapper {
-      display: none;
-    }
+    // .mat-mdc-form-field-subscript-wrapper {
+    //   display: none;
+    // }
 
-    input {
-      transition: all 0.3s ease;
+    // input {
+    //   transition: all 0.3s ease;
 
-      &:focus {
-        transform: scale(1.01);
-      }
-    }
+    //   &:focus {
+    //     transform: scale(1.01);
+    //   }
+    // }
   }
 
   @keyframes bounce {
