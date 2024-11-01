@@ -68,7 +68,7 @@ export class MovieService {
   uploadMovieFile(file: File): void {
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = (e: ProgressEvent<FileReader>) => {
       try {
         const content = e.target?.result as string;
         const movies = this.parseMovieData(content);

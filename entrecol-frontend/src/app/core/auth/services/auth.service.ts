@@ -39,11 +39,11 @@ export class AuthService {
           );
           this.router.navigate(['/login']);
         },
-        error: (error: HttpErrorResponse) => {
-          if (error.status === 400) {
-            if (error.error === 'Username is already taken!') {
+        error: ({ error, status }: HttpErrorResponse) => {
+          if (status === 400) {
+            if (error === 'Username is already taken!') {
               this.error.set('El nombre de usuario ya está en uso.');
-            } else if (error.error === 'Email is already in use!') {
+            } else if (error === 'Email is already in use!') {
               this.error.set('El correo electrónico ya está registrado.');
             } else {
               this.error.set(
@@ -51,7 +51,7 @@ export class AuthService {
               );
             }
             this.isRegisterInvalid.set(true);
-          } else if (error.status === 0) {
+          } else if (status === 0) {
             this.error.set(
               'No se pudo conectar al servidor. Verifique su conexión a internet.',
             );
@@ -72,19 +72,19 @@ export class AuthService {
       .post<AuthResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
-        next: (response) => {
-          localStorage.setItem('token', response.token);
+        next: ({ token }) => {
+          localStorage.setItem('token', token);
           this.isAuthenticated.set(true);
           this.snackBarService.success('Inicio de sesión exitoso');
           this.router.navigate(['/']);
         },
-        error: (error: HttpErrorResponse) => {
-          if (error.status === 401) {
+        error: ({ status }: HttpErrorResponse) => {
+          if (status === 401) {
             this.error.set('El usuario o la contraseña son incorrectos.');
             this.isLoginInvalid.set(true);
-          } else if (error.status === 400) {
+          } else if (status === 400) {
             this.error.set('Por favor, complete el captcha correctamente.');
-          } else if (error.status === 0) {
+          } else if (status === 0) {
             this.error.set(
               'No se pudo conectar al servidor. Verifique su conexión a internet.',
             );

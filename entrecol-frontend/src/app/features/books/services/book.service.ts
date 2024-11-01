@@ -59,8 +59,10 @@ export class BookService {
       }>(`${this.apiUrl}/upload`, books)
       .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
-        next: () => {
-          this.snackBar.success('Libros subidos exitosamente');
+        next: ({ processedCount }) => {
+          this.snackBar.success(
+            `${processedCount} libros subidos exitosamente`,
+          );
           this.books.update((state) => ({ ...state, initialLoad: true }));
           this.getAll();
         },
@@ -74,7 +76,7 @@ export class BookService {
   uploadBookFile(file: File): void {
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = (e: ProgressEvent<FileReader>) => {
       try {
         const content = e.target?.result as string;
         const books = JSON.parse(content);
