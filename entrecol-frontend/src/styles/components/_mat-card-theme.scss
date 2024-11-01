@@ -2,6 +2,29 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
+  .mat-mdc-card {
+    backdrop-filter: blur(5px);
+    padding: 2rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+
+  .dark-theme {
+    .mat-mdc-card {
+      .logo {
+        filter: brightness(0) invert(1);
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mat-mdc-card {
+      padding: 1.5rem 1.5rem 2rem;
+    }
+  }
 }
 
 @mixin typography($theme) {
