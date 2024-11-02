@@ -50,7 +50,26 @@ export class PayrollListComponent implements OnInit {
   protected readonly dataSource = computed(() =>
     Object.assign(
       new MatTableDataSource<Employee>(this.payrollService.employees().data),
-      { paginator: this.paginator(), sort: this.sort() },
+      {
+        paginator: this.paginator(),
+        sort: this.sort(),
+        sortingDataAccessor: (item: Employee, property: string) => {
+          switch (property) {
+            case 'department':
+              return item.department.name;
+            case 'position':
+              return item.position.name;
+            case 'eps':
+              return item.eps.name;
+            case 'arl':
+              return item.arl.name;
+            case 'pensionFund':
+              return item.pensionFund.name;
+            default:
+              return item[property as keyof Employee];
+          }
+        },
+      },
     ),
   );
 
