@@ -14,7 +14,11 @@
         "
       >
         <mat-icon>picture_as_pdf</mat-icon>
-        {{ payrollService.pdfExporting() ? "Exportando..." : "Exportar a PDF" }}
+        {{
+          payrollService.pdfExporting()
+            ? "Generando reporte..."
+            : "Generar reporte en PDF"
+        }}
       </button>
     </div>
   </mat-card-header>
