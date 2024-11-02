@@ -25,6 +25,7 @@
     "@swimlane/ngx-charts": "^20.5.0",
     "entrecol-frontend": "file:",
     "ng-recaptcha-2": "^14.0.0",
+    "ngx-extended-pdf-viewer": "^22.0.0-alpha.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"

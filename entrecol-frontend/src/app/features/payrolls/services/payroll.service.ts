@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
 
 import { environment } from '@env';
+import { PdfPreviewDialogComponent } from '../components/pdf-preview-dialog/pdf-preview-dialog.component';
 import { Employee } from '../models/payroll.model';
 import { EmployeeReport } from '../models/report.model';
 
@@ -19,6 +21,7 @@ interface LoadingState<T> {
 export class PayrollService {
   private readonly http = inject(HttpClient);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
   private readonly apiUrl = `${environment.apiUrl}/employees`;
 
   employees = signal<LoadingState<Employee[]>>({
@@ -111,11 +114,19 @@ export class PayrollService {
       .subscribe({
         next: (blob) => {
           const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'nomina.pdf';
-          link.click();
-          window.URL.revokeObjectURL(url);
+          const dialogRef = this.dialog.open(PdfPreviewDialogComponent, {
+            width: '90vw',
+            height: '90vh',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+          });
+
+          const component = dialogRef.componentInstance;
+          component.setPdfUrl(url);
+
+          dialogRef.afterClosed().subscribe(() => {
+            window.URL.revokeObjectURL(url);
+          });
         },
         error: () => {
           this.snackBar.open('Error al exportar el PDF', 'Cerrar');

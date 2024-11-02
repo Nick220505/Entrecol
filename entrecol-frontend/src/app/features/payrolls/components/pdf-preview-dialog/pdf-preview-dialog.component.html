@@ -1,0 +1,28 @@
+<div class="pdf-preview-dialog">
+  <div class="dialog-header">
+    <h2>Vista Previa del PDF</h2>
+    <button mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    <ngx-extended-pdf-viewer
+      [src]="pdfUrl()"
+      [height]="'80vh'"
+      [language]="'es'"
+      [textLayer]="true"
+      [showDownloadButton]="true"
+      [showPrintButton]="true"
+      [showOpenFileButton]="false"
+      [showSecondaryToolbarButton]="true"
+      [showRotateButton]="true"
+      [showHandToolButton]="true"
+      [showZoomButtons]="true"
+      [zoom]="'auto'"
+      [minZoom]="0.5"
+      [maxZoom]="4.0"
+    >
+    </ngx-extended-pdf-viewer>
+  </div>
+</div>
