@@ -1,5 +1,7 @@
 package co.edu.unbosque.service;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -17,6 +19,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -25,9 +33,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
@@ -502,57 +512,149 @@ public class EmployeeService {
             document.open();
 
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-            Paragraph title = new Paragraph("Reporte de Nómina", titleFont);
-            title.setAlignment(Element.ALIGN_CENTER);
-            title.setSpacingAfter(20);
-            document.add(title);
-
             Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+
+            Paragraph mainTitle = new Paragraph("Reporte de Nómina", titleFont);
+            mainTitle.setAlignment(Element.ALIGN_CENTER);
+            mainTitle.setSpacingAfter(20);
+            document.add(mainTitle);
+
             Paragraph total = new Paragraph(
                     "Total de Empleados: " + employees.size(),
                     normalFont);
             total.setSpacingAfter(20);
             document.add(total);
 
-            PdfPTable table = new PdfPTable(9);
-            table.setWidthPercentage(100);
-            float[] columnWidths = { 3f, 1.5f, 2f, 2f, 2f, 1.5f, 1.5f, 2f, 2f };
-            table.setWidths(columnWidths);
+            addEmployeeTable(document, employees);
 
-            String[] headers = {
-                    "Nombre", "Código", "Departamento", "Cargo",
-                    "Fecha de Ingreso", "EPS", "ARL", "Fondo de Pensión", "Salario"
-            };
+            document.newPage();
 
-            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
-            for (String header : headers) {
-                PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                cell.setPadding(5);
-                table.addCell(cell);
-            }
+            PdfPTable chartsTable = new PdfPTable(1);
+            chartsTable.setWidthPercentage(100);
 
-            Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10);
-            for (Employee employee : employees) {
-                addCell(table, employee.getFullName(), dataFont, Element.ALIGN_LEFT);
-                addCell(table, employee.getCode(), dataFont, Element.ALIGN_CENTER);
-                addCell(table, employee.getDepartment().getName(), dataFont, Element.ALIGN_LEFT);
-                addCell(table, employee.getPosition().getName(), dataFont, Element.ALIGN_LEFT);
-                addCell(table, DATE_FORMAT.format(employee.getHireDate()), dataFont, Element.ALIGN_CENTER);
-                addCell(table, employee.getEps().getName(), dataFont, Element.ALIGN_CENTER);
-                addCell(table, employee.getArl().getName(), dataFont, Element.ALIGN_CENTER);
-                addCell(table, employee.getPensionFund().getName(), dataFont, Element.ALIGN_CENTER);
-                addCell(table, String.format("$%,d", employee.getSalary().longValue()), dataFont, Element.ALIGN_RIGHT);
-            }
+            PdfPCell titleCell = new PdfPCell(new Paragraph("Empleados por Departamento", titleFont));
+            titleCell.setBorder(0);
+            titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleCell.setPaddingBottom(10);
+            chartsTable.addCell(titleCell);
 
-            document.add(table);
+            JFreeChart pieChart = createDepartmentPieChart();
+            BufferedImage pieChartImage = pieChart.createBufferedImage(700, 400);
+            Image pieChartPdfImage = Image.getInstance(pieChartImage, null);
+            PdfPCell chartCell = new PdfPCell(pieChartPdfImage);
+            chartCell.setBorder(0);
+            chartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            chartsTable.addCell(chartCell);
+
+            document.add(chartsTable);
+
+            document.newPage();
+
+            PdfPTable barChartsTable = new PdfPTable(1);
+            barChartsTable.setWidthPercentage(100);
+
+            PdfPCell barTitleCell = new PdfPCell(new Paragraph("Empleados por Cargo y Departamento", titleFont));
+            barTitleCell.setBorder(0);
+            barTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            barTitleCell.setPaddingBottom(10);
+            barChartsTable.addCell(barTitleCell);
+
+            JFreeChart barChart = createDepartmentPositionBarChart();
+            BufferedImage barChartImage = barChart.createBufferedImage(700, 400);
+            Image barChartPdfImage = Image.getInstance(barChartImage, null);
+            PdfPCell barChartCell = new PdfPCell(barChartPdfImage);
+            barChartCell.setBorder(0);
+            barChartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            barChartsTable.addCell(barChartCell);
+
+            document.add(barChartsTable);
+
             document.close();
-
             return out.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("Error generating PDF", e);
         }
+    }
+
+    private void addEmployeeTable(Document document, List<Employee> employees) throws DocumentException {
+        PdfPTable table = new PdfPTable(9);
+        table.setWidthPercentage(100);
+        float[] columnWidths = { 3f, 1.5f, 2f, 2f, 2f, 1.5f, 1.5f, 2f, 2f };
+        table.setWidths(columnWidths);
+
+        String[] headers = {
+                "Nombre", "Código", "Departamento", "Cargo",
+                "Fecha de Ingreso", "EPS", "ARL", "Fondo de Pensión", "Salario"
+        };
+
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
+        for (String header : headers) {
+            PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell.setPadding(5);
+            table.addCell(cell);
+        }
+
+        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10);
+        for (Employee employee : employees) {
+            addCell(table, employee.getFullName(), dataFont, Element.ALIGN_LEFT);
+            addCell(table, employee.getCode(), dataFont, Element.ALIGN_CENTER);
+            addCell(table, employee.getDepartment().getName(), dataFont, Element.ALIGN_LEFT);
+            addCell(table, employee.getPosition().getName(), dataFont, Element.ALIGN_LEFT);
+            addCell(table, DATE_FORMAT.format(employee.getHireDate()), dataFont, Element.ALIGN_CENTER);
+            addCell(table, employee.getEps().getName(), dataFont, Element.ALIGN_CENTER);
+            addCell(table, employee.getArl().getName(), dataFont, Element.ALIGN_CENTER);
+            addCell(table, employee.getPensionFund().getName(), dataFont, Element.ALIGN_CENTER);
+            addCell(table, String.format("$%,d", employee.getSalary().longValue()), dataFont, Element.ALIGN_RIGHT);
+        }
+
+        document.add(table);
+    }
+
+    private JFreeChart createDepartmentPieChart() {
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+        Map<String, Long> departmentStats = getEmployeeCountByDepartment();
+
+        departmentStats.forEach((key, value) -> dataset.setValue(key, value.doubleValue()));
+
+        JFreeChart chart = ChartFactory.createPieChart(
+                null,
+                dataset,
+                true,
+                true,
+                false);
+
+        @SuppressWarnings("unchecked")
+        PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setOutlinePaint(null);
+        plot.setLabelGenerator(null);
+
+        return chart;
+    }
+
+    private JFreeChart createDepartmentPositionBarChart() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        Map<String, Map<String, Long>> stats = getEmployeeCountByDepartmentAndPosition();
+
+        stats.forEach((department, positions) -> positions
+                .forEach((position, count) -> dataset.addValue(count, position, department)));
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                null,
+                "Departamento",
+                "Cantidad",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false);
+
+        chart.setBackgroundPaint(Color.WHITE);
+        chart.getPlot().setBackgroundPaint(Color.WHITE);
+
+        return chart;
     }
 
     private void addCell(PdfPTable table, String text, Font font, int alignment) {
