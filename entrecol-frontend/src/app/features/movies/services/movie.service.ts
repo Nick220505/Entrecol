@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@app/features/movies/models/movie.model';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
 import { finalize } from 'rxjs';
 
@@ -17,7 +17,7 @@ interface State<T> {
 export class MovieService {
   private readonly apiUrl = `${environment.apiUrl}/movies`;
   private readonly http = inject(HttpClient);
-  private readonly snackBar = inject(SnackBarService);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly movies = signal<State<Movie[]>>({
     data: [],
@@ -38,7 +38,7 @@ export class MovieService {
       },
       error: () => {
         this.movies.update((state) => ({ ...state, loading: false }));
-        this.snackBar.error('Error al cargar las películas');
+        this.snackBar.open('Error al cargar las películas', 'Cerrar');
       },
     });
   }
@@ -54,13 +54,13 @@ export class MovieService {
       .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
         next: () => {
-          this.snackBar.success('Películas subidas exitosamente');
+          this.snackBar.open('Películas subidas exitosamente', 'Cerrar');
           this.movies.update((state) => ({ ...state, initialLoad: true }));
           this.getAll();
         },
         error: () => {
           this.movies.update((state) => ({ ...state, loading: false }));
-          this.snackBar.error('Error al subir las películas');
+          this.snackBar.open('Error al subir las películas', 'Cerrar');
         },
       });
   }
@@ -74,12 +74,12 @@ export class MovieService {
         const movies = this.parseMovieData(content);
         this.uploadMovies(movies);
       } catch {
-        this.snackBar.error('Error al procesar el archivo');
+        this.snackBar.open('Error al procesar el archivo', 'Cerrar');
       }
     };
 
     reader.onerror = () => {
-      this.snackBar.error('Error al leer el archivo');
+      this.snackBar.open('Error al leer el archivo', 'Cerrar');
     };
 
     reader.readAsText(file);

@@ -41,10 +41,7 @@ export class PayrollService {
       },
       error: () => {
         this.employees.update((state) => ({ ...state, loading: false }));
-        this.snackBar.open('Error al cargar los empleados', 'Cerrar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
+        this.snackBar.open('Error al cargar los empleados', 'Cerrar');
       },
     });
   }
@@ -66,19 +63,13 @@ export class PayrollService {
       .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
         next: () => {
-          this.snackBar.open('Empleados subidos exitosamente', 'Cerrar', {
-            duration: 3000,
-            panelClass: ['success-snackbar'],
-          });
+          this.snackBar.open('Empleados subidos exitosamente', 'Cerrar');
           this.employees.update((state) => ({ ...state, initialLoad: true }));
           this.getAll();
         },
         error: () => {
           this.employees.update((state) => ({ ...state, loading: false }));
-          this.snackBar.open('Error al subir los empleados', 'Cerrar', {
-            duration: 3000,
-            panelClass: ['error-snackbar'],
-          });
+          this.snackBar.open('Error al subir los empleados', 'Cerrar');
         },
       });
   }

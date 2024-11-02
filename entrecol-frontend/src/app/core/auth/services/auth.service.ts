@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { environment } from '@env';
 
 import { finalize } from 'rxjs';
@@ -17,7 +17,7 @@ export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}/auth`;
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly snackBarService = inject(SnackBarService);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
@@ -34,8 +34,9 @@ export class AuthService {
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: () => {
-          this.snackBarService.success(
+          this.snackBar.open(
             'Registro exitoso. Por favor inicie sesión.',
+            'Cerrar',
           );
           this.router.navigate(['/login']);
         },
@@ -75,7 +76,7 @@ export class AuthService {
         next: ({ token }) => {
           localStorage.setItem('token', token);
           this.isAuthenticated.set(true);
-          this.snackBarService.success('Inicio de sesión exitoso');
+          this.snackBar.open('Inicio de sesión exitoso', 'Cerrar');
           this.router.navigate(['/']);
         },
         error: ({ status }: HttpErrorResponse) => {
@@ -101,6 +102,6 @@ export class AuthService {
     localStorage.removeItem('token');
     this.isAuthenticated.set(false);
     this.router.navigate(['/login']);
-    this.snackBarService.info('Se ha cerrado la sesión exitosamente');
+    this.snackBar.open('Se ha cerrado la sesión exitosamente', 'Cerrar');
   }
 }

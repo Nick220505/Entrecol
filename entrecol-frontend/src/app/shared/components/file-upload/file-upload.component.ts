@@ -12,8 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SnackBarService } from '@core/services/snack-bar.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -30,7 +30,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
   styleUrl: './file-upload.component.scss',
 })
 export class FileUploadComponent {
-  private readonly snackBar = inject(SnackBarService);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly maxFileSize = 10 * 1024 * 1024;
 
   protected readonly isDragging = signal(false);
@@ -81,14 +81,15 @@ export class FileUploadComponent {
 
   handleFile(file: File): void {
     if (!this.isValidFileType(file)) {
-      this.snackBar.error(
+      this.snackBar.open(
         `Solo se permiten archivos: ${this.acceptAttribute()}`,
+        'Cerrar',
       );
       return;
     }
 
     if (file.size > this.maxFileSize) {
-      this.snackBar.error('El archivo no debe superar los 10MB');
+      this.snackBar.open('El archivo no debe superar los 10MB', 'Cerrar');
       return;
     }
 
