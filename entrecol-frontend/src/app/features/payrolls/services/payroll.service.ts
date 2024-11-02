@@ -104,7 +104,9 @@ export class PayrollService {
     this.pdfExporting.set(true);
 
     this.http
-      .get<Blob>(`${this.apiUrl}/export/pdf`)
+      .get(`${this.apiUrl}/export/pdf`, {
+        responseType: 'blob',
+      })
       .pipe(finalize(() => this.pdfExporting.set(false)))
       .subscribe({
         next: (blob) => {

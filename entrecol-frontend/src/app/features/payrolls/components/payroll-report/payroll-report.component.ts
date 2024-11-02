@@ -39,6 +39,7 @@ export class PayrollReportComponent {
       .filter((item) => item.value > 0)
       .sort((a, b) => b.value - a.value);
   });
+
   protected readonly departmentPositionChartData = computed(() => {
     const data = this.report().data;
     if (!data) return [];
@@ -66,6 +67,7 @@ export class PayrollReportComponent {
           a.series.reduce((sum, item) => sum + item.value, 0),
       );
   });
+
   protected readonly yAxisTicks = computed(() => {
     const data = this.departmentPositionChartData();
     if (!data.length) return [0, 1, 2, 3];
@@ -87,7 +89,7 @@ export class PayrollReportComponent {
     );
   }
 
-  formatPositionName(name: string): string {
+  private formatPositionName(name: string): string {
     return name
       .split(/(?=[A-Z])/)
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))

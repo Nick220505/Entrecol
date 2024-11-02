@@ -1,13 +1,16 @@
 <div class="chart-container">
   <ngx-charts-pie-chart
-    [results]="data()"
+    [view]="view"
+    [results]="formattedData()"
     [animations]="true"
     [gradient]="true"
     [legend]="true"
     [legendPosition]="legendPosition"
+    [legendTitle]="'Departamentos'"
     [labels]="true"
     [doughnut]="false"
     [scheme]="colorScheme"
+    [labelFormatting]="formatLabel"
   >
   </ngx-charts-pie-chart>
 </div>
