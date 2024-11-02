@@ -63,4 +63,15 @@ export class PayrollListComponent implements OnInit {
     this.dataSource().filter = filterValue.trim().toLowerCase();
     this.dataSource().paginator.firstPage();
   }
+
+  downloadPdf(): void {
+    this.payrollService.exportToPdf().subscribe((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'nomina.pdf';
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
 }

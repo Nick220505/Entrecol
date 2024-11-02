@@ -1,5 +1,6 @@
 package co.edu.unbosque.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import co.edu.unbosque.model.ARL;
 import co.edu.unbosque.model.Department;
@@ -46,6 +59,7 @@ public class EmployeeService {
     private final EPSRepository epsRepository;
     private final ARLRepository arlRepository;
     private final PensionFundRepository pensionFundRepository;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     public EmployeeService(
             EmployeeRepository employeeRepository,
@@ -465,5 +479,92 @@ public class EmployeeService {
         }
 
         return processedRecords;
+    }
+
+    public Map<String, Object> getEmployeeReport(String sort) {
+        Map<String, Object> report = new HashMap<>();
+        List<Employee> allEmployees = getAllEmployeesSorted(sort);
+        report.put("totalEmployees", allEmployees.size());
+        report.put("employees", allEmployees);
+        report.put("departmentStats", getEmployeeCountByDepartment());
+        report.put("departmentPositionStats", getEmployeeCountByDepartmentAndPosition());
+        return report;
+    }
+
+    private List<Employee> getAllEmployeesSorted(String sort) {
+        Sort.Direction direction = sort.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return employeeRepository.findAll(Sort.by(direction, "fullName"));
+    }
+
+    public byte[] generatePayrollPdf(List<Employee> employees) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Document document = new Document(PageSize.A4.rotate());
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            // Add title
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+            Paragraph title = new Paragraph("Reporte de Nómina", titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.setSpacingAfter(20);
+            document.add(title);
+
+            // Add total employees
+            Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+            Paragraph total = new Paragraph(
+                    "Total de Empleados: " + employees.size(),
+                    normalFont);
+            total.setSpacingAfter(20);
+            document.add(total);
+
+            // Create table
+            PdfPTable table = new PdfPTable(9);
+            table.setWidthPercentage(100);
+            float[] columnWidths = { 3f, 1.5f, 2f, 2f, 2f, 1.5f, 1.5f, 2f, 2f };
+            table.setWidths(columnWidths);
+
+            // Add headers
+            String[] headers = {
+                    "Nombre", "Código", "Departamento", "Cargo",
+                    "Fecha de Ingreso", "EPS", "ARL", "Fondo de Pensión", "Salario"
+            };
+
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
+            for (String header : headers) {
+                PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                cell.setPadding(5);
+                table.addCell(cell);
+            }
+
+            // Add data
+            Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10);
+            for (Employee employee : employees) {
+                addCell(table, employee.getFullName(), dataFont, Element.ALIGN_LEFT);
+                addCell(table, employee.getCode(), dataFont, Element.ALIGN_CENTER);
+                addCell(table, employee.getDepartment().getName(), dataFont, Element.ALIGN_LEFT);
+                addCell(table, employee.getPosition().getName(), dataFont, Element.ALIGN_LEFT);
+                addCell(table, DATE_FORMAT.format(employee.getHireDate()), dataFont, Element.ALIGN_CENTER);
+                addCell(table, employee.getEps().getName(), dataFont, Element.ALIGN_CENTER);
+                addCell(table, employee.getArl().getName(), dataFont, Element.ALIGN_CENTER);
+                addCell(table, employee.getPensionFund().getName(), dataFont, Element.ALIGN_CENTER);
+                addCell(table, String.format("$%,d", employee.getSalary().longValue()), dataFont, Element.ALIGN_RIGHT);
+            }
+
+            document.add(table);
+            document.close();
+
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating PDF", e);
+        }
+    }
+
+    private void addCell(PdfPTable table, String text, Font font, int alignment) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setHorizontalAlignment(alignment);
+        cell.setPadding(5);
+        table.addCell(cell);
     }
 }

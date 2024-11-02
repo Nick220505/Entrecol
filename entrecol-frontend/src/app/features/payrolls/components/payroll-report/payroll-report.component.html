@@ -1,0 +1,24 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Reportes Gráficos</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (report$()) {
+      <!-- Department Stats Section -->
+      <section>
+        <h2>Empleados por Departamento</h2>
+        <app-department-pie-chart [data]="departmentChartData" />
+      </section>
+
+      <!-- Department Position Stats Section -->
+      <section>
+        <h2>Empleados por Cargo y Departamento</h2>
+        <app-department-position-bar-chart
+          [data]="departmentPositionChartData"
+          [yAxisTicks]="yAxisTicks"
+        />
+      </section>
+    }
+  </mat-card-content>
+</mat-card>

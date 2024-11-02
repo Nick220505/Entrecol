@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
-import { Employee } from '@app/features/payrolls/models/payroll.model';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { environment } from '@env';
-import { finalize } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, finalize } from 'rxjs';
 
-interface State<T> {
+import { Employee } from '../models/payroll.model';
+import { EmployeeReport } from '../models/report.model';
+
+interface LoadingState<T> {
   data: T;
   loading: boolean;
   initialLoad: boolean;
@@ -15,23 +16,17 @@ interface State<T> {
   providedIn: 'root',
 })
 export class PayrollService {
-  private readonly apiUrl = `${environment.apiUrl}/employees`;
   private readonly http = inject(HttpClient);
-  private readonly snackBar = inject(SnackBarService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly apiUrl = '/api/employees';
 
-  readonly employee = signal<State<Employee | null>>({
-    data: null,
-    loading: false,
-    initialLoad: true,
-  });
-
-  readonly employees = signal<State<Employee[]>>({
+  employees = signal<LoadingState<Employee[]>>({
     data: [],
     loading: false,
     initialLoad: true,
   });
 
-  readonly uploading = signal(false);
+  uploading = signal(false);
 
   getAll(): void {
     this.employees.update((state) => ({ ...state, loading: true }));
@@ -45,24 +40,10 @@ export class PayrollService {
       },
       error: () => {
         this.employees.update((state) => ({ ...state, loading: false }));
-        this.snackBar.error('Error al cargar los empleados');
-      },
-    });
-  }
-
-  getById(id: number): void {
-    this.employee.update((state) => ({ ...state, loading: true }));
-    this.http.get<Employee>(`${this.apiUrl}/${id}`).subscribe({
-      next: (employee) => {
-        this.employee.set({
-          data: employee,
-          loading: false,
-          initialLoad: false,
+        this.snackBar.open('Error al cargar los empleados', 'Cerrar', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
         });
-      },
-      error: () => {
-        this.employee.update((state) => ({ ...state, loading: false }));
-        this.snackBar.error('Error al cargar el empleado');
       },
     });
   }
@@ -77,19 +58,39 @@ export class PayrollService {
     this.http
       .post<{
         message: string;
+        processedEmployees: number;
+        processedRecords: number;
         processedCount: number;
       }>(`${this.apiUrl}/upload`, formData)
       .pipe(finalize(() => this.uploading.set(false)))
       .subscribe({
         next: () => {
-          this.snackBar.success('Empleados subidos exitosamente');
+          this.snackBar.open('Empleados subidos exitosamente', 'Cerrar', {
+            duration: 3000,
+            panelClass: ['success-snackbar'],
+          });
           this.employees.update((state) => ({ ...state, initialLoad: true }));
           this.getAll();
         },
         error: () => {
           this.employees.update((state) => ({ ...state, loading: false }));
-          this.snackBar.error('Error al subir los empleados');
+          this.snackBar.open('Error al subir los empleados', 'Cerrar', {
+            duration: 3000,
+            panelClass: ['error-snackbar'],
+          });
         },
       });
+  }
+
+  getEmployeeReport(sort: string): Observable<EmployeeReport> {
+    return this.http.get<EmployeeReport>(`${this.apiUrl}/report`, {
+      params: { sort },
+    });
+  }
+
+  exportToPdf(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/export/pdf`, {
+      responseType: 'blob',
+    });
   }
 }

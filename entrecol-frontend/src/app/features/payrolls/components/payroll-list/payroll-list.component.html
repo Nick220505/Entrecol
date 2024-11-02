@@ -1,6 +1,15 @@
 <mat-card appearance="outlined">
   <mat-card-header>
     <mat-card-title>Lista de Empleados</mat-card-title>
+    <div class="header-actions">
+      <span class="total-employees"
+        >Total de Empleados: {{ payrollService.employees().data.length }}</span
+      >
+      <button mat-button (click)="downloadPdf()">
+        <mat-icon>picture_as_pdf</mat-icon>
+        Exportar a PDF
+      </button>
+    </div>
   </mat-card-header>
 
   <mat-card-content>

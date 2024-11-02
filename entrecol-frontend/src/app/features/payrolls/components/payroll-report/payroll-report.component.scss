@@ -1,0 +1,111 @@
+:host {
+  display: block;
+  padding: 16px;
+}
+
+.report-actions {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+section {
+  margin: 32px 0;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+
+  h2 {
+    margin-bottom: 24px;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+  }
+}
+
+table {
+  width: 100%;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container {
+  height: 500px;
+  margin: 16px 0;
+  padding: 0 24px 40px 0;
+  overflow: visible;
+
+  ::ng-deep {
+    .ngx-charts {
+      text {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+      }
+
+      .legend-title {
+        font-size: 14px !important;
+      }
+
+      .legend-label {
+        font-size: 14px !important;
+      }
+
+      .grid-line-path {
+        stroke: rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .x-axis,
+      .y-axis {
+        text {
+          fill: rgba(0, 0, 0, 0.87) !important;
+        }
+      }
+
+      .x-axis {
+        text {
+          transform: rotate(-45deg) translate(-10px, 0);
+          text-anchor: end;
+        }
+      }
+
+      .bar {
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      .legend-entries {
+        margin-left: 16px !important;
+      }
+    }
+  }
+}
+
+:host-context(.dark-theme) {
+  section {
+    background: rgba(255, 255, 255, 0.05);
+
+    h2 {
+      color: rgba(255, 255, 255, 0.87);
+    }
+  }
+
+  ::ng-deep {
+    .ngx-charts {
+      text {
+        fill: rgba(255, 255, 255, 0.87) !important;
+      }
+
+      .grid-line-path {
+        stroke: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      .x-axis,
+      .y-axis {
+        text {
+          fill: rgba(255, 255, 255, 0.87) !important;
+        }
+      }
+    }
+  }
+}

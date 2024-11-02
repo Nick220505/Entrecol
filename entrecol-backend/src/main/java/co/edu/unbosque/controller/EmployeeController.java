@@ -1,10 +1,14 @@
 package co.edu.unbosque.controller;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -91,5 +95,33 @@ public class EmployeeController {
             @RequestParam @DateTimeFormat(pattern = "MM/yyyy") Date startDate,
             @RequestParam @DateTimeFormat(pattern = "MM/yyyy") Date endDate) {
         return ResponseEntity.ok(employeeService.getEmployeeRecordsStatistics(startDate, endDate));
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<Map<String, Object>> getEmployeeReport(
+            @RequestParam(defaultValue = "asc") String sort) {
+        try {
+            Map<String, Object> report = employeeService.getEmployeeReport(sort);
+            return ResponseEntity.ok(report);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/export/pdf")
+    public ResponseEntity<byte[]> exportPdf() {
+        try {
+            List<Employee> employees = employeeService.getAllEmployees();
+            byte[] pdfBytes = employeeService.generatePayrollPdf(employees);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("filename", "nomina.pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }
