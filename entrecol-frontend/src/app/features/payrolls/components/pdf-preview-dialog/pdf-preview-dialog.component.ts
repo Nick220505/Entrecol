@@ -23,15 +23,12 @@ import {
 })
 export class PdfPreviewDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<PdfPreviewDialogComponent>);
-  protected readonly pdfUrl = signal<string>('');
+
+  readonly pdfUrl = signal<string>('');
 
   constructor() {
     pdfDefaultOptions.assetsFolder = 'assets';
     pdfDefaultOptions.doubleTapZoomFactor = '150%';
-  }
-
-  setPdfUrl(url: string): void {
-    this.pdfUrl.set(url);
   }
 
   close(): void {

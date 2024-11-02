@@ -24,19 +24,19 @@ export class PayrollService {
   private readonly dialog = inject(MatDialog);
   private readonly apiUrl = `${environment.apiUrl}/employees`;
 
-  employees = signal<LoadingState<Employee[]>>({
+  readonly employees = signal<LoadingState<Employee[]>>({
     data: [],
     loading: false,
     initialLoad: true,
   });
 
-  report = signal<LoadingState<EmployeeReport | null>>({
+  readonly report = signal<LoadingState<EmployeeReport | null>>({
     data: null,
     loading: false,
     initialLoad: true,
   });
 
-  uploading = signal(false);
+  readonly uploading = signal(false);
 
   readonly pdfExporting = signal(false);
 
@@ -120,17 +120,12 @@ export class PayrollService {
             maxWidth: '100vw',
             maxHeight: '100vh',
           });
-
-          const component = dialogRef.componentInstance;
-          component.setPdfUrl(url);
-
+          dialogRef.componentInstance.pdfUrl.set(url);
           dialogRef.afterClosed().subscribe(() => {
             window.URL.revokeObjectURL(url);
           });
         },
-        error: () => {
-          this.snackBar.open('Error al exportar el PDF', 'Cerrar');
-        },
+        error: () => this.snackBar.open('Error al exportar el PDF', 'Cerrar'),
       });
   }
 }
