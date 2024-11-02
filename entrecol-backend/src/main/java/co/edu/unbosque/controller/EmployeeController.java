@@ -98,10 +98,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/report")
-    public ResponseEntity<Map<String, Object>> getEmployeeReport(
-            @RequestParam(defaultValue = "asc") String sort) {
+    public ResponseEntity<Map<String, Object>> getEmployeeReport() {
         try {
-            Map<String, Object> report = employeeService.getEmployeeReport(sort);
+            Map<String, Object> report = employeeService.getEmployeeReport();
             return ResponseEntity.ok(report);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

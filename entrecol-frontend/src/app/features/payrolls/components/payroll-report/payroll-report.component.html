@@ -4,19 +4,17 @@
   </mat-card-header>
 
   <mat-card-content>
-    @if (report$()) {
-      <!-- Department Stats Section -->
+    @if (!report().loading && report().data) {
       <section>
         <h2>Empleados por Departamento</h2>
-        <app-department-pie-chart [data]="departmentChartData" />
+        <app-department-pie-chart [data]="departmentChartData()" />
       </section>
 
-      <!-- Department Position Stats Section -->
       <section>
         <h2>Empleados por Cargo y Departamento</h2>
         <app-department-position-bar-chart
-          [data]="departmentPositionChartData"
-          [yAxisTicks]="yAxisTicks"
+          [data]="departmentPositionChartData()"
+          [yAxisTicks]="yAxisTicks()"
         />
       </section>
     }

@@ -481,9 +481,9 @@ public class EmployeeService {
         return processedRecords;
     }
 
-    public Map<String, Object> getEmployeeReport(String sort) {
+    public Map<String, Object> getEmployeeReport() {
         Map<String, Object> report = new HashMap<>();
-        List<Employee> allEmployees = getAllEmployeesSorted(sort);
+        List<Employee> allEmployees = getAllEmployeesSorted();
         report.put("totalEmployees", allEmployees.size());
         report.put("employees", allEmployees);
         report.put("departmentStats", getEmployeeCountByDepartment());
@@ -491,9 +491,8 @@ public class EmployeeService {
         return report;
     }
 
-    private List<Employee> getAllEmployeesSorted(String sort) {
-        Sort.Direction direction = sort.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return employeeRepository.findAll(Sort.by(direction, "fullName"));
+    private List<Employee> getAllEmployeesSorted() {
+        return employeeRepository.findAll(Sort.by(Sort.Direction.ASC, "fullName"));
     }
 
     public byte[] generatePayrollPdf(List<Employee> employees) {
@@ -502,14 +501,12 @@ public class EmployeeService {
             PdfWriter.getInstance(document, out);
             document.open();
 
-            // Add title
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
             Paragraph title = new Paragraph("Reporte de Nómina", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             title.setSpacingAfter(20);
             document.add(title);
 
-            // Add total employees
             Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
             Paragraph total = new Paragraph(
                     "Total de Empleados: " + employees.size(),
@@ -517,13 +514,11 @@ public class EmployeeService {
             total.setSpacingAfter(20);
             document.add(total);
 
-            // Create table
             PdfPTable table = new PdfPTable(9);
             table.setWidthPercentage(100);
             float[] columnWidths = { 3f, 1.5f, 2f, 2f, 2f, 1.5f, 1.5f, 2f, 2f };
             table.setWidths(columnWidths);
 
-            // Add headers
             String[] headers = {
                     "Nombre", "Código", "Departamento", "Cargo",
                     "Fecha de Ingreso", "EPS", "ARL", "Fondo de Pensión", "Salario"
@@ -538,7 +533,6 @@ public class EmployeeService {
                 table.addCell(cell);
             }
 
-            // Add data
             Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10);
             for (Employee employee : employees) {
                 addCell(table, employee.getFullName(), dataFont, Element.ALIGN_LEFT);

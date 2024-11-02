@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 
 import { environment } from '@env';
 import { Employee } from '../models/payroll.model';
@@ -27,7 +27,15 @@ export class PayrollService {
     initialLoad: true,
   });
 
+  report = signal<LoadingState<EmployeeReport | null>>({
+    data: null,
+    loading: false,
+    initialLoad: true,
+  });
+
   uploading = signal(false);
+
+  readonly pdfExporting = signal(false);
 
   getAll(): void {
     this.employees.update((state) => ({ ...state, loading: true }));
@@ -74,15 +82,42 @@ export class PayrollService {
       });
   }
 
-  getEmployeeReport(sort: string): Observable<EmployeeReport> {
-    return this.http.get<EmployeeReport>(`${this.apiUrl}/report`, {
-      params: { sort },
+  getEmployeeReport(): void {
+    this.report.update((state) => ({ ...state, loading: true }));
+
+    this.http.get<EmployeeReport>(`${this.apiUrl}/report`).subscribe({
+      next: (data) => {
+        this.report.set({
+          data,
+          loading: false,
+          initialLoad: false,
+        });
+      },
+      error: () => {
+        this.report.update((state) => ({ ...state, loading: false }));
+        this.snackBar.open('Error al cargar el reporte', 'Cerrar');
+      },
     });
   }
 
-  exportToPdf(): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/export/pdf`, {
-      responseType: 'blob',
-    });
+  exportToPdf(): void {
+    this.pdfExporting.set(true);
+
+    this.http
+      .get<Blob>(`${this.apiUrl}/export/pdf`)
+      .pipe(finalize(() => this.pdfExporting.set(false)))
+      .subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'nomina.pdf';
+          link.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: () => {
+          this.snackBar.open('Error al exportar el PDF', 'Cerrar');
+        },
+      });
   }
 }
