@@ -24,14 +24,14 @@ export class DepartmentPieChartComponent {
     selectable: true,
     group: ScaleType.Ordinal,
     domain: [
-      '#2196F3', // Blue
-      '#FF9800', // Orange
-      '#4CAF50', // Green
-      '#E91E63', // Pink
-      '#9C27B0', // Purple
-      '#00BCD4', // Cyan
-      '#FFC107', // Amber
-      '#3F51B5', // Indigo
+      '#2196F3',
+      '#FF9800',
+      '#4CAF50',
+      '#E91E63',
+      '#9C27B0',
+      '#00BCD4',
+      '#FFC107',
+      '#3F51B5',
     ],
   };
 
