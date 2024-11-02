@@ -1,7 +1,7 @@
 <div class="chart-container">
   <ngx-charts-bar-vertical-2d
     [view]="view"
-    [results]="data"
+    [results]="data()"
     [gradient]="true"
     [xAxis]="true"
     [yAxis]="true"
@@ -20,7 +20,7 @@
     [showGridLines]="true"
     [noBarWhenZero]="true"
     [yAxisTickFormatting]="formatYAxisTick"
-    [yAxisTicks]="yAxisTicks"
+    [yAxisTicks]="yAxisTicks()"
     [xAxisTickFormatting]="formatXAxisTick"
   >
   </ngx-charts-bar-vertical-2d>

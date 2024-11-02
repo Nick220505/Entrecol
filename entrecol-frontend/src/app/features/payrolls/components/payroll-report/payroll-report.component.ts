@@ -25,8 +25,8 @@ import { DepartmentPositionBarChartComponent } from '../department-position-bar-
 export class PayrollReportComponent {
   private readonly payrollService = inject(PayrollService);
 
-  readonly report = this.payrollService.report;
-  readonly departmentChartData = computed(() => {
+  protected readonly report = computed(() => this.payrollService.report());
+  protected readonly departmentChartData = computed(() => {
     const data = this.report().data;
     if (!data) return [];
     return Object.entries(data.departmentStats)
@@ -39,7 +39,7 @@ export class PayrollReportComponent {
       .filter((item) => item.value > 0)
       .sort((a, b) => b.value - a.value);
   });
-  readonly departmentPositionChartData = computed(() => {
+  protected readonly departmentPositionChartData = computed(() => {
     const data = this.report().data;
     if (!data) return [];
 
@@ -66,7 +66,7 @@ export class PayrollReportComponent {
           a.series.reduce((sum, item) => sum + item.value, 0),
       );
   });
-  readonly yAxisTicks = computed(() => {
+  protected readonly yAxisTicks = computed(() => {
     const data = this.departmentPositionChartData();
     if (!data.length) return [0, 1, 2, 3];
 

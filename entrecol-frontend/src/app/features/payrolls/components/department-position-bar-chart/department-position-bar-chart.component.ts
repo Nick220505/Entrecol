@@ -1,10 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   LegendPosition,
   NgxChartsModule,
   ScaleType,
 } from '@swimlane/ngx-charts';
+
+interface ChartData {
+  name: string;
+  series: {
+    name: string;
+    value: number;
+  }[];
+}
 
 @Component({
   selector: 'app-department-position-bar-chart',
@@ -14,17 +22,11 @@ import {
   styleUrls: ['./department-position-bar-chart.component.scss'],
 })
 export class DepartmentPositionBarChartComponent {
-  @Input({ required: true }) data: {
-    name: string;
-    series: { name: string; value: number }[];
-  }[] = [];
-
-  @Input() yAxisTicks = [0, 1, 2, 3];
-
-  readonly view: [number, number] = [window.innerWidth / 1.2, 550];
-  readonly legendPosition = LegendPosition.Right;
-  readonly colorScheme = {
-    name: 'custom',
+  readonly data = input.required<ChartData[]>();
+  readonly yAxisTicks = input.required<number[]>();
+  protected readonly legendPosition = LegendPosition.Right;
+  protected readonly colorScheme = {
+    name: 'vivid',
     selectable: true,
     group: ScaleType.Ordinal,
     domain: [
@@ -45,6 +47,8 @@ export class DepartmentPositionBarChartComponent {
       '#e67300',
     ],
   };
+
+  protected readonly view: [number, number] = [window.innerWidth / 1.2, 550];
 
   formatYAxisTick(value: number): string {
     return Math.round(value).toString();
