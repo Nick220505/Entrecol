@@ -3,6 +3,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, finalize } from 'rxjs';
 
+import { environment } from '@env';
 import { Employee } from '../models/payroll.model';
 import { EmployeeReport } from '../models/report.model';
 
@@ -18,7 +19,7 @@ interface LoadingState<T> {
 export class PayrollService {
   private readonly http = inject(HttpClient);
   private readonly snackBar = inject(MatSnackBar);
-  private readonly apiUrl = '/api/employees';
+  private readonly apiUrl = `${environment.apiUrl}/employees`;
 
   employees = signal<LoadingState<Employee[]>>({
     data: [],
