@@ -1,15 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { PayrollService } from '@payrolls/services/payroll.service';
 import {
   LegendPosition,
   NgxChartsModule,
   ScaleType,
 } from '@swimlane/ngx-charts';
-
-interface ChartData {
-  name: string;
-  value: number;
-}
 
 @Component({
   selector: 'app-department-pie-chart',
@@ -19,7 +15,8 @@ interface ChartData {
   styleUrls: ['./department-pie-chart.component.scss'],
 })
 export class DepartmentPieChartComponent {
-  readonly data = input.required<ChartData[]>();
+  private readonly payrollService = inject(PayrollService);
+
   protected readonly legendPosition = LegendPosition.Right;
   protected readonly view: [number, number] = [window.innerWidth / 1.2, 550];
   protected readonly colorScheme = {
@@ -38,8 +35,22 @@ export class DepartmentPieChartComponent {
     ],
   };
 
+  protected readonly chartData = computed(() => {
+    const data = this.payrollService.report().data;
+    if (!data) return [];
+    return Object.entries(data.departmentStats)
+      .map(([name, value]) => ({
+        name:
+          data.employees.find((emp) => emp.department.name === name)?.department
+            .name || name,
+        value: value,
+      }))
+      .filter((item) => item.value > 0)
+      .sort((a, b) => b.value - a.value);
+  });
+
   protected readonly formattedData = computed(() =>
-    this.data().map((d) => ({
+    this.chartData().map((d) => ({
       ...d,
       name: this.formatName(d.name),
     })),

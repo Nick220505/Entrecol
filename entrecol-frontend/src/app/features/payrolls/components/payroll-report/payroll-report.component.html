@@ -4,19 +4,28 @@
   </mat-card-header>
 
   <mat-card-content>
-    @if (!report().loading && report().data) {
-      <section>
-        <h2>Empleados por Departamento</h2>
-        <app-department-pie-chart [data]="departmentChartData()" />
-      </section>
+    @if (report().initialLoad && report().loading) {
+      <app-loading-spinner
+        loadingText="Cargando reportes..."
+      ></app-loading-spinner>
+    } @else {
+      @if (!report().data) {
+        <div class="no-data">
+          <mat-icon>insert_chart</mat-icon>
+          <p>No hay datos para mostrar</p>
+          <p>Sube algunos empleados para comenzar</p>
+        </div>
+      } @else {
+        <section>
+          <h2>Empleados por Departamento</h2>
+          <app-department-pie-chart />
+        </section>
 
-      <section>
-        <h2>Empleados por Cargo y Departamento</h2>
-        <app-department-position-bar-chart
-          [data]="departmentPositionChartData()"
-          [yAxisTicks]="yAxisTicks()"
-        />
-      </section>
+        <section>
+          <h2>Empleados por Cargo y Departamento</h2>
+          <app-department-position-bar-chart />
+        </section>
+      }
     }
   </mat-card-content>
 </mat-card>
