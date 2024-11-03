@@ -21,8 +21,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.springframework.data.domain.PageRequest;
@@ -937,13 +939,16 @@ public class EmployeeService {
 
     private JFreeChart createEpsFrequencyChart(List<EmployeeHealthPensionStats> stats) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        stats.stream()
+        Map<String, Long> epsCounts = stats.stream()
                 .collect(Collectors.groupingBy(
                         EmployeeHealthPensionStats::getEpsName,
                         Collectors.collectingAndThen(
                                 Collectors.toList(),
-                                list -> list.get(0).getEpsCount())))
-                .forEach((eps, count) -> dataset.addValue(count, "EPS", eps));
+                                list -> list.get(0).getEpsCount())));
+
+        epsCounts.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> dataset.addValue(entry.getValue(), "EPS", entry.getKey()));
 
         JFreeChart chart = ChartFactory.createBarChart(
                 null,
@@ -958,18 +963,39 @@ public class EmployeeService {
         chart.setBackgroundPaint(Color.WHITE);
         chart.getPlot().setBackgroundPaint(Color.WHITE);
 
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+
+        Color[] colors = {
+                new Color(33, 150, 243),
+                new Color(255, 152, 0),
+                new Color(76, 175, 80),
+                new Color(233, 30, 99),
+                new Color(156, 39, 176),
+                new Color(0, 188, 212),
+                new Color(255, 193, 7),
+                new Color(63, 81, 181)
+        };
+
+        for (int i = 0; i < dataset.getRowCount(); i++) {
+            renderer.setSeriesPaint(i, colors[i % colors.length]);
+        }
+
         return chart;
     }
 
     private JFreeChart createPensionFrequencyChart(List<EmployeeHealthPensionStats> stats) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        stats.stream()
+        Map<String, Long> pensionCounts = stats.stream()
                 .collect(Collectors.groupingBy(
                         EmployeeHealthPensionStats::getPensionFundName,
                         Collectors.collectingAndThen(
                                 Collectors.toList(),
-                                list -> list.get(0).getPensionFundCount())))
-                .forEach((pension, count) -> dataset.addValue(count, "Fondo de Pensión", pension));
+                                list -> list.get(0).getPensionFundCount())));
+
+        pensionCounts.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> dataset.addValue(entry.getValue(), "Fondo de Pensión", entry.getKey()));
 
         JFreeChart chart = ChartFactory.createBarChart(
                 null,
@@ -983,6 +1009,24 @@ public class EmployeeService {
 
         chart.setBackgroundPaint(Color.WHITE);
         chart.getPlot().setBackgroundPaint(Color.WHITE);
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+
+        Color[] colors = {
+                new Color(233, 30, 99),
+                new Color(156, 39, 176),
+                new Color(103, 58, 183),
+                new Color(63, 81, 181),
+                new Color(33, 150, 243),
+                new Color(3, 169, 244),
+                new Color(0, 188, 212),
+                new Color(0, 150, 136)
+        };
+
+        for (int i = 0; i < dataset.getRowCount(); i++) {
+            renderer.setSeriesPaint(i, colors[i % colors.length]);
+        }
 
         return chart;
     }
@@ -1014,6 +1058,24 @@ public class EmployeeService {
         chart.setBackgroundPaint(Color.WHITE);
         chart.getPlot().setBackgroundPaint(Color.WHITE);
 
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+
+        Color[] colors = {
+                new Color(33, 150, 243),
+                new Color(255, 152, 0),
+                new Color(76, 175, 80),
+                new Color(233, 30, 99),
+                new Color(156, 39, 176),
+                new Color(0, 188, 212),
+                new Color(255, 193, 7),
+                new Color(63, 81, 181)
+        };
+
+        for (int i = 0; i < dataset.getRowCount(); i++) {
+            renderer.setSeriesPaint(i, colors[i % colors.length]);
+        }
+
         return chart;
     }
 
@@ -1043,6 +1105,24 @@ public class EmployeeService {
 
         chart.setBackgroundPaint(Color.WHITE);
         chart.getPlot().setBackgroundPaint(Color.WHITE);
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+
+        Color[] colors = {
+                new Color(233, 30, 99),
+                new Color(156, 39, 176),
+                new Color(103, 58, 183),
+                new Color(63, 81, 181),
+                new Color(33, 150, 243),
+                new Color(3, 169, 244),
+                new Color(0, 188, 212),
+                new Color(0, 150, 136)
+        };
+
+        for (int i = 0; i < dataset.getRowCount(); i++) {
+            renderer.setSeriesPaint(i, colors[i % colors.length]);
+        }
 
         return chart;
     }
