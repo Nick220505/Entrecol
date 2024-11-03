@@ -36,16 +36,16 @@ export class PensionFrequencyChartComponent {
   };
 
   protected readonly chartData = computed(() => {
-    const data = this.payrollService.healthPensionReport().data;
-    if (!data) return [];
+    const data = this.payrollService.pensionFrequency().data;
+    if (!Object.keys(data).length) return [];
 
-    return Object.entries(data.pensionFundCounts)
+    return Object.entries(data)
       .map(([name, value]) => ({
         name,
-        value,
+        value: Number(value),
       }))
       .filter((item) => item.value > 0)
-      .sort((a, b) => b.value - a.value);
+      .sort((a, b) => a.name.localeCompare(b.name));
   });
 
   protected readonly yAxisTicks = computed(() => {
@@ -57,7 +57,7 @@ export class PensionFrequencyChartComponent {
   });
 
   formatYAxisTick(value: number): string {
-    return `${value}`;
+    return value.toString();
   }
 
   formatXAxisTick(value: string): string {

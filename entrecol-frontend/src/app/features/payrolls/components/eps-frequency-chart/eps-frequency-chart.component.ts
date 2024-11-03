@@ -36,16 +36,17 @@ export class EpsFrequencyChartComponent {
   };
 
   protected readonly chartData = computed(() => {
-    const data = this.payrollService.healthPensionReport().data;
-    if (!data) return [];
+    const data = this.payrollService.epsFrequency().data;
+    console.log(data);
+    if (!Object.keys(data).length) return [];
 
-    return Object.entries(data.epsCounts)
+    return Object.entries(data)
       .map(([name, value]) => ({
         name,
-        value,
+        value: Number(value),
       }))
       .filter((item) => item.value > 0)
-      .sort((a, b) => b.value - a.value);
+      .sort((a, b) => a.name.localeCompare(b.name));
   });
 
   protected readonly yAxisTicks = computed(() => {
@@ -57,7 +58,7 @@ export class EpsFrequencyChartComponent {
   });
 
   formatYAxisTick(value: number): string {
-    return `${value}`;
+    return value.toString();
   }
 
   formatXAxisTick(value: string): string {

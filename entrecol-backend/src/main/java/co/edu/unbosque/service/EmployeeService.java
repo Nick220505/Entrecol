@@ -1046,4 +1046,24 @@ public class EmployeeService {
 
         return chart;
     }
+
+    public Map<String, Long> getEpsFrequency() {
+        List<EmployeeHealthPensionStats> stats = employeeRepository.getHealthPensionStats();
+        return stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getEpsName,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.get(0).getEpsCount())));
+    }
+
+    public Map<String, Long> getPensionFrequency() {
+        List<EmployeeHealthPensionStats> stats = employeeRepository.getHealthPensionStats();
+        return stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getPensionFundName,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.get(0).getPensionFundCount())));
+    }
 }

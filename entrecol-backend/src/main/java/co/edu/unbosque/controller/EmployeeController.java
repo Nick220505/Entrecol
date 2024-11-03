@@ -171,4 +171,26 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @GetMapping("/eps-frequency")
+    public ResponseEntity<Map<String, Object>> getEpsFrequency() {
+        try {
+            Map<String, Long> epsCounts = employeeService.getEpsFrequency();
+            return ResponseEntity.ok(Map.of("data", epsCounts));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/pension-frequency")
+    public ResponseEntity<Map<String, Object>> getPensionFrequency() {
+        try {
+            Map<String, Long> pensionCounts = employeeService.getPensionFrequency();
+            return ResponseEntity.ok(Map.of("data", pensionCounts));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
 }

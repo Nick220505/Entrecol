@@ -42,6 +42,8 @@ export class HealthPensionReportComponent {
       () => {
         if (this.payrollService.employees().data.length > 0) {
           this.payrollService.getHealthPensionReport();
+          this.payrollService.getEpsFrequency();
+          this.payrollService.getPensionFrequency();
         }
       },
       { allowSignalWrites: true },

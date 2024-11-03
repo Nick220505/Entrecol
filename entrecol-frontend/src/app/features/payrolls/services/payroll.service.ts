@@ -57,6 +57,18 @@ export class PayrollService {
 
   readonly pdfExportingHealthPension = signal(false);
 
+  readonly epsFrequency = signal<State<Record<string, number>>>({
+    data: {},
+    loading: false,
+    initialLoad: true,
+  });
+
+  readonly pensionFrequency = signal<State<Record<string, number>>>({
+    data: {},
+    loading: false,
+    initialLoad: true,
+  });
+
   getAll(): void {
     this.employees.update((state) => ({ ...state, loading: true }));
     this.http.get<Employee[]>(this.apiUrl).subscribe({
@@ -247,6 +259,52 @@ export class PayrollService {
           });
         },
         error: () => this.snackBar.open('Error al exportar el PDF', 'Cerrar'),
+      });
+  }
+
+  getEpsFrequency(): void {
+    this.epsFrequency.update((state) => ({ ...state, loading: true }));
+
+    this.http
+      .get<{ data: Record<string, number> }>(`${this.apiUrl}/eps-frequency`)
+      .subscribe({
+        next: ({ data }) => {
+          this.epsFrequency.set({
+            data,
+            loading: false,
+            initialLoad: false,
+          });
+        },
+        error: () => {
+          this.epsFrequency.update((state) => ({ ...state, loading: false }));
+          this.snackBar.open('Error al cargar la frecuencia de EPS', 'Cerrar');
+        },
+      });
+  }
+
+  getPensionFrequency(): void {
+    this.pensionFrequency.update((state) => ({ ...state, loading: true }));
+
+    this.http
+      .get<{ data: Record<string, number> }>(`${this.apiUrl}/pension-frequency`)
+      .subscribe({
+        next: ({ data }) => {
+          this.pensionFrequency.set({
+            data,
+            loading: false,
+            initialLoad: false,
+          });
+        },
+        error: () => {
+          this.pensionFrequency.update((state) => ({
+            ...state,
+            loading: false,
+          }));
+          this.snackBar.open(
+            'Error al cargar la frecuencia de Fondos de Pensión',
+            'Cerrar',
+          );
+        },
       });
   }
 }
