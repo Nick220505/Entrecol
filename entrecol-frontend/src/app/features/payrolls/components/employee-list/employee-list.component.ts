@@ -21,7 +21,7 @@ import { CustomPaginatorIntl } from '@shared/config/paginator-intl.config';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
 
 @Component({
-  selector: 'app-payroll-list',
+  selector: 'app-employee-list',
   standalone: true,
   imports: [
     FormsModule,
@@ -40,10 +40,10 @@ import { EmptyPipe } from '@shared/pipes/empty.pipe';
     EmptyPipe,
   ],
   providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
-  templateUrl: './payroll-list.component.html',
-  styleUrl: './payroll-list.component.scss',
+  templateUrl: './employee-list.component.html',
+  styleUrl: './employee-list.component.scss',
 })
-export class PayrollListComponent implements OnInit {
+export class EmployeeListComponent implements OnInit {
   protected readonly payrollService = inject(PayrollService);
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);

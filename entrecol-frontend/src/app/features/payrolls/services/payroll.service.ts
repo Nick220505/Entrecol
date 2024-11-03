@@ -44,6 +44,7 @@ export class PayrollService {
   });
 
   readonly uploading = signal(false);
+  readonly fileUploaded = signal(false);
   readonly pdfExporting = signal(false);
 
   getAll(): void {
@@ -82,6 +83,7 @@ export class PayrollService {
         next: () => {
           this.snackBar.open('Empleados subidos exitosamente', 'Cerrar');
           this.employees.update((state) => ({ ...state, initialLoad: true }));
+          this.fileUploaded.set(true);
           this.getAll();
         },
         error: () => {

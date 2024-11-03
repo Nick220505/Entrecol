@@ -1,4 +1,4 @@
-<mat-tab-group>
+<mat-tab-group [(selectedIndex)]="selectedTabIndex">
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="tab-icon">upload_file</mat-icon>
@@ -12,7 +12,7 @@
       <mat-icon class="tab-icon">list</mat-icon>
       Lista de Empleados
     </ng-template>
-    <app-payroll-list></app-payroll-list>
+    <app-employee-list></app-employee-list>
   </mat-tab>
 
   <mat-tab>
