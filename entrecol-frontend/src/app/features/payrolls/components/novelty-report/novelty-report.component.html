@@ -144,41 +144,12 @@
 
         <section>
           <h2>Novedades por Departamento</h2>
-          <div class="stats-grid">
-            @for (
-              entry of report().data!.departmentStats | keyvalue;
-              track entry.key
-            ) {
-              <mat-card appearance="outlined" class="stat-card">
-                <mat-card-content>
-                  <div class="stat-value">{{ entry.value }}</div>
-                  <div class="stat-label">{{ entry.key }}</div>
-                </mat-card-content>
-              </mat-card>
-            }
-          </div>
+          <app-novelty-department-chart />
         </section>
 
         <section>
           <h2>Novedades por Departamento y Cargo</h2>
-          @for (
-            dept of report().data!.departmentPositionStats | keyvalue;
-            track dept.key
-          ) {
-            <div class="department-stats">
-              <h3>{{ dept.key }}</h3>
-              <div class="stats-grid">
-                @for (pos of dept.value | keyvalue; track pos.key) {
-                  <mat-card appearance="outlined" class="stat-card">
-                    <mat-card-content>
-                      <div class="stat-value">{{ pos.value }}</div>
-                      <div class="stat-label">{{ pos.key }}</div>
-                    </mat-card-content>
-                  </mat-card>
-                }
-              </div>
-            </div>
-          }
+          <app-novelty-department-position-chart />
         </section>
       }
     }

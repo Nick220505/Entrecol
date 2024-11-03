@@ -16,6 +16,8 @@ import { MatTableModule } from '@angular/material/table';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { EmployeeNovelty } from '../../models/novelty-report.model';
 import { PayrollService } from '../../services/payroll.service';
+import { NoveltyDepartmentChartComponent } from '../novelty-department-chart/novelty-department-chart.component';
+import { NoveltyDepartmentPositionChartComponent } from '../novelty-department-position-chart/novelty-department-position-chart.component';
 
 @Component({
   selector: 'app-novelty-report',
@@ -30,6 +32,8 @@ import { PayrollService } from '../../services/payroll.service';
     MatInputModule,
     MatTableModule,
     LoadingSpinnerComponent,
+    NoveltyDepartmentChartComponent,
+    NoveltyDepartmentPositionChartComponent,
   ],
   templateUrl: './novelty-report.component.html',
   styleUrl: './novelty-report.component.scss',

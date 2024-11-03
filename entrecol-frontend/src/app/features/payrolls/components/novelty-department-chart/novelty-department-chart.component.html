@@ -1,0 +1,24 @@
+<div class="chart-container">
+  <ngx-charts-bar-vertical
+    [view]="view"
+    [results]="chartData()"
+    [gradient]="true"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="false"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+    [xAxisLabel]="'Departamento'"
+    [yAxisLabel]="'Cantidad'"
+    [scheme]="colorScheme"
+    [animations]="true"
+    [barPadding]="3"
+    [roundDomains]="true"
+    [showGridLines]="true"
+    [noBarWhenZero]="true"
+    [yAxisTickFormatting]="formatYAxisTick"
+    [yAxisTicks]="yAxisTicks()"
+    [xAxisTickFormatting]="formatXAxisTick"
+  >
+  </ngx-charts-bar-vertical>
+</div>

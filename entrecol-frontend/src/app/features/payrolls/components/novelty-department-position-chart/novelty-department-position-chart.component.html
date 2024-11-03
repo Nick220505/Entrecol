@@ -1,0 +1,27 @@
+<div class="chart-container">
+  <ngx-charts-bar-vertical-2d
+    [view]="view"
+    [results]="chartData()"
+    [gradient]="true"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="true"
+    [legendTitle]="'Cargos'"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+    [xAxisLabel]="'Departamento'"
+    [yAxisLabel]="'Cantidad'"
+    [legendPosition]="legendPosition"
+    [scheme]="colorScheme"
+    [animations]="true"
+    [barPadding]="3"
+    [groupPadding]="10"
+    [roundDomains]="true"
+    [showGridLines]="true"
+    [noBarWhenZero]="true"
+    [yAxisTickFormatting]="formatYAxisTick"
+    [yAxisTicks]="yAxisTicks()"
+    [xAxisTickFormatting]="formatXAxisTick"
+  >
+  </ngx-charts-bar-vertical-2d>
+</div>

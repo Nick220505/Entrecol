@@ -323,7 +323,9 @@ export class PayrollService {
     this.http
       .get<{
         data: NoveltyReport;
-      }>(`${this.apiUrl}/novelty-report?startDate=${startDate}&endDate=${endDate}`)
+      }>(
+        `${this.apiUrl}/novelty-report?startDate=${startDate}&endDate=${endDate}`,
+      )
       .subscribe({
         next: ({ data }) => {
           this.noveltyReport.set({
