@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ import co.edu.unbosque.service.EntertainmentReportService;
 
 @RestController
 @RequestMapping("/api/entertainment-report")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EntertainmentReportController {
     private final EntertainmentReportService entertainmentReportService;
 
@@ -38,6 +40,7 @@ public class EntertainmentReportController {
                     startDate, endDate, topN, genreCount, ascending);
             return ResponseEntity.ok(Map.of("data", report));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", e.getMessage()));
         }
@@ -60,6 +63,7 @@ public class EntertainmentReportController {
 
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }

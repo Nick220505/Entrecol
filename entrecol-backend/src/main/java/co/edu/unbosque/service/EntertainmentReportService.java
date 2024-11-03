@@ -2,6 +2,7 @@ package co.edu.unbosque.service;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,53 +46,64 @@ public class EntertainmentReportService {
 
     public EntertainmentReportDTO getEntertainmentReport(Date startDate, Date endDate, int topN, int genreCount,
             boolean ascending) {
-        EntertainmentReportDTO report = new EntertainmentReportDTO();
+        try {
+            EntertainmentReportDTO report = new EntertainmentReportDTO();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
-        int startYear = calendar.get(Calendar.YEAR);
-        calendar.setTime(endDate);
-        int endYear = calendar.get(Calendar.YEAR);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            int startYear = calendar.get(Calendar.YEAR);
+            calendar.setTime(endDate);
+            int endYear = calendar.get(Calendar.YEAR);
 
-        Sort.Direction direction = ascending ? Sort.Direction.ASC : Sort.Direction.DESC;
+            Sort.Direction direction = ascending ? Sort.Direction.ASC : Sort.Direction.DESC;
 
-        List<Movie> movies = movieRepository.findMoviesByYearRange(startYear, endYear);
-        report.setMoviesByGenre(movies);
+            List<Movie> movies = movieRepository.findMoviesByYearRange(startYear, endYear);
+            report.setMoviesByGenre(movies != null ? movies : new ArrayList<>());
 
-        List<Book> topBooks = bookRepository.findTopNByRating(PageRequest.of(0, topN, Sort.by(direction, "title")));
-        report.setTopRatedBooks(topBooks);
+            List<Book> topBooks = bookRepository.findTopNByRating(PageRequest.of(0, topN, Sort.by(direction, "title")));
+            report.setTopRatedBooks(topBooks != null ? topBooks : new ArrayList<>());
 
-        Map<Integer, List<Book>> booksByYear = new HashMap<>();
-        for (int year = startYear; year <= endYear; year++) {
-            List<Book> yearTopBooks = bookRepository.findTopBooksByYear(year,
-                    PageRequest.of(0, 5, Sort.by(direction, "title")));
-            List<Book> yearBottomBooks = bookRepository.findBottomBooksByYear(year,
-                    PageRequest.of(0, 5, Sort.by(direction, "title")));
-            yearTopBooks.addAll(yearBottomBooks);
-            booksByYear.put(year, yearTopBooks);
+            Map<Integer, List<Book>> booksByYear = new HashMap<>();
+            for (int year = startYear; year <= endYear; year++) {
+                List<Book> yearTopBooks = bookRepository.findTopBooksByYear(year,
+                        PageRequest.of(0, 5, Sort.by(direction, "title")));
+                List<Book> yearBottomBooks = bookRepository.findBottomBooksByYear(year,
+                        PageRequest.of(0, 5, Sort.by(direction, "title")));
+                if (yearTopBooks != null) {
+                    if (yearBottomBooks != null) {
+                        yearTopBooks.addAll(yearBottomBooks);
+                    }
+                    booksByYear.put(year, yearTopBooks);
+                }
+            }
+            report.setTopAndBottomBooksByYear(booksByYear);
+
+            List<Movie> moviesByGenreCount = movieRepository.findMoviesByGenreCount(genreCount);
+            Map<Integer, List<Movie>> moviesGrouped = new HashMap<>();
+            moviesGrouped.put(genreCount, moviesByGenreCount != null ? moviesByGenreCount : new ArrayList<>());
+            report.setMoviesGroupedByGenreCount(moviesGrouped);
+            report.setTotalMovies((long) (moviesByGenreCount != null ? moviesByGenreCount.size() : 0));
+
+            List<Object[]> genreStats = movieRepository.getMovieCountByGenre();
+            Map<String, Long> genreStatsMap = genreStats != null ? genreStats.stream()
+                    .collect(Collectors.toMap(
+                            row -> (String) row[0],
+                            row -> (Long) row[1]))
+                    : new HashMap<>();
+            report.setMoviesByGenreStats(genreStatsMap);
+
+            List<Object[]> bookStats = bookRepository.getBookCountByYear(startDate, endDate);
+            Map<Integer, Long> bookStatsMap = bookStats != null ? bookStats.stream()
+                    .collect(Collectors.toMap(
+                            row -> ((Number) row[0]).intValue(),
+                            row -> ((Number) row[1]).longValue()))
+                    : new HashMap<>();
+            report.setBookPublicationStats(bookStatsMap);
+
+            return report;
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating entertainment report: " + e.getMessage(), e);
         }
-        report.setTopAndBottomBooksByYear(booksByYear);
-
-        List<Movie> moviesByGenreCount = movieRepository.findMoviesByGenreCount(genreCount);
-        Map<Integer, List<Movie>> moviesGrouped = new HashMap<>();
-        moviesGrouped.put(genreCount, moviesByGenreCount);
-        report.setMoviesGroupedByGenreCount(moviesGrouped);
-        report.setTotalMovies((long) moviesByGenreCount.size());
-
-        List<Object[]> genreStats = movieRepository.getMovieCountByGenre();
-        Map<String, Long> genreStatsMap = genreStats.stream()
-                .collect(Collectors.toMap(
-                        row -> (String) row[0],
-                        row -> (Long) row[1]));
-        report.setMoviesByGenreStats(genreStatsMap);
-
-        Map<Integer, Long> bookStats = bookRepository.getBookCountByYear(startDate, endDate).stream()
-                .collect(Collectors.toMap(
-                        row -> ((Number) row[0]).intValue(),
-                        row -> ((Number) row[1]).longValue()));
-        report.setBookPublicationStats(bookStats);
-
-        return report;
     }
 
     public byte[] generateEntertainmentReportPdf(Date startDate, Date endDate, int topN, int genreCount,

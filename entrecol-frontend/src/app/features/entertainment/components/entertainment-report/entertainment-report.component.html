@@ -1,0 +1,161 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Reporte de Entretenimiento</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Inicial</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startPicker"
+            formControlName="startDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="startPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Final</mat-label>
+          <input
+            matInput
+            [matDatepicker]="endPicker"
+            formControlName="endDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="endPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Top N Libros</mat-label>
+          <input matInput type="number" formControlName="topN" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cantidad de Géneros</mat-label>
+          <input matInput type="number" formControlName="genreCount" />
+        </mat-form-field>
+
+        <mat-slide-toggle formControlName="ascending">
+          Orden Ascendente
+        </mat-slide-toggle>
+      </div>
+
+      <div class="actions">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="form.invalid"
+        >
+          Generar Reporte
+        </button>
+        <button
+          mat-raised-button
+          color="accent"
+          type="button"
+          [disabled]="form.invalid || pdfExporting()"
+          (click)="exportToPdf()"
+        >
+          {{ pdfExporting() ? "Exportando..." : "Exportar PDF" }}
+        </button>
+      </div>
+    </form>
+
+    @if (report().loading) {
+      <div class="loading">
+        <mat-spinner></mat-spinner>
+      </div>
+    } @else if (report().data) {
+      <div class="report-content">
+        <section>
+          <h2>Películas por Género</h2>
+          <div class="chart-container">
+            <ngx-charts-bar-vertical
+              [results]="moviesByGenreData()"
+              [xAxis]="true"
+              [yAxis]="true"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              xAxisLabel="Género"
+              yAxisLabel="Cantidad"
+            >
+            </ngx-charts-bar-vertical>
+          </div>
+        </section>
+
+        <section>
+          <h2>Frecuencia de Publicación de Libros</h2>
+          <div class="chart-container">
+            <ngx-charts-bar-vertical
+              [results]="bookPublicationData()"
+              [xAxis]="true"
+              [yAxis]="true"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              xAxisLabel="Año"
+              yAxisLabel="Cantidad"
+            >
+            </ngx-charts-bar-vertical>
+          </div>
+        </section>
+
+        <section>
+          <h2>Top {{ form.value.topN }} Libros con Mejor Rating</h2>
+          <ul class="book-list">
+            @for (book of report().data?.topRatedBooks; track book.id) {
+              <li>{{ book.title }}</li>
+            }
+          </ul>
+        </section>
+
+        <section>
+          <h2>Top 5 Libros por Año</h2>
+          @for (
+            entry of report().data?.topAndBottomBooksByYear | keyvalue;
+            track entry.key
+          ) {
+            <div class="year-section">
+              <h3>{{ entry.key }}</h3>
+              <ul class="book-list">
+                @for (book of entry.value; track book.id) {
+                  <li>{{ book.title }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </section>
+
+        <section>
+          <h2>Películas con {{ form.value.genreCount }} Géneros</h2>
+          <p>Total: {{ report().data?.totalMovies }}</p>
+          <ul class="movie-list">
+            @for (
+              movie of report().data?.moviesGroupedByGenreCount?.[
+                form.value.genreCount
+              ] ?? [];
+              track movie.id
+            ) {
+              <li>
+                {{ movie.title }}
+                <span class="genres">
+                  @for (genre of movie.genres; track genre.id) {
+                    <span class="genre-tag">{{ genre.name }}</span>
+                  }
+                </span>
+              </li>
+            }
+          </ul>
+        </section>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

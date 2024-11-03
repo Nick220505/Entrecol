@@ -1,0 +1,133 @@
+:host {
+  display: block;
+  padding: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: center;
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr) auto;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  mat-slide-toggle {
+    margin: 8px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.report-content {
+  section {
+    margin-bottom: 40px;
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+  }
+}
+
+.chart-container {
+  height: 400px;
+  margin: 20px 0;
+
+  @media (min-width: 1200px) {
+    height: 500px;
+  }
+}
+
+.book-list,
+.movie-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+
+  li {
+    padding: 12px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.02);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.year-section {
+  margin-bottom: 20px;
+
+  h3 {
+    color: #666;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+  }
+}
+
+.genres {
+  margin-left: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.genre-tag {
+  display: inline-block;
+  background: #e0e0e0;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background: #d0d0d0;
+  }
+}
+
+:host-context(.dark-theme) {
+  .book-list,
+  .movie-list {
+    li {
+      background-color: rgba(255, 255, 255, 0.05);
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+    }
+  }
+
+  .genre-tag {
+    background: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+}

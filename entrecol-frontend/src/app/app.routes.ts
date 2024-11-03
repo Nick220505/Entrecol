@@ -48,6 +48,19 @@ export const routes: Routes = [
         title: 'ENTRECOL - Nóminas',
       },
       {
+        path: 'reportes',
+        children: [
+          {
+            path: 'entretenimiento',
+            loadComponent: () =>
+              import(
+                './features/entertainment/components/entertainment-report/entertainment-report.component'
+              ).then((m) => m.EntertainmentReportComponent),
+            title: 'ENTRECOL - Reporte de Entretenimiento',
+          },
+        ],
+      },
+      {
         path: '',
         redirectTo: 'libros',
         pathMatch: 'full',
