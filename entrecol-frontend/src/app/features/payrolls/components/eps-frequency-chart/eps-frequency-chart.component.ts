@@ -37,7 +37,6 @@ export class EpsFrequencyChartComponent {
 
   protected readonly chartData = computed(() => {
     const data = this.payrollService.epsFrequency().data;
-    console.log(data);
     if (!Object.keys(data).length) return [];
 
     return Object.entries(data)
