@@ -850,16 +850,16 @@ public class EmployeeService {
             PdfPTable epsTable = new PdfPTable(1);
             epsTable.setWidthPercentage(100);
 
-            PdfPCell epsTitleCell = new PdfPCell(new Paragraph("Empleados por EPS", subtitleFont));
+            PdfPCell epsTitleCell = new PdfPCell(new Paragraph("Frecuencia de Empleados por EPS", subtitleFont));
             epsTitleCell.setBorder(0);
             epsTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
             epsTitleCell.setPaddingBottom(10);
             epsTable.addCell(epsTitleCell);
 
-            JFreeChart epsPieChart = createEpsPieChart(stats);
-            BufferedImage epsPieChartImage = epsPieChart.createBufferedImage(700, 400);
-            Image epsPieChartPdfImage = Image.getInstance(epsPieChartImage, null);
-            PdfPCell epsChartCell = new PdfPCell(epsPieChartPdfImage);
+            JFreeChart epsBarChart = createEpsFrequencyChart(stats);
+            BufferedImage epsBarChartImage = epsBarChart.createBufferedImage(700, 400);
+            Image epsBarChartPdfImage = Image.getInstance(epsBarChartImage, null);
+            PdfPCell epsChartCell = new PdfPCell(epsBarChartPdfImage);
             epsChartCell.setBorder(0);
             epsChartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
             epsTable.addCell(epsChartCell);
@@ -870,16 +870,17 @@ public class EmployeeService {
             PdfPTable pensionTable = new PdfPTable(1);
             pensionTable.setWidthPercentage(100);
 
-            PdfPCell pensionTitleCell = new PdfPCell(new Paragraph("Empleados por Fondo de Pensión", subtitleFont));
+            PdfPCell pensionTitleCell = new PdfPCell(
+                    new Paragraph("Frecuencia de Empleados por Fondo de Pensión", subtitleFont));
             pensionTitleCell.setBorder(0);
             pensionTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
             pensionTitleCell.setPaddingBottom(10);
             pensionTable.addCell(pensionTitleCell);
 
-            JFreeChart pensionPieChart = createPensionPieChart(stats);
-            BufferedImage pensionPieChartImage = pensionPieChart.createBufferedImage(700, 400);
-            Image pensionPieChartPdfImage = Image.getInstance(pensionPieChartImage, null);
-            PdfPCell pensionChartCell = new PdfPCell(pensionPieChartPdfImage);
+            JFreeChart pensionBarChart = createPensionFrequencyChart(stats);
+            BufferedImage pensionBarChartImage = pensionBarChart.createBufferedImage(700, 400);
+            Image pensionBarChartPdfImage = Image.getInstance(pensionBarChartImage, null);
+            PdfPCell pensionChartCell = new PdfPCell(pensionBarChartPdfImage);
             pensionChartCell.setBorder(0);
             pensionChartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
             pensionTable.addCell(pensionChartCell);
@@ -934,54 +935,54 @@ public class EmployeeService {
         }
     }
 
-    private JFreeChart createEpsPieChart(List<EmployeeHealthPensionStats> stats) {
-        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+    private JFreeChart createEpsFrequencyChart(List<EmployeeHealthPensionStats> stats) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         stats.stream()
                 .collect(Collectors.groupingBy(
                         EmployeeHealthPensionStats::getEpsName,
                         Collectors.collectingAndThen(
                                 Collectors.toList(),
                                 list -> list.get(0).getEpsCount())))
-                .forEach(dataset::setValue);
+                .forEach((eps, count) -> dataset.addValue(count, "EPS", eps));
 
-        JFreeChart chart = ChartFactory.createPieChart(
+        JFreeChart chart = ChartFactory.createBarChart(
                 null,
+                "EPS",
+                "Cantidad",
                 dataset,
+                PlotOrientation.VERTICAL,
                 true,
                 true,
                 false);
 
-        @SuppressWarnings("unchecked")
-        PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
-        plot.setBackgroundPaint(Color.WHITE);
-        plot.setOutlinePaint(null);
-        plot.setLabelGenerator(null);
+        chart.setBackgroundPaint(Color.WHITE);
+        chart.getPlot().setBackgroundPaint(Color.WHITE);
 
         return chart;
     }
 
-    private JFreeChart createPensionPieChart(List<EmployeeHealthPensionStats> stats) {
-        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+    private JFreeChart createPensionFrequencyChart(List<EmployeeHealthPensionStats> stats) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         stats.stream()
                 .collect(Collectors.groupingBy(
                         EmployeeHealthPensionStats::getPensionFundName,
                         Collectors.collectingAndThen(
                                 Collectors.toList(),
                                 list -> list.get(0).getPensionFundCount())))
-                .forEach(dataset::setValue);
+                .forEach((pension, count) -> dataset.addValue(count, "Fondo de Pensión", pension));
 
-        JFreeChart chart = ChartFactory.createPieChart(
+        JFreeChart chart = ChartFactory.createBarChart(
                 null,
+                "Fondo de Pensión",
+                "Cantidad",
                 dataset,
+                PlotOrientation.VERTICAL,
                 true,
                 true,
                 false);
 
-        @SuppressWarnings("unchecked")
-        PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
-        plot.setBackgroundPaint(Color.WHITE);
-        plot.setOutlinePaint(null);
-        plot.setLabelGenerator(null);
+        chart.setBackgroundPaint(Color.WHITE);
+        chart.getPlot().setBackgroundPaint(Color.WHITE);
 
         return chart;
     }

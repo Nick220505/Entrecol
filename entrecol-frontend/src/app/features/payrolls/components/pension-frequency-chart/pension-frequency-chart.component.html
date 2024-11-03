@@ -1,0 +1,26 @@
+<div class="chart-container">
+  <ngx-charts-bar-vertical
+    [view]="view"
+    [results]="chartData()"
+    [gradient]="true"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="true"
+    [legendTitle]="'Fondo de Pensión'"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+    [xAxisLabel]="'Fondo de Pensión'"
+    [yAxisLabel]="'Cantidad'"
+    [legendPosition]="legendPosition"
+    [scheme]="colorScheme"
+    [animations]="true"
+    [barPadding]="8"
+    [roundDomains]="true"
+    [showGridLines]="true"
+    [noBarWhenZero]="true"
+    [yAxisTickFormatting]="formatYAxisTick"
+    [yAxisTicks]="yAxisTicks()"
+    [xAxisTickFormatting]="formatXAxisTick"
+  >
+  </ngx-charts-bar-vertical>
+</div>

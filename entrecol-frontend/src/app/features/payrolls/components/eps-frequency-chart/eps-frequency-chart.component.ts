@@ -8,13 +8,13 @@ import {
 } from '@swimlane/ngx-charts';
 
 @Component({
-  selector: 'app-eps-pie-chart',
+  selector: 'app-eps-frequency-chart',
   standalone: true,
   imports: [CommonModule, NgxChartsModule],
-  templateUrl: './eps-pie-chart.component.html',
-  styleUrl: './eps-pie-chart.component.scss',
+  templateUrl: './eps-frequency-chart.component.html',
+  styleUrl: './eps-frequency-chart.component.scss',
 })
-export class EpsPieChartComponent {
+export class EpsFrequencyChartComponent {
   private readonly payrollService = inject(PayrollService);
 
   protected readonly legendPosition = LegendPosition.Right;
@@ -48,7 +48,19 @@ export class EpsPieChartComponent {
       .sort((a, b) => b.value - a.value);
   });
 
-  formatLabel(value: number): string {
+  protected readonly yAxisTicks = computed(() => {
+    const data = this.chartData();
+    if (!data.length) return [0];
+
+    const maxValue = Math.max(...data.map((item) => item.value));
+    return Array.from({ length: maxValue + 1 }, (_, i) => i);
+  });
+
+  formatYAxisTick(value: number): string {
     return `${value}`;
+  }
+
+  formatXAxisTick(value: string): string {
+    return value.length > 15 ? value.substring(0, 15) + '...' : value;
   }
 }
