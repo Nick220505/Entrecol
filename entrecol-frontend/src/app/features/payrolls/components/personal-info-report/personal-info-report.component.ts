@@ -18,7 +18,7 @@ import { PayrollService } from '@payrolls/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
-  selector: 'app-personal-info',
+  selector: 'app-personal-info-report',
   standalone: true,
   imports: [
     CommonModule,
@@ -31,10 +31,10 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
     MatAutocompleteModule,
     LoadingSpinnerComponent,
   ],
-  templateUrl: './personal-info.component.html',
-  styleUrls: ['./personal-info.component.scss'],
+  templateUrl: './personal-info-report.component.html',
+  styleUrls: ['./personal-info-report.component.scss'],
 })
-export class PersonalInfoComponent {
+export class PersonalInfoReportComponent {
   private readonly payrollService = inject(PayrollService);
   protected readonly employeeSearchControl = new FormControl('');
   protected readonly selectedEmployee = signal<Employee | null>(null);

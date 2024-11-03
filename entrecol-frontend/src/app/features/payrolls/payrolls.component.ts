@@ -6,7 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { PayrollFileUploadComponent } from './components/payroll-file-upload/payroll-file-upload.component';
 import { PayrollListComponent } from './components/payroll-list/payroll-list.component';
 import { PayrollReportComponent } from './components/payroll-report/payroll-report.component';
-import { PersonalInfoComponent } from './components/personal-info/personal-info.component';
+import { PersonalInfoReportComponent } from './components/personal-info-report/personal-info-report.component';
 
 @Component({
   selector: 'app-payrolls',
@@ -18,7 +18,7 @@ import { PersonalInfoComponent } from './components/personal-info/personal-info.
     PayrollFileUploadComponent,
     PayrollListComponent,
     PayrollReportComponent,
-    PersonalInfoComponent,
+    PersonalInfoReportComponent,
   ],
   templateUrl: './payrolls.component.html',
   styleUrls: ['./payrolls.component.scss'],
