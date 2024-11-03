@@ -129,4 +129,19 @@ public class EmployeeController {
     public ResponseEntity<EmployeePersonalInfoDTO> getEmployeePersonalInfo(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.getEmployeePersonalInfo(id));
     }
+
+    @GetMapping("/{id}/personal-info/export/pdf")
+    public ResponseEntity<byte[]> exportPersonalInfoPdf(@PathVariable Long id) {
+        try {
+            byte[] pdfBytes = employeeService.generatePersonalInfoPdf(id);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("filename", "informacion-personal.pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }

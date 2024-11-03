@@ -6,11 +6,14 @@ import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { PdfViewerComponent } from '@shared/components/pdf-viewer/pdf-viewer.component';
 import { map, startWith } from 'rxjs/operators';
 
 import { Employee } from '@payrolls/models/payroll.model';
@@ -29,16 +32,18 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
+    MatButtonModule,
+    MatDialogModule,
+    PdfViewerComponent,
     LoadingSpinnerComponent,
   ],
   templateUrl: './personal-info-report.component.html',
   styleUrls: ['./personal-info-report.component.scss'],
 })
 export class PersonalInfoReportComponent {
-  private readonly payrollService = inject(PayrollService);
+  protected readonly payrollService = inject(PayrollService);
   protected readonly employeeSearchControl = new FormControl('');
   protected readonly selectedEmployee = signal<Employee | null>(null);
-
   protected readonly personalInfo = computed(() =>
     this.payrollService.personalInfo(),
   );
@@ -71,5 +76,10 @@ export class PersonalInfoReportComponent {
     const employee = event.option.value as Employee;
     this.selectedEmployee.set(employee);
     this.payrollService.getPersonalInfo(employee.id);
+  }
+
+  exportToPdf(): void {
+    if (!this.selectedEmployee()) return;
+    this.payrollService.exportPersonalInfoToPdf(this.selectedEmployee()!.id);
   }
 }

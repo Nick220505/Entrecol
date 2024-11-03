@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -698,5 +699,94 @@ public class EmployeeService {
                     return dto;
                 })
                 .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
+    }
+
+    public byte[] generatePersonalInfoPdf(Long employeeId) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Document document = new Document(PageSize.A4);
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+            Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+            Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+
+            EmployeePersonalInfoDTO personalInfo = getEmployeePersonalInfo(employeeId);
+
+            Paragraph mainTitle = new Paragraph("Reporte de Información Personal", titleFont);
+            mainTitle.setAlignment(Element.ALIGN_CENTER);
+            mainTitle.setSpacingAfter(20);
+            document.add(mainTitle);
+
+            // Basic Information Section
+            addSection(document, "Información Básica", subtitleFont);
+            addInfoItem(document, "Nombre:", personalInfo.getFullName(), normalFont);
+            addInfoItem(document, "Código:", personalInfo.getCode(), normalFont);
+
+            // Work Information Section
+            addSection(document, "Información Laboral", subtitleFont);
+            addInfoItem(document, "Dependencia:", personalInfo.getDepartmentName(), normalFont);
+            addInfoItem(document, "Cargo:", personalInfo.getPositionName(), normalFont);
+            addInfoItem(document, "Fecha de Ingreso:", DATE_FORMAT.format(personalInfo.getHireDate()), normalFont);
+
+            // Social Security Section
+            addSection(document, "Información de Seguridad Social", subtitleFont);
+            addInfoItem(document, "EPS:", personalInfo.getEpsName(), normalFont);
+            addInfoItem(document, "Fondo de Pensión:", personalInfo.getPensionFundName(), normalFont);
+            addInfoItem(document, "Salario:", String.format("$%,d", personalInfo.getSalary().longValue()), normalFont);
+
+            // Records Section
+            addSection(document, "Novedades", subtitleFont);
+            if (personalInfo.getDisabilityRecord() != null && personalInfo.getDisabilityRecord()) {
+                addInfoItem(document, "Incapacidad:", personalInfo.getDisabilityDays() + " días", normalFont);
+                if (personalInfo.getDisabilityStartDate() != null && personalInfo.getDisabilityEndDate() != null) {
+                    addInfoItem(document, "Periodo:", String.format("%s - %s",
+                            DATE_FORMAT.format(personalInfo.getDisabilityStartDate()),
+                            DATE_FORMAT.format(personalInfo.getDisabilityEndDate())), normalFont);
+                }
+            }
+
+            if (personalInfo.getVacationRecord() != null && personalInfo.getVacationRecord()) {
+                addInfoItem(document, "Vacaciones:", personalInfo.getVacationDays() + " días", normalFont);
+                if (personalInfo.getVacationStartDate() != null && personalInfo.getVacationEndDate() != null) {
+                    addInfoItem(document, "Periodo:", String.format("%s - %s",
+                            DATE_FORMAT.format(personalInfo.getVacationStartDate()),
+                            DATE_FORMAT.format(personalInfo.getVacationEndDate())), normalFont);
+                }
+            }
+
+            if (personalInfo.getBonus() != null && personalInfo.getBonus().compareTo(BigDecimal.ZERO) > 0) {
+                addInfoItem(document, "Bonificación:", String.format("$%,d", personalInfo.getBonus().longValue()),
+                        normalFont);
+            }
+
+            if (personalInfo.getTransportAllowance() != null
+                    && personalInfo.getTransportAllowance().compareTo(BigDecimal.ZERO) > 0) {
+                addInfoItem(document, "Auxilio de Transporte:",
+                        String.format("$%,d", personalInfo.getTransportAllowance().longValue()), normalFont);
+            }
+
+            document.close();
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating personal info PDF", e);
+        }
+    }
+
+    private void addSection(Document document, String title, Font titleFont) throws DocumentException {
+        Paragraph section = new Paragraph(title, titleFont);
+        section.setSpacingBefore(15);
+        section.setSpacingAfter(10);
+        document.add(section);
+    }
+
+    private void addInfoItem(Document document, String label, String value, Font font) throws DocumentException {
+        Paragraph item = new Paragraph();
+        Chunk labelChunk = new Chunk(label + " ", FontFactory.getFont(FontFactory.HELVETICA_BOLD, font.getSize()));
+        Chunk valueChunk = new Chunk(value, font);
+        item.add(labelChunk);
+        item.add(valueChunk);
+        item.setSpacingAfter(8);
+        document.add(item);
     }
 }

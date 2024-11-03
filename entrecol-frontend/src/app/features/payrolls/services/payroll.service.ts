@@ -46,6 +46,7 @@ export class PayrollService {
   readonly uploading = signal(false);
   readonly fileUploaded = signal(false);
   readonly pdfExporting = signal(false);
+  readonly pdfExportingPersonalInfo = signal(false);
 
   getAll(): void {
     this.employees.update((state) => ({ ...state, loading: true }));
@@ -142,6 +143,32 @@ export class PayrollService {
         responseType: 'blob',
       })
       .pipe(finalize(() => this.pdfExporting.set(false)))
+      .subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const dialogRef = this.dialog.open(PdfPreviewDialogComponent, {
+            width: '90vw',
+            height: '90vh',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+          });
+          dialogRef.componentInstance.pdfUrl.set(url);
+          dialogRef.afterClosed().subscribe(() => {
+            window.URL.revokeObjectURL(url);
+          });
+        },
+        error: () => this.snackBar.open('Error al exportar el PDF', 'Cerrar'),
+      });
+  }
+
+  exportPersonalInfoToPdf(employeeId: number): void {
+    this.pdfExportingPersonalInfo.set(true);
+
+    this.http
+      .get(`${this.apiUrl}/${employeeId}/personal-info/export/pdf`, {
+        responseType: 'blob',
+      })
+      .pipe(finalize(() => this.pdfExportingPersonalInfo.set(false)))
       .subscribe({
         next: (blob) => {
           const url = window.URL.createObjectURL(blob);
