@@ -5,21 +5,6 @@
       <span class="total-employees"
         >Total de Empleados: {{ payrollService.employees().data.length }}</span
       >
-      <button
-        mat-button
-        (click)="payrollService.exportToPdf()"
-        [disabled]="
-          payrollService.pdfExporting() ||
-          payrollService.employees().data.length === 0
-        "
-      >
-        <mat-icon>picture_as_pdf</mat-icon>
-        {{
-          payrollService.pdfExporting()
-            ? "Generando reporte..."
-            : "Generar reporte en PDF"
-        }}
-      </button>
     </div>
   </mat-card-header>
 

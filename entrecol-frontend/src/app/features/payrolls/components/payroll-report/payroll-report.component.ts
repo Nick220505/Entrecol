@@ -27,8 +27,11 @@ import { DepartmentPositionBarChartComponent } from '../department-position-bar-
   ],
 })
 export class PayrollReportComponent {
-  private readonly payrollService = inject(PayrollService);
+  protected readonly payrollService = inject(PayrollService);
   protected readonly report = computed(() => this.payrollService.report());
+  protected readonly employees = computed(() =>
+    this.payrollService.employees(),
+  );
 
   constructor() {
     effect(
@@ -39,5 +42,9 @@ export class PayrollReportComponent {
       },
       { allowSignalWrites: true },
     );
+  }
+
+  downloadPdf(): void {
+    this.payrollService.exportToPdf();
   }
 }

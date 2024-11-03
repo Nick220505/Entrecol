@@ -1,6 +1,22 @@
 <mat-card appearance="outlined">
   <mat-card-header>
     <mat-card-title>Reporte de Nómina</mat-card-title>
+    <div class="header-actions">
+      <button
+        mat-button
+        (click)="downloadPdf()"
+        [disabled]="
+          payrollService.pdfExporting() || employees().data.length === 0
+        "
+      >
+        <mat-icon>picture_as_pdf</mat-icon>
+        {{
+          payrollService.pdfExporting()
+            ? "Generando reporte..."
+            : "Generar reporte en PDF"
+        }}
+      </button>
+    </div>
   </mat-card-header>
 
   <mat-card-content>

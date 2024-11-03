@@ -82,8 +82,4 @@ export class PayrollListComponent implements OnInit {
     this.dataSource().filter = filterValue.trim().toLowerCase();
     this.dataSource().paginator.firstPage();
   }
-
-  downloadPdf(): void {
-    this.payrollService.exportToPdf();
-  }
 }
