@@ -229,11 +229,12 @@ SELECT
     er.bonus,
     er.transport_allowance,
     CASE 
-        WHEN er.disability_record = true OR er.vacation_record = true OR er.bonus > 0 OR er.transport_allowance > 0 
+        WHEN er.disability_record = true OR er.vacation_record = true
         THEN true 
         ELSE false 
     END as has_novelty
 FROM employee e
 JOIN department d ON e.department_id = d.id
 JOIN position p ON e.position_id = p.id
-LEFT JOIN employee_record er ON e.id = er.employee_id;
+JOIN employee_record er ON e.id = er.employee_id
+WHERE er.disability_record = true OR er.vacation_record = true;

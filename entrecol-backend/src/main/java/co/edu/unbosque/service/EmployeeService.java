@@ -1155,10 +1155,28 @@ public class EmployeeService {
     }
 
     public NoveltyReportDTO getNoveltyReport(Date startDate, Date endDate) {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(startDate);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date adjustedStartDate = calendar.getTime();
+
+        calendar.setTime(endDate);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        Date adjustedEndDate = calendar.getTime();
+
         NoveltyReportDTO report = new NoveltyReportDTO();
 
         List<EmployeeNoveltyStats> stats = employeeNoveltyStatsRepository
-                .findNoveltyStatsByDateRange(startDate, endDate);
+                .findNoveltyStatsByDateRange(adjustedStartDate, adjustedEndDate);
 
         report.setEmployees(stats.stream()
                 .map(this::mapToEmployeeNoveltyDTO)
@@ -1169,7 +1187,7 @@ public class EmployeeService {
         Map<String, Long> departmentStats = new HashMap<>();
         departmentRepository.findAll().forEach(department -> {
             Long count = employeeNoveltyStatsRepository
-                    .countNoveltyByDepartmentAndDateRange(department.getId(), startDate, endDate);
+                    .countNoveltyByDepartmentAndDateRange(department.getId(), adjustedStartDate, adjustedEndDate);
             if (count > 0) {
                 departmentStats.put(department.getName(), count);
             }
@@ -1182,7 +1200,7 @@ public class EmployeeService {
             positionRepository.findAll().forEach(position -> {
                 Long count = employeeNoveltyStatsRepository
                         .countNoveltyByDepartmentPositionAndDateRange(
-                                department.getId(), position.getId(), startDate, endDate);
+                                department.getId(), position.getId(), adjustedStartDate, adjustedEndDate);
                 if (count > 0) {
                     positionStats.put(position.getName(), count);
                 }
@@ -1218,6 +1236,24 @@ public class EmployeeService {
     }
 
     public byte[] generateNoveltyReportPdf(Date startDate, Date endDate) {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(startDate);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date adjustedStartDate = calendar.getTime();
+
+        calendar.setTime(endDate);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        Date adjustedEndDate = calendar.getTime();
+
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Document document = new Document(PageSize.A4.rotate());
             PdfWriter.getInstance(document, out);
@@ -1226,7 +1262,7 @@ public class EmployeeService {
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
             Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
 
-            NoveltyReportDTO report = getNoveltyReport(startDate, endDate);
+            NoveltyReportDTO report = getNoveltyReport(adjustedStartDate, adjustedEndDate);
 
             Paragraph mainTitle = new Paragraph("Reporte de Novedades", titleFont);
             mainTitle.setAlignment(Element.ALIGN_CENTER);
@@ -1236,8 +1272,8 @@ public class EmployeeService {
             SimpleDateFormat monthYearFormat = new SimpleDateFormat("MM/yyyy");
             Paragraph period = new Paragraph(
                     String.format("Período: %s - %s",
-                            monthYearFormat.format(startDate),
-                            monthYearFormat.format(endDate)),
+                            monthYearFormat.format(adjustedStartDate),
+                            monthYearFormat.format(adjustedEndDate)),
                     normalFont);
             period.setSpacingAfter(20);
             document.add(period);
