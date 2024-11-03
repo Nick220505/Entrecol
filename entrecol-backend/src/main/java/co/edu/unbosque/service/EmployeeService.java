@@ -1258,10 +1258,17 @@ public class EmployeeService {
             addChartSection(chartsTable, "Novedades por Departamento",
                     createDepartmentNoveltyChart(report.getDepartmentStats()));
 
-            addChartSection(chartsTable, "Novedades por Departamento y Cargo",
+            document.add(chartsTable);
+
+            document.newPage();
+
+            PdfPTable deptPosTable = new PdfPTable(1);
+            deptPosTable.setWidthPercentage(100);
+
+            addChartSection(deptPosTable, "Novedades por Departamento y Cargo",
                     createDepartmentPositionNoveltyChart(report.getDepartmentPositionStats()));
 
-            document.add(chartsTable);
+            document.add(deptPosTable);
 
             document.close();
             return out.toByteArray();
@@ -1271,14 +1278,14 @@ public class EmployeeService {
     }
 
     private void addNoveltyTable(Document document, List<EmployeeNoveltyDTO> employees) throws DocumentException {
-        PdfPTable table = new PdfPTable(8);
+        PdfPTable table = new PdfPTable(9);
         table.setWidthPercentage(100);
-        float[] columnWidths = { 3f, 1.5f, 2f, 2f, 1.5f, 1.5f, 2f, 2f };
+        float[] columnWidths = { 3f, 1.5f, 2f, 2f, 1.5f, 1.5f, 2f, 2f, 2f };
         table.setWidths(columnWidths);
 
         String[] headers = {
                 "Nombre", "Código", "Departamento", "Cargo",
-                "Incapacidad", "Vacaciones", "Bonificación", "Aux. Transporte"
+                "Incapacidad", "Vacaciones", "Fecha Inicio", "Fecha Fin", "Días"
         };
 
         Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
@@ -1292,16 +1299,35 @@ public class EmployeeService {
 
         Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10);
         for (EmployeeNoveltyDTO employee : employees) {
+            if (!employee.getDisabilityRecord() && !employee.getVacationRecord()) {
+                continue;
+            }
+
             addCell(table, employee.getFullName(), dataFont, Element.ALIGN_LEFT);
             addCell(table, employee.getCode(), dataFont, Element.ALIGN_CENTER);
             addCell(table, employee.getDepartmentName(), dataFont, Element.ALIGN_LEFT);
             addCell(table, employee.getPositionName(), dataFont, Element.ALIGN_LEFT);
             addCell(table, employee.getDisabilityRecord() ? "Sí" : "No", dataFont, Element.ALIGN_CENTER);
             addCell(table, employee.getVacationRecord() ? "Sí" : "No", dataFont, Element.ALIGN_CENTER);
-            addCell(table, employee.getBonus().compareTo(BigDecimal.ZERO) > 0 ? "Sí" : "No", dataFont,
-                    Element.ALIGN_CENTER);
-            addCell(table, employee.getTransportAllowance().compareTo(BigDecimal.ZERO) > 0 ? "Sí" : "No", dataFont,
-                    Element.ALIGN_CENTER);
+
+            String startDate = "";
+            if (employee.getDisabilityRecord() && employee.getDisabilityStartDate() != null) {
+                startDate = DATE_FORMAT.format(employee.getDisabilityStartDate());
+            } else if (employee.getVacationRecord() && employee.getVacationStartDate() != null) {
+                startDate = DATE_FORMAT.format(employee.getVacationStartDate());
+            }
+            addCell(table, startDate, dataFont, Element.ALIGN_CENTER);
+
+            String endDate = "";
+            if (employee.getDisabilityRecord() && employee.getDisabilityEndDate() != null) {
+                endDate = DATE_FORMAT.format(employee.getDisabilityEndDate());
+            } else if (employee.getVacationRecord() && employee.getVacationEndDate() != null) {
+                endDate = DATE_FORMAT.format(employee.getVacationEndDate());
+            }
+            addCell(table, endDate, dataFont, Element.ALIGN_CENTER);
+
+            int days = employee.getDisabilityRecord() ? employee.getDisabilityDays() : employee.getVacationDays();
+            addCell(table, String.valueOf(days), dataFont, Element.ALIGN_CENTER);
         }
 
         document.add(table);

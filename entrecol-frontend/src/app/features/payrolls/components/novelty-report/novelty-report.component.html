@@ -84,7 +84,12 @@
       } @else {
         <section>
           <h2>Empleados con Novedades</h2>
-          <table mat-table [dataSource]="report().data!.employees">
+          <table
+            mat-table
+            [dataSource]="
+              report().data!.employees.filter(hasNoveltyInDateRange)
+            "
+          >
             <ng-container matColumnDef="fullName">
               <th mat-header-cell *matHeaderCellDef>Nombre</th>
               <td mat-cell *matCellDef="let employee">

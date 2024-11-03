@@ -79,8 +79,6 @@ export class NoveltyReportComponent {
     const types = [];
     if (employee.disabilityRecord) types.push('Incapacidad');
     if (employee.vacationRecord) types.push('Vacaciones');
-    if (employee.bonus > 0) types.push('Bonificación');
-    if (employee.transportAllowance > 0) types.push('Auxilio de Transporte');
     return types;
   }
 
@@ -102,5 +100,9 @@ export class NoveltyReportComponent {
       return new Date(employee.vacationEndDate);
     }
     return null;
+  }
+
+  hasNoveltyInDateRange(employee: EmployeeNovelty): boolean {
+    return employee.disabilityRecord || employee.vacationRecord;
   }
 }
