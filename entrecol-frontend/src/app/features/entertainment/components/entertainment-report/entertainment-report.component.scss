@@ -40,21 +40,73 @@
 
 .report-content {
   section {
-    margin-bottom: 40px;
+    margin: 32px 0;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
 
     h2 {
-      margin-bottom: 20px;
-      color: #333;
+      margin-bottom: 24px;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.87);
     }
   }
 }
 
 .chart-container {
   height: 400px;
-  margin: 20px 0;
+  margin: 16px 0;
+  padding: 0 24px 40px 0;
+  overflow: visible;
 
   @media (min-width: 1200px) {
     height: 500px;
+  }
+
+  ::ng-deep {
+    .ngx-charts {
+      text {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+      }
+
+      .legend-title {
+        font-size: 14px !important;
+      }
+
+      .legend-label {
+        font-size: 14px !important;
+      }
+
+      .grid-line-path {
+        stroke: rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .x-axis,
+      .y-axis {
+        text {
+          fill: rgba(0, 0, 0, 0.87) !important;
+        }
+      }
+
+      .x-axis {
+        text {
+          transform: rotate(-45deg) translate(-10px, 0);
+          text-anchor: end;
+        }
+      }
+
+      .bar {
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      .legend-entries {
+        margin-left: 16px !important;
+      }
+    }
   }
 }
 
@@ -112,6 +164,35 @@
 }
 
 :host-context(.dark-theme) {
+  .report-content {
+    section {
+      background: rgba(255, 255, 255, 0.05);
+
+      h2 {
+        color: rgba(255, 255, 255, 0.87);
+      }
+    }
+  }
+
+  .chart-container {
+    ::ng-deep {
+      .ngx-charts {
+        text {
+          fill: rgba(255, 255, 255, 0.87) !important;
+        }
+
+        .grid-line-path {
+          stroke: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .legend-title,
+        .legend-label {
+          fill: rgba(255, 255, 255, 0.87) !important;
+        }
+      }
+    }
+  }
+
   .book-list,
   .movie-list {
     li {
@@ -120,6 +201,13 @@
       &:hover {
         background-color: rgba(255, 255, 255, 0.08);
       }
+    }
+  }
+
+  .year-section {
+    h3 {
+      color: rgba(255, 255, 255, 0.87);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
     }
   }
 
