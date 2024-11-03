@@ -44,8 +44,10 @@ public class EntertainmentReportService {
         this.bookRepository = bookRepository;
     }
 
-    public EntertainmentReportDTO getEntertainmentReport(Date startDate, Date endDate, int topN, int genreCount,
-            boolean ascending) {
+    public EntertainmentReportDTO getEntertainmentReport(
+            Date startDate, Date endDate, int topN, int genreCount,
+            boolean moviesByGenreAscending, boolean topRatedBooksAscending,
+            boolean topBottomBooksByYearAscending, boolean moviesByGenreCountAscending) {
         try {
             EntertainmentReportDTO report = new EntertainmentReportDTO();
 
@@ -55,20 +57,21 @@ public class EntertainmentReportService {
             calendar.setTime(endDate);
             int endYear = calendar.get(Calendar.YEAR);
 
-            Sort.Direction direction = ascending ? Sort.Direction.ASC : Sort.Direction.DESC;
-
-            List<Movie> movies = movieRepository.findMoviesByYearRange(startYear, endYear);
-            report.setMoviesByGenre(movies != null ? movies : new ArrayList<>());
-
-            List<Book> topBooks = bookRepository.findTopNByRating(PageRequest.of(0, topN, Sort.by(direction, "title")));
+            // Para libros con mejor rating
+            final Sort.Direction topRatedDirection = topRatedBooksAscending ? Sort.Direction.ASC : Sort.Direction.DESC;
+            List<Book> topBooks = bookRepository.findTopNByRating(
+                    PageRequest.of(0, topN, Sort.by(topRatedDirection, "title")));
             report.setTopRatedBooks(topBooks != null ? topBooks : new ArrayList<>());
 
+            // Para libros por año
+            final Sort.Direction yearDirection = topBottomBooksByYearAscending ? Sort.Direction.ASC
+                    : Sort.Direction.DESC;
             Map<Integer, List<Book>> booksByYear = new HashMap<>();
             for (int year = startYear; year <= endYear; year++) {
                 List<Book> yearTopBooks = bookRepository.findTopBooksByYear(year,
-                        PageRequest.of(0, 5, Sort.by(direction, "title")));
+                        PageRequest.of(0, 5, Sort.by(yearDirection, "title")));
                 List<Book> yearBottomBooks = bookRepository.findBottomBooksByYear(year,
-                        PageRequest.of(0, 5, Sort.by(direction, "title")));
+                        PageRequest.of(0, 5, Sort.by(yearDirection, "title")));
                 if (yearTopBooks != null) {
                     if (yearBottomBooks != null) {
                         yearTopBooks.addAll(yearBottomBooks);
@@ -78,7 +81,18 @@ public class EntertainmentReportService {
             }
             report.setTopAndBottomBooksByYear(booksByYear);
 
+            // Para películas por cantidad de géneros
+            final Sort.Direction movieDirection = moviesByGenreCountAscending ? Sort.Direction.ASC
+                    : Sort.Direction.DESC;
             List<Movie> moviesByGenreCount = movieRepository.findMoviesByGenreCount(genreCount);
+            if (moviesByGenreCount != null) {
+                final Sort.Direction finalMovieDirection = movieDirection;
+                moviesByGenreCount.sort((m1, m2) -> {
+                    int comparison = m1.getTitle().compareTo(m2.getTitle());
+                    return finalMovieDirection == Sort.Direction.ASC ? comparison : -comparison;
+                });
+            }
+
             Map<Integer, List<Movie>> moviesGrouped = new HashMap<>();
             moviesGrouped.put(genreCount, moviesByGenreCount != null ? moviesByGenreCount : new ArrayList<>());
             report.setMoviesGroupedByGenreCount(moviesGrouped);
@@ -114,13 +128,15 @@ public class EntertainmentReportService {
             document.open();
 
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-
             Paragraph title = new Paragraph("Reporte de Entretenimiento", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             title.setSpacingAfter(20);
             document.add(title);
 
-            EntertainmentReportDTO report = getEntertainmentReport(startDate, endDate, topN, genreCount, ascending);
+            // Llamar al método getEntertainmentReport con todos los parámetros necesarios
+            EntertainmentReportDTO report = getEntertainmentReport(
+                    startDate, endDate, topN, genreCount,
+                    ascending, ascending, ascending, ascending);
 
             PdfPTable mainTable = new PdfPTable(1);
             mainTable.setWidthPercentage(100);
@@ -136,7 +152,7 @@ public class EntertainmentReportService {
 
             return out.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException("Error generating PDF", e);
+            throw new RuntimeException("Error generating PDF: " + e.getMessage(), e);
         }
     }
 

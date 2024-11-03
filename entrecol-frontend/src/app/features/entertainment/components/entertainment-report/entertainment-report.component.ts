@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import {
   FormBuilder,
@@ -35,17 +35,21 @@ import { EntertainmentReportService } from '../../services/entertainment-report.
   styleUrl: './entertainment-report.component.scss',
 })
 export class EntertainmentReportComponent {
-  private readonly fb = inject(FormBuilder);
+  private readonly formBuilder = inject(FormBuilder);
   private readonly entertainmentReportService = inject(
     EntertainmentReportService,
   );
 
-  readonly form: FormGroup = this.fb.group({
+  readonly form: FormGroup = this.formBuilder.group({
     startDate: ['', Validators.required],
     endDate: ['', Validators.required],
     topN: [10, [Validators.required, Validators.min(1)]],
     genreCount: [2, [Validators.required, Validators.min(1)]],
     ascending: [true],
+    moviesByGenreAscending: [true],
+    topRatedBooksAscending: [true],
+    topBottomBooksByYearAscending: [true],
+    moviesByGenreCountAscending: [true],
   });
 
   readonly report = this.entertainmentReportService.report;
@@ -63,23 +67,28 @@ export class EntertainmentReportComponent {
     return Object.entries(stats).map(([name, value]) => ({ name, value }));
   });
 
-  private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
-
   onSubmit(): void {
     if (this.form.valid) {
-      const { startDate, endDate, topN, genreCount, ascending } =
-        this.form.value;
-      const formattedStartDate = this.formatDate(startDate);
-      const formattedEndDate = this.formatDate(endDate);
-
-      this.entertainmentReportService.getReport(
-        formattedStartDate,
-        formattedEndDate,
+      const {
+        startDate,
+        endDate,
         topN,
         genreCount,
-        ascending,
+        moviesByGenreAscending,
+        topRatedBooksAscending,
+        topBottomBooksByYearAscending,
+        moviesByGenreCountAscending,
+      } = this.form.value;
+
+      this.entertainmentReportService.getReport(
+        formatDate(startDate, 'yyyy-MM-dd', 'en-US'),
+        formatDate(endDate, 'yyyy-MM-dd', 'en-US'),
+        topN,
+        genreCount,
+        moviesByGenreAscending,
+        topRatedBooksAscending,
+        topBottomBooksByYearAscending,
+        moviesByGenreCountAscending,
       );
     }
   }
@@ -88,12 +97,10 @@ export class EntertainmentReportComponent {
     if (this.form.valid) {
       const { startDate, endDate, topN, genreCount, ascending } =
         this.form.value;
-      const formattedStartDate = this.formatDate(startDate);
-      const formattedEndDate = this.formatDate(endDate);
 
       this.entertainmentReportService.exportToPdf(
-        formattedStartDate,
-        formattedEndDate,
+        formatDate(startDate, 'yyyy-MM-dd', 'en-US'),
+        formatDate(endDate, 'yyyy-MM-dd', 'en-US'),
         topN,
         genreCount,
         ascending,

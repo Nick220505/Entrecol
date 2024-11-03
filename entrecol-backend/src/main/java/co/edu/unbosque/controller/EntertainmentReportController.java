@@ -34,10 +34,15 @@ public class EntertainmentReportController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @RequestParam(defaultValue = "10") int topN,
             @RequestParam(defaultValue = "2") int genreCount,
-            @RequestParam(defaultValue = "true") boolean ascending) {
+            @RequestParam(defaultValue = "true") boolean moviesByGenreAscending,
+            @RequestParam(defaultValue = "true") boolean topRatedBooksAscending,
+            @RequestParam(defaultValue = "true") boolean topBottomBooksByYearAscending,
+            @RequestParam(defaultValue = "true") boolean moviesByGenreCountAscending) {
         try {
             EntertainmentReportDTO report = entertainmentReportService.getEntertainmentReport(
-                    startDate, endDate, topN, genreCount, ascending);
+                    startDate, endDate, topN, genreCount,
+                    moviesByGenreAscending, topRatedBooksAscending,
+                    topBottomBooksByYearAscending, moviesByGenreCountAscending);
             return ResponseEntity.ok(Map.of("data", report));
         } catch (Exception e) {
             e.printStackTrace();

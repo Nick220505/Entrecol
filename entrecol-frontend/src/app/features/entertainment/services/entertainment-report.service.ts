@@ -35,13 +35,25 @@ export class EntertainmentReportService {
     endDate: string,
     topN: number,
     genreCount: number,
-    ascending: boolean,
+    moviesByGenreAscending: boolean,
+    topRatedBooksAscending: boolean,
+    topBottomBooksByYearAscending: boolean,
+    moviesByGenreCountAscending: boolean,
   ): void {
     this.report.update((state) => ({ ...state, loading: true }));
 
     this.http
       .get<{ data: EntertainmentReport }>(this.apiUrl, {
-        params: { startDate, endDate, topN, genreCount, ascending },
+        params: {
+          startDate,
+          endDate,
+          topN,
+          genreCount,
+          moviesByGenreAscending,
+          topRatedBooksAscending,
+          topBottomBooksByYearAscending,
+          moviesByGenreCountAscending,
+        },
       })
       .subscribe({
         next: ({ data }) => {
