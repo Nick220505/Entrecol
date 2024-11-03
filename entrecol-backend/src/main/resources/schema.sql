@@ -187,3 +187,23 @@ LEFT JOIN position p ON e.position_id = p.id
 LEFT JOIN eps ON e.eps_id = eps.id
 LEFT JOIN pension_fund pf ON e.pension_fund_id = pf.id
 LEFT JOIN employee_record er ON e.id = er.employee_id;
+
+CREATE OR REPLACE VIEW employee_health_pension_stats AS
+SELECT 
+    d.name as department_name,
+    e.eps_id,
+    eps.name as eps_name,
+    e.pension_fund_id,
+    pf.name as pension_fund_name,
+    p.name as position_name,
+    e.full_name,
+    e.code,
+    COUNT(*) OVER (PARTITION BY eps.name) as eps_count,
+    COUNT(*) OVER (PARTITION BY pf.name) as pension_fund_count,
+    COUNT(*) OVER (PARTITION BY d.name, eps.name) as eps_department_count,
+    COUNT(*) OVER (PARTITION BY d.name, pf.name) as pension_fund_department_count
+FROM employee e
+JOIN department d ON e.department_id = d.id
+JOIN eps ON e.eps_id = eps.id
+JOIN pension_fund pf ON e.pension_fund_id = pf.id
+JOIN position p ON e.position_id = p.id;

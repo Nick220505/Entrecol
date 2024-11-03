@@ -47,10 +47,12 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import co.edu.unbosque.dto.EmployeePersonalInfoDTO;
+import co.edu.unbosque.dto.HealthPensionReportDTO;
 import co.edu.unbosque.model.ARL;
 import co.edu.unbosque.model.Department;
 import co.edu.unbosque.model.EPS;
 import co.edu.unbosque.model.Employee;
+import co.edu.unbosque.model.EmployeeHealthPensionStats;
 import co.edu.unbosque.model.EmployeeRecord;
 import co.edu.unbosque.model.PensionFund;
 import co.edu.unbosque.model.Position;
@@ -718,24 +720,20 @@ public class EmployeeService {
             mainTitle.setSpacingAfter(20);
             document.add(mainTitle);
 
-            // Basic Information Section
             addSection(document, "Información Básica", subtitleFont);
             addInfoItem(document, "Nombre:", personalInfo.getFullName(), normalFont);
             addInfoItem(document, "Código:", personalInfo.getCode(), normalFont);
 
-            // Work Information Section
             addSection(document, "Información Laboral", subtitleFont);
             addInfoItem(document, "Dependencia:", personalInfo.getDepartmentName(), normalFont);
             addInfoItem(document, "Cargo:", personalInfo.getPositionName(), normalFont);
             addInfoItem(document, "Fecha de Ingreso:", DATE_FORMAT.format(personalInfo.getHireDate()), normalFont);
 
-            // Social Security Section
             addSection(document, "Información de Seguridad Social", subtitleFont);
             addInfoItem(document, "EPS:", personalInfo.getEpsName(), normalFont);
             addInfoItem(document, "Fondo de Pensión:", personalInfo.getPensionFundName(), normalFont);
             addInfoItem(document, "Salario:", String.format("$%,d", personalInfo.getSalary().longValue()), normalFont);
 
-            // Records Section
             addSection(document, "Novedades", subtitleFont);
             if (personalInfo.getDisabilityRecord() != null && personalInfo.getDisabilityRecord()) {
                 addInfoItem(document, "Incapacidad:", personalInfo.getDisabilityDays() + " días", normalFont);
@@ -788,5 +786,263 @@ public class EmployeeService {
         item.add(valueChunk);
         item.setSpacingAfter(8);
         document.add(item);
+    }
+
+    public HealthPensionReportDTO getHealthPensionReport() {
+        List<EmployeeHealthPensionStats> stats = employeeRepository.getHealthPensionStats();
+        HealthPensionReportDTO report = new HealthPensionReportDTO();
+
+        Map<String, Long> epsCounts = stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getEpsName,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.get(0).getEpsCount())));
+        report.setEpsCounts(epsCounts);
+
+        Map<String, Long> pensionFundCounts = stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getPensionFundName,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.get(0).getPensionFundCount())));
+        report.setPensionFundCounts(pensionFundCounts);
+
+        Map<String, Map<String, Long>> epsByDepartment = stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getDepartmentName,
+                        Collectors.groupingBy(
+                                EmployeeHealthPensionStats::getEpsName,
+                                Collectors.collectingAndThen(
+                                        Collectors.toList(),
+                                        list -> list.get(0).getEpsDepartmentCount()))));
+        report.setEpsByDepartment(epsByDepartment);
+
+        Map<String, Map<String, Long>> pensionFundByDepartment = stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getDepartmentName,
+                        Collectors.groupingBy(
+                                EmployeeHealthPensionStats::getPensionFundName,
+                                Collectors.collectingAndThen(
+                                        Collectors.toList(),
+                                        list -> list.get(0).getPensionFundDepartmentCount()))));
+        report.setPensionFundByDepartment(pensionFundByDepartment);
+
+        return report;
+    }
+
+    public byte[] generateHealthPensionReportPdf() {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Document document = new Document(PageSize.A4.rotate());
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+            Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+
+            Paragraph mainTitle = new Paragraph("Reporte de Salud y Pensión", titleFont);
+            mainTitle.setAlignment(Element.ALIGN_CENTER);
+            mainTitle.setSpacingAfter(20);
+            document.add(mainTitle);
+
+            List<EmployeeHealthPensionStats> stats = employeeRepository.getHealthPensionStats();
+
+            PdfPTable epsTable = new PdfPTable(1);
+            epsTable.setWidthPercentage(100);
+
+            PdfPCell epsTitleCell = new PdfPCell(new Paragraph("Empleados por EPS", subtitleFont));
+            epsTitleCell.setBorder(0);
+            epsTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            epsTitleCell.setPaddingBottom(10);
+            epsTable.addCell(epsTitleCell);
+
+            JFreeChart epsPieChart = createEpsPieChart(stats);
+            BufferedImage epsPieChartImage = epsPieChart.createBufferedImage(700, 400);
+            Image epsPieChartPdfImage = Image.getInstance(epsPieChartImage, null);
+            PdfPCell epsChartCell = new PdfPCell(epsPieChartPdfImage);
+            epsChartCell.setBorder(0);
+            epsChartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            epsTable.addCell(epsChartCell);
+
+            document.add(epsTable);
+            document.newPage();
+
+            PdfPTable pensionTable = new PdfPTable(1);
+            pensionTable.setWidthPercentage(100);
+
+            PdfPCell pensionTitleCell = new PdfPCell(new Paragraph("Empleados por Fondo de Pensión", subtitleFont));
+            pensionTitleCell.setBorder(0);
+            pensionTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            pensionTitleCell.setPaddingBottom(10);
+            pensionTable.addCell(pensionTitleCell);
+
+            JFreeChart pensionPieChart = createPensionPieChart(stats);
+            BufferedImage pensionPieChartImage = pensionPieChart.createBufferedImage(700, 400);
+            Image pensionPieChartPdfImage = Image.getInstance(pensionPieChartImage, null);
+            PdfPCell pensionChartCell = new PdfPCell(pensionPieChartPdfImage);
+            pensionChartCell.setBorder(0);
+            pensionChartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            pensionTable.addCell(pensionChartCell);
+
+            document.add(pensionTable);
+            document.newPage();
+
+            PdfPTable epsDeptTable = new PdfPTable(1);
+            epsDeptTable.setWidthPercentage(100);
+
+            PdfPCell epsDeptTitleCell = new PdfPCell(new Paragraph("Empleados por EPS y Departamento", subtitleFont));
+            epsDeptTitleCell.setBorder(0);
+            epsDeptTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            epsDeptTitleCell.setPaddingBottom(10);
+            epsDeptTable.addCell(epsDeptTitleCell);
+
+            JFreeChart epsDeptChart = createEpsDepartmentChart(stats);
+            BufferedImage epsDeptChartImage = epsDeptChart.createBufferedImage(700, 400);
+            Image epsDeptChartPdfImage = Image.getInstance(epsDeptChartImage, null);
+            PdfPCell epsDeptChartCell = new PdfPCell(epsDeptChartPdfImage);
+            epsDeptChartCell.setBorder(0);
+            epsDeptChartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            epsDeptTable.addCell(epsDeptChartCell);
+
+            document.add(epsDeptTable);
+            document.newPage();
+
+            PdfPTable pensionDeptTable = new PdfPTable(1);
+            pensionDeptTable.setWidthPercentage(100);
+
+            PdfPCell pensionDeptTitleCell = new PdfPCell(
+                    new Paragraph("Empleados por Fondo de Pensión y Departamento", subtitleFont));
+            pensionDeptTitleCell.setBorder(0);
+            pensionDeptTitleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            pensionDeptTitleCell.setPaddingBottom(10);
+            pensionDeptTable.addCell(pensionDeptTitleCell);
+
+            JFreeChart pensionDeptChart = createPensionDepartmentChart(stats);
+            BufferedImage pensionDeptChartImage = pensionDeptChart.createBufferedImage(700, 400);
+            Image pensionDeptChartPdfImage = Image.getInstance(pensionDeptChartImage, null);
+            PdfPCell pensionDeptChartCell = new PdfPCell(pensionDeptChartPdfImage);
+            pensionDeptChartCell.setBorder(0);
+            pensionDeptChartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            pensionDeptTable.addCell(pensionDeptChartCell);
+
+            document.add(pensionDeptTable);
+
+            document.close();
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating health pension report PDF", e);
+        }
+    }
+
+    private JFreeChart createEpsPieChart(List<EmployeeHealthPensionStats> stats) {
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+        stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getEpsName,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.get(0).getEpsCount())))
+                .forEach(dataset::setValue);
+
+        JFreeChart chart = ChartFactory.createPieChart(
+                null,
+                dataset,
+                true,
+                true,
+                false);
+
+        @SuppressWarnings("unchecked")
+        PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setOutlinePaint(null);
+        plot.setLabelGenerator(null);
+
+        return chart;
+    }
+
+    private JFreeChart createPensionPieChart(List<EmployeeHealthPensionStats> stats) {
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+        stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getPensionFundName,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.get(0).getPensionFundCount())))
+                .forEach(dataset::setValue);
+
+        JFreeChart chart = ChartFactory.createPieChart(
+                null,
+                dataset,
+                true,
+                true,
+                false);
+
+        @SuppressWarnings("unchecked")
+        PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setOutlinePaint(null);
+        plot.setLabelGenerator(null);
+
+        return chart;
+    }
+
+    private JFreeChart createEpsDepartmentChart(List<EmployeeHealthPensionStats> stats) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        Map<String, Map<String, Long>> epsByDepartment = stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getDepartmentName,
+                        Collectors.groupingBy(
+                                EmployeeHealthPensionStats::getEpsName,
+                                Collectors.collectingAndThen(
+                                        Collectors.toList(),
+                                        list -> list.get(0).getEpsDepartmentCount()))));
+
+        epsByDepartment.forEach(
+                (department, epsMap) -> epsMap.forEach((eps, count) -> dataset.addValue(count, eps, department)));
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                null,
+                "Departamento",
+                "Cantidad",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false);
+
+        chart.setBackgroundPaint(Color.WHITE);
+        chart.getPlot().setBackgroundPaint(Color.WHITE);
+
+        return chart;
+    }
+
+    private JFreeChart createPensionDepartmentChart(List<EmployeeHealthPensionStats> stats) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        Map<String, Map<String, Long>> pensionByDepartment = stats.stream()
+                .collect(Collectors.groupingBy(
+                        EmployeeHealthPensionStats::getDepartmentName,
+                        Collectors.groupingBy(
+                                EmployeeHealthPensionStats::getPensionFundName,
+                                Collectors.collectingAndThen(
+                                        Collectors.toList(),
+                                        list -> list.get(0).getPensionFundDepartmentCount()))));
+
+        pensionByDepartment.forEach((department, pensionMap) -> pensionMap
+                .forEach((pension, count) -> dataset.addValue(count, pension, department)));
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                null,
+                "Departamento",
+                "Cantidad",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false);
+
+        chart.setBackgroundPaint(Color.WHITE);
+        chart.getPlot().setBackgroundPaint(Color.WHITE);
+
+        return chart;
     }
 }

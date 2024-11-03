@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.edu.unbosque.dto.EmployeePersonalInfoDTO;
+import co.edu.unbosque.dto.HealthPensionReportDTO;
 import co.edu.unbosque.model.Employee;
 import co.edu.unbosque.service.EmployeeService;
 
@@ -138,6 +139,32 @@ public class EmployeeController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("filename", "informacion-personal.pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/health-pension-report")
+    public ResponseEntity<Map<String, Object>> getHealthPensionReport() {
+        try {
+            HealthPensionReportDTO report = employeeService.getHealthPensionReport();
+            return ResponseEntity.ok(Map.of("data", report));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/health-pension-report/export/pdf")
+    public ResponseEntity<byte[]> exportHealthPensionReportPdf() {
+        try {
+            byte[] pdfBytes = employeeService.generateHealthPensionReportPdf();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("filename", "reporte-salud-pension.pdf");
 
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {

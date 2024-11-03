@@ -7,6 +7,7 @@ import { finalize } from 'rxjs';
 import { environment } from '@env';
 import { EmployeePersonalInfo } from '@payrolls/models/employee-personal-info.model';
 import { PdfPreviewDialogComponent } from '../components/pdf-preview-dialog/pdf-preview-dialog.component';
+import { HealthPensionReport } from '../models/health-pension-report.model';
 import { Employee } from '../models/payroll.model';
 import { EmployeeReport } from '../models/report.model';
 
@@ -47,6 +48,14 @@ export class PayrollService {
   readonly fileUploaded = signal(false);
   readonly pdfExporting = signal(false);
   readonly pdfExportingPersonalInfo = signal(false);
+
+  readonly healthPensionReport = signal<State<HealthPensionReport | null>>({
+    data: null,
+    loading: false,
+    initialLoad: true,
+  });
+
+  readonly pdfExportingHealthPension = signal(false);
 
   getAll(): void {
     this.employees.update((state) => ({ ...state, loading: true }));
@@ -169,6 +178,60 @@ export class PayrollService {
         responseType: 'blob',
       })
       .pipe(finalize(() => this.pdfExportingPersonalInfo.set(false)))
+      .subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const dialogRef = this.dialog.open(PdfPreviewDialogComponent, {
+            width: '90vw',
+            height: '90vh',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+          });
+          dialogRef.componentInstance.pdfUrl.set(url);
+          dialogRef.afterClosed().subscribe(() => {
+            window.URL.revokeObjectURL(url);
+          });
+        },
+        error: () => this.snackBar.open('Error al exportar el PDF', 'Cerrar'),
+      });
+  }
+
+  getHealthPensionReport(): void {
+    this.healthPensionReport.update((state) => ({ ...state, loading: true }));
+
+    this.http
+      .get<{
+        data: HealthPensionReport;
+      }>(`${this.apiUrl}/health-pension-report`)
+      .subscribe({
+        next: ({ data }) => {
+          this.healthPensionReport.set({
+            data,
+            loading: false,
+            initialLoad: false,
+          });
+        },
+        error: () => {
+          this.healthPensionReport.update((state) => ({
+            ...state,
+            loading: false,
+          }));
+          this.snackBar.open(
+            'Error al cargar el reporte de salud y pensión',
+            'Cerrar',
+          );
+        },
+      });
+  }
+
+  exportHealthPensionReportToPdf(): void {
+    this.pdfExportingHealthPension.set(true);
+
+    this.http
+      .get(`${this.apiUrl}/health-pension-report/export/pdf`, {
+        responseType: 'blob',
+      })
+      .pipe(finalize(() => this.pdfExportingHealthPension.set(false)))
       .subscribe({
         next: (blob) => {
           const url = window.URL.createObjectURL(blob);
