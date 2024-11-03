@@ -13,7 +13,6 @@
 
       .legend-title {
         font-size: 14px !important;
-        font-weight: 600 !important;
       }
 
       .legend-label {
@@ -26,7 +25,6 @@
 
       .pie-label {
         fill: rgba(0, 0, 0, 0.87) !important;
-        font-weight: 500 !important;
       }
 
       .pie-grid {
@@ -52,12 +50,29 @@
 :host-context(.dark-theme) {
   ::ng-deep {
     .ngx-charts {
-      text {
+      text,
+      .legend-label-text {
         fill: rgba(255, 255, 255, 0.87) !important;
       }
 
       .pie-label {
         fill: rgba(255, 255, 255, 0.87) !important;
+      }
+
+      .pie-label-line {
+        stroke: rgba(255, 255, 255, 0.7) !important;
+      }
+
+      .legend-title-text {
+        fill: rgba(255, 255, 255, 0.87) !important;
+      }
+
+      .pie-grid {
+        .arc {
+          path {
+            stroke: #424242 !important;
+          }
+        }
       }
     }
   }

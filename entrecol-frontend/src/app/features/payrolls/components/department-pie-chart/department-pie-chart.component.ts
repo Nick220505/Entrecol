@@ -12,7 +12,7 @@ import {
   standalone: true,
   imports: [CommonModule, NgxChartsModule],
   templateUrl: './department-pie-chart.component.html',
-  styleUrls: ['./department-pie-chart.component.scss'],
+  styleUrl: './department-pie-chart.component.scss',
 })
 export class DepartmentPieChartComponent {
   private readonly payrollService = inject(PayrollService);

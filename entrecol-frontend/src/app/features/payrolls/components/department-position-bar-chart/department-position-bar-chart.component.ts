@@ -12,7 +12,7 @@ import {
   standalone: true,
   imports: [CommonModule, NgxChartsModule],
   templateUrl: './department-position-bar-chart.component.html',
-  styleUrls: ['./department-position-bar-chart.component.scss'],
+  styleUrl: './department-position-bar-chart.component.scss',
 })
 export class DepartmentPositionBarChartComponent {
   private readonly payrollService = inject(PayrollService);

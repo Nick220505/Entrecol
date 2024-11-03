@@ -24,7 +24,7 @@ import { PersonalInfoReportComponent } from './components/personal-info-report/p
     HealthPensionReportComponent,
   ],
   templateUrl: './payrolls.component.html',
-  styleUrls: ['./payrolls.component.scss'],
+  styleUrl: './payrolls.component.scss',
 })
 export class PayrollsComponent {
   private readonly payrollService = inject(PayrollService);

@@ -13,11 +13,58 @@
 
       .legend-title {
         font-size: 14px !important;
-        font-weight: 600 !important;
       }
 
       .legend-label {
         font-size: 14px !important;
+      }
+
+      .grid-line-path {
+        stroke: rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .x-axis,
+      .y-axis {
+        text {
+          fill: rgba(0, 0, 0, 0.87) !important;
+        }
+      }
+
+      .x-axis {
+        text {
+          transform: rotate(-45deg) translate(-10px, 0);
+          text-anchor: end;
+        }
+      }
+
+      .bar {
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      .legend-entries {
+        margin-left: 16px !important;
+      }
+    }
+  }
+}
+
+:host-context(.dark-theme) {
+  ::ng-deep {
+    .ngx-charts {
+      text {
+        fill: rgba(255, 255, 255, 0.87) !important;
+      }
+
+      .grid-line-path {
+        stroke: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      .tick {
+        line {
+          stroke: rgba(255, 255, 255, 0.1) !important;
+        }
       }
     }
   }

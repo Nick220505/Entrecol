@@ -33,25 +33,35 @@
           <p>Sube algunos empleados para comenzar</p>
         </div>
       } @else {
-        <section>
-          <h2>Empleados por EPS</h2>
-          <app-eps-pie-chart />
-        </section>
+        <div class="report-content">
+          <section>
+            <h2>Empleados por EPS</h2>
+            <div class="chart-container">
+              <app-eps-pie-chart />
+            </div>
+          </section>
 
-        <section>
-          <h2>Empleados por Fondo de Pensión</h2>
-          <app-pension-pie-chart />
-        </section>
+          <section>
+            <h2>Empleados por Fondo de Pensión</h2>
+            <div class="chart-container">
+              <app-pension-pie-chart />
+            </div>
+          </section>
 
-        <section>
-          <h2>Empleados por EPS y Departamento</h2>
-          <app-eps-department-bar-chart />
-        </section>
+          <section>
+            <h2>Empleados por EPS y Departamento</h2>
+            <div class="chart-container">
+              <app-eps-department-bar-chart />
+            </div>
+          </section>
 
-        <section>
-          <h2>Empleados por Fondo de Pensión y Departamento</h2>
-          <app-pension-department-bar-chart />
-        </section>
+          <section>
+            <h2>Empleados por Fondo de Pensión y Departamento</h2>
+            <div class="chart-container">
+              <app-pension-department-bar-chart />
+            </div>
+          </section>
+        </div>
       }
     }
   </mat-card-content>

@@ -38,7 +38,7 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
     LoadingSpinnerComponent,
   ],
   templateUrl: './personal-info-report.component.html',
-  styleUrls: ['./personal-info-report.component.scss'],
+  styleUrl: './personal-info-report.component.scss',
 })
 export class PersonalInfoReportComponent {
   protected readonly payrollService = inject(PayrollService);

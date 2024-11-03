@@ -10,7 +10,7 @@ import {
   standalone: true,
   imports: [CommonModule, NgxExtendedPdfViewerModule],
   templateUrl: './pdf-viewer.component.html',
-  styleUrls: ['./pdf-viewer.component.scss'],
+  styleUrl: './pdf-viewer.component.scss',
 })
 export class PdfViewerComponent {
   readonly src = input.required<string>();

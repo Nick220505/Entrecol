@@ -16,7 +16,7 @@ import { PdfViewerComponent } from '@shared/components/pdf-viewer/pdf-viewer.com
     PdfViewerComponent,
   ],
   templateUrl: './pdf-preview-dialog.component.html',
-  styleUrls: ['./pdf-preview-dialog.component.scss'],
+  styleUrl: './pdf-preview-dialog.component.scss',
 })
 export class PdfPreviewDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<PdfPreviewDialogComponent>);

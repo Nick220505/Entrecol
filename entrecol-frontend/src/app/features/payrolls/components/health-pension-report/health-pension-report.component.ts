@@ -26,7 +26,7 @@ import { PensionPieChartComponent } from '../pension-pie-chart/pension-pie-chart
     PensionDepartmentBarChartComponent,
   ],
   templateUrl: './health-pension-report.component.html',
-  styleUrls: ['./health-pension-report.component.scss'],
+  styleUrl: './health-pension-report.component.scss',
 })
 export class HealthPensionReportComponent {
   protected readonly payrollService = inject(PayrollService);

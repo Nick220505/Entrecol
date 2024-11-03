@@ -13,7 +13,7 @@ import { DepartmentPositionBarChartComponent } from '../department-position-bar-
 @Component({
   selector: 'app-payroll-report',
   templateUrl: './payroll-report.component.html',
-  styleUrls: ['./payroll-report.component.scss'],
+  styleUrl: './payroll-report.component.scss',
   standalone: true,
   imports: [
     CommonModule,
