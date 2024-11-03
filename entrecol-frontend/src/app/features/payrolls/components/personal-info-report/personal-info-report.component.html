@@ -22,217 +22,229 @@
   </mat-card-header>
 
   <mat-card-content>
-    <mat-card appearance="outlined" class="select-employee-card">
-      <mat-card-content>
-        <mat-form-field appearance="outline" class="employee-select">
-          <mat-label>Buscar Empleado</mat-label>
-          <input
-            type="text"
-            matInput
-            [formControl]="employeeSearchControl"
-            [matAutocomplete]="auto"
-            placeholder="Buscar por nombre o código"
-          />
-          <mat-icon matSuffix>search</mat-icon>
-          <mat-autocomplete
-            #auto="matAutocomplete"
-            [displayWith]="displayFn"
-            (optionSelected)="onEmployeeSelected($event)"
-          >
-            @for (employee of filteredEmployees(); track employee.id) {
-              <mat-option [value]="employee">
-                {{ employee.fullName }} ({{ employee.code }})
-              </mat-option>
-            }
-          </mat-autocomplete>
-        </mat-form-field>
-      </mat-card-content>
-    </mat-card>
-
-    @if (selectedEmployee()) {
-      <mat-card appearance="outlined">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>badge</mat-icon>
-            Información Personal
-          </mat-card-title>
-        </mat-card-header>
-
+    @if (payrollService.employees().data.length === 0) {
+      <div class="no-data">
+        <mat-icon>people</mat-icon>
+        <p>No hay datos para mostrar</p>
+        <p>Sube algunos empleados para comenzar</p>
+      </div>
+    } @else {
+      <mat-card appearance="outlined" class="select-employee-card">
         <mat-card-content>
-          @if (personalInfo().initialLoad && personalInfo().loading) {
-            <app-loading-spinner
-              loadingText="Cargando información..."
-            ></app-loading-spinner>
-          } @else {
-            @let personalInfoData = personalInfo().data;
-            @if (!personalInfoData) {
-              <div class="no-data">
-                <mat-icon>person_off</mat-icon>
-                <p>No hay información disponible</p>
-              </div>
-            } @else {
-              <div class="info-grid">
-                <mat-card appearance="outlined" class="info-card">
-                  <mat-card-header>
-                    <mat-card-title>
-                      <mat-icon>person</mat-icon>
-                      Información Básica
-                    </mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content>
-                    <div class="info-item">
-                      <mat-icon>account_circle</mat-icon>
-                      <span class="label">Nombre:</span>
-                      <span class="value">{{ personalInfoData.fullName }}</span>
-                    </div>
-                    <div class="info-item">
-                      <mat-icon>pin</mat-icon>
-                      <span class="label">Código:</span>
-                      <span class="value">{{ personalInfoData.code }}</span>
-                    </div>
-                  </mat-card-content>
-                </mat-card>
-
-                <mat-card appearance="outlined" class="info-card">
-                  <mat-card-header>
-                    <mat-card-title>
-                      <mat-icon>work</mat-icon>
-                      Información Laboral
-                    </mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content>
-                    <div class="info-item">
-                      <mat-icon>domain</mat-icon>
-                      <span class="label">Dependencia:</span>
-                      <span class="value">{{
-                        personalInfoData.departmentName
-                      }}</span>
-                    </div>
-                    <div class="info-item">
-                      <mat-icon>assignment_ind</mat-icon>
-                      <span class="label">Cargo:</span>
-                      <span class="value">{{
-                        personalInfoData.positionName
-                      }}</span>
-                    </div>
-                    <div class="info-item">
-                      <mat-icon>event</mat-icon>
-                      <span class="label">Fecha de Ingreso:</span>
-                      <span class="value">{{
-                        personalInfoData.hireDate | date: "dd/MM/yyyy"
-                      }}</span>
-                    </div>
-                  </mat-card-content>
-                </mat-card>
-
-                <mat-card appearance="outlined" class="info-card">
-                  <mat-card-header>
-                    <mat-card-title>
-                      <mat-icon>health_and_safety</mat-icon>
-                      Información de Seguridad Social
-                    </mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content>
-                    <div class="info-item">
-                      <mat-icon>local_hospital</mat-icon>
-                      <span class="label">EPS:</span>
-                      <span class="value">{{ personalInfoData.epsName }}</span>
-                    </div>
-                    <div class="info-item">
-                      <mat-icon>savings</mat-icon>
-                      <span class="label">Fondo de Pensión:</span>
-                      <span class="value">{{
-                        personalInfoData.pensionFundName
-                      }}</span>
-                    </div>
-                    <div class="info-item">
-                      <mat-icon>payments</mat-icon>
-                      <span class="label">Salario:</span>
-                      <span class="value">{{
-                        personalInfoData.salary
-                          | currency: "COP" : "symbol-narrow" : "1.0-0"
-                      }}</span>
-                    </div>
-                  </mat-card-content>
-                </mat-card>
-
-                <mat-card appearance="outlined" class="info-card">
-                  <mat-card-header>
-                    <mat-card-title>
-                      <mat-icon>event_note</mat-icon>
-                      Novedades
-                    </mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content>
-                    @if (personalInfoData.disabilityRecord) {
-                      <div class="info-item">
-                        <mat-icon>healing</mat-icon>
-                        <span class="label">Incapacidad:</span>
-                        <span class="value"
-                          >{{ personalInfoData.disabilityDays }} días</span
-                        >
-                        <span class="date-range">
-                          <mat-icon>date_range</mat-icon>
-                          ({{
-                            personalInfoData.disabilityStartDate
-                              | date: "dd/MM/yyyy"
-                          }}
-                          -
-                          {{
-                            personalInfoData.disabilityEndDate
-                              | date: "dd/MM/yyyy"
-                          }})
-                        </span>
-                      </div>
-                    }
-                    @if (personalInfoData.vacationRecord) {
-                      <div class="info-item">
-                        <mat-icon>beach_access</mat-icon>
-                        <span class="label">Vacaciones:</span>
-                        <span class="value"
-                          >{{ personalInfoData.vacationDays }} días</span
-                        >
-                        <span class="date-range">
-                          <mat-icon>date_range</mat-icon>
-                          ({{
-                            personalInfoData.vacationStartDate
-                              | date: "dd/MM/yyyy"
-                          }}
-                          -
-                          {{
-                            personalInfoData.vacationEndDate
-                              | date: "dd/MM/yyyy"
-                          }})
-                        </span>
-                      </div>
-                    }
-                    @if (personalInfoData.bonus > 0) {
-                      <div class="info-item">
-                        <mat-icon>stars</mat-icon>
-                        <span class="label">Bonificación:</span>
-                        <span class="value">{{
-                          personalInfoData.bonus
-                            | currency: "COP" : "symbol-narrow" : "1.0-0"
-                        }}</span>
-                      </div>
-                    }
-                    @if (personalInfoData.transportAllowance > 0) {
-                      <div class="info-item">
-                        <mat-icon>directions_bus</mat-icon>
-                        <span class="label">Auxilio de Transporte:</span>
-                        <span class="value">{{
-                          personalInfoData.transportAllowance
-                            | currency: "COP" : "symbol-narrow" : "1.0-0"
-                        }}</span>
-                      </div>
-                    }
-                  </mat-card-content>
-                </mat-card>
-              </div>
-            }
-          }
+          <mat-form-field appearance="outline" class="employee-select">
+            <mat-label>Buscar Empleado</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="employeeSearchControl"
+              [matAutocomplete]="auto"
+              placeholder="Buscar por nombre o código"
+            />
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              [displayWith]="displayFn"
+              (optionSelected)="onEmployeeSelected($event)"
+            >
+              @for (employee of filteredEmployees(); track employee.id) {
+                <mat-option [value]="employee">
+                  {{ employee.fullName }} ({{ employee.code }})
+                </mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
         </mat-card-content>
       </mat-card>
+
+      @if (selectedEmployee()) {
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>badge</mat-icon>
+              Información Personal
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            @if (personalInfo().initialLoad && personalInfo().loading) {
+              <app-loading-spinner
+                loadingText="Cargando información..."
+              ></app-loading-spinner>
+            } @else {
+              @let personalInfoData = personalInfo().data;
+              @if (!personalInfoData) {
+                <div class="no-data">
+                  <mat-icon>person_off</mat-icon>
+                  <p>No hay información disponible</p>
+                </div>
+              } @else {
+                <div class="info-grid">
+                  <mat-card appearance="outlined" class="info-card">
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>person</mat-icon>
+                        Información Básica
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <div class="info-item">
+                        <mat-icon>account_circle</mat-icon>
+                        <span class="label">Nombre:</span>
+                        <span class="value">{{
+                          personalInfoData.fullName
+                        }}</span>
+                      </div>
+                      <div class="info-item">
+                        <mat-icon>pin</mat-icon>
+                        <span class="label">Código:</span>
+                        <span class="value">{{ personalInfoData.code }}</span>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+
+                  <mat-card appearance="outlined" class="info-card">
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>work</mat-icon>
+                        Información Laboral
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <div class="info-item">
+                        <mat-icon>domain</mat-icon>
+                        <span class="label">Dependencia:</span>
+                        <span class="value">{{
+                          personalInfoData.departmentName
+                        }}</span>
+                      </div>
+                      <div class="info-item">
+                        <mat-icon>assignment_ind</mat-icon>
+                        <span class="label">Cargo:</span>
+                        <span class="value">{{
+                          personalInfoData.positionName
+                        }}</span>
+                      </div>
+                      <div class="info-item">
+                        <mat-icon>event</mat-icon>
+                        <span class="label">Fecha de Ingreso:</span>
+                        <span class="value">{{
+                          personalInfoData.hireDate | date: "dd/MM/yyyy"
+                        }}</span>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+
+                  <mat-card appearance="outlined" class="info-card">
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>health_and_safety</mat-icon>
+                        Información de Seguridad Social
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <div class="info-item">
+                        <mat-icon>local_hospital</mat-icon>
+                        <span class="label">EPS:</span>
+                        <span class="value">{{
+                          personalInfoData.epsName
+                        }}</span>
+                      </div>
+                      <div class="info-item">
+                        <mat-icon>savings</mat-icon>
+                        <span class="label">Fondo de Pensión:</span>
+                        <span class="value">{{
+                          personalInfoData.pensionFundName
+                        }}</span>
+                      </div>
+                      <div class="info-item">
+                        <mat-icon>payments</mat-icon>
+                        <span class="label">Salario:</span>
+                        <span class="value">{{
+                          personalInfoData.salary
+                            | currency: "COP" : "symbol-narrow" : "1.0-0"
+                        }}</span>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+
+                  <mat-card appearance="outlined" class="info-card">
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>event_note</mat-icon>
+                        Novedades
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      @if (personalInfoData.disabilityRecord) {
+                        <div class="info-item">
+                          <mat-icon>healing</mat-icon>
+                          <span class="label">Incapacidad:</span>
+                          <span class="value"
+                            >{{ personalInfoData.disabilityDays }} días</span
+                          >
+                          <span class="date-range">
+                            <mat-icon>date_range</mat-icon>
+                            ({{
+                              personalInfoData.disabilityStartDate
+                                | date: "dd/MM/yyyy"
+                            }}
+                            -
+                            {{
+                              personalInfoData.disabilityEndDate
+                                | date: "dd/MM/yyyy"
+                            }})
+                          </span>
+                        </div>
+                      }
+                      @if (personalInfoData.vacationRecord) {
+                        <div class="info-item">
+                          <mat-icon>beach_access</mat-icon>
+                          <span class="label">Vacaciones:</span>
+                          <span class="value"
+                            >{{ personalInfoData.vacationDays }} días</span
+                          >
+                          <span class="date-range">
+                            <mat-icon>date_range</mat-icon>
+                            ({{
+                              personalInfoData.vacationStartDate
+                                | date: "dd/MM/yyyy"
+                            }}
+                            -
+                            {{
+                              personalInfoData.vacationEndDate
+                                | date: "dd/MM/yyyy"
+                            }})
+                          </span>
+                        </div>
+                      }
+                      @if (personalInfoData.bonus > 0) {
+                        <div class="info-item">
+                          <mat-icon>stars</mat-icon>
+                          <span class="label">Bonificación:</span>
+                          <span class="value">{{
+                            personalInfoData.bonus
+                              | currency: "COP" : "symbol-narrow" : "1.0-0"
+                          }}</span>
+                        </div>
+                      }
+                      @if (personalInfoData.transportAllowance > 0) {
+                        <div class="info-item">
+                          <mat-icon>directions_bus</mat-icon>
+                          <span class="label">Auxilio de Transporte:</span>
+                          <span class="value">{{
+                            personalInfoData.transportAllowance
+                              | currency: "COP" : "symbol-narrow" : "1.0-0"
+                          }}</span>
+                        </div>
+                      }
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              }
+            }
+          </mat-card-content>
+        </mat-card>
+      }
     }
   </mat-card-content>
 </mat-card>
