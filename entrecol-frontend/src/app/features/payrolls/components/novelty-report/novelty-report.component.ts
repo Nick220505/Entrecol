@@ -55,16 +55,6 @@ export class NoveltyReportComponent {
     ]),
   });
 
-  protected readonly displayedColumns = [
-    'fullName',
-    'code',
-    'departmentName',
-    'positionName',
-    'noveltyType',
-    'startDate',
-    'endDate',
-  ];
-
   onSearch(): void {
     if (this.dateForm.valid) {
       const { startDate, endDate } = this.dateForm.value;

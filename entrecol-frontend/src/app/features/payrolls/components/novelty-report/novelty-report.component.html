@@ -84,6 +84,16 @@
       } @else {
         <section>
           <h2>Empleados con Novedades</h2>
+          @let displayedColumns =
+            [
+              "fullName",
+              "code",
+              "departmentName",
+              "positionName",
+              "noveltyType",
+              "startDate",
+              "endDate",
+            ];
           <table
             mat-table
             [dataSource]="
