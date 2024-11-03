@@ -157,3 +157,33 @@ CREATE TABLE `movie_genre` (
 CREATE INDEX idx_movie_original_id ON `movie`(original_id);
 CREATE INDEX idx_movie_year ON `movie`(release_year);
 CREATE INDEX idx_genre_name ON `genre`(name);
+
+CREATE OR REPLACE VIEW employee_personal_info AS
+SELECT 
+    e.id,
+    e.full_name,
+    e.code,
+    d.name as department_name,
+    p.name as position_name,
+    e.hire_date,
+    eps.name as eps_name,
+    pf.name as pension_fund_name,
+    e.salary,
+    er.disability_record,
+    er.vacation_record,
+    er.worked_days,
+    er.disability_days,
+    er.vacation_days,
+    er.vacation_start_date,
+    er.vacation_end_date,
+    er.disability_start_date,
+    er.disability_end_date,
+    er.bonus,
+    er.transport_allowance,
+    er.record_date
+FROM employee e
+LEFT JOIN department d ON e.department_id = d.id
+LEFT JOIN position p ON e.position_id = p.id
+LEFT JOIN eps ON e.eps_id = eps.id
+LEFT JOIN pension_fund pf ON e.pension_fund_id = pf.id
+LEFT JOIN employee_record er ON e.id = er.employee_id;

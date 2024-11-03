@@ -5,11 +5,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
 
 import { environment } from '@env';
+import { EmployeePersonalInfo } from '@payrolls/models/employee-personal-info.model';
 import { PdfPreviewDialogComponent } from '../components/pdf-preview-dialog/pdf-preview-dialog.component';
 import { Employee } from '../models/payroll.model';
 import { EmployeeReport } from '../models/report.model';
 
-interface LoadingState<T> {
+interface State<T> {
   data: T;
   loading: boolean;
   initialLoad: boolean;
@@ -24,20 +25,25 @@ export class PayrollService {
   private readonly dialog = inject(MatDialog);
   private readonly apiUrl = `${environment.apiUrl}/employees`;
 
-  readonly employees = signal<LoadingState<Employee[]>>({
+  readonly employees = signal<State<Employee[]>>({
     data: [],
     loading: false,
     initialLoad: true,
   });
 
-  readonly report = signal<LoadingState<EmployeeReport | null>>({
+  readonly report = signal<State<EmployeeReport | null>>({
+    data: null,
+    loading: false,
+    initialLoad: true,
+  });
+
+  readonly personalInfo = signal<State<EmployeePersonalInfo | null>>({
     data: null,
     loading: false,
     initialLoad: true,
   });
 
   readonly uploading = signal(false);
-
   readonly pdfExporting = signal(false);
 
   getAll(): void {
@@ -101,6 +107,29 @@ export class PayrollService {
         this.snackBar.open('Error al cargar el reporte', 'Cerrar');
       },
     });
+  }
+
+  getPersonalInfo(employeeId: number): void {
+    this.personalInfo.update((state) => ({ ...state, loading: true }));
+
+    this.http
+      .get<EmployeePersonalInfo>(`${this.apiUrl}/${employeeId}/personal-info`)
+      .subscribe({
+        next: (data) => {
+          this.personalInfo.set({
+            data,
+            loading: false,
+            initialLoad: false,
+          });
+        },
+        error: () => {
+          this.personalInfo.update((state) => ({ ...state, loading: false }));
+          this.snackBar.open(
+            'Error al cargar la información personal',
+            'Cerrar',
+          );
+        },
+      });
   }
 
   exportToPdf(): void {

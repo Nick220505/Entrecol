@@ -45,6 +45,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import co.edu.unbosque.dto.EmployeePersonalInfoDTO;
 import co.edu.unbosque.model.ARL;
 import co.edu.unbosque.model.Department;
 import co.edu.unbosque.model.EPS;
@@ -662,5 +663,40 @@ public class EmployeeService {
         cell.setHorizontalAlignment(alignment);
         cell.setPadding(5);
         table.addCell(cell);
+    }
+
+    public EmployeePersonalInfoDTO getEmployeePersonalInfo(Long id) {
+        return employeeRepository.findById(id)
+                .map(employee -> {
+                    EmployeePersonalInfoDTO dto = new EmployeePersonalInfoDTO();
+                    dto.setId(employee.getId());
+                    dto.setFullName(employee.getFullName());
+                    dto.setCode(employee.getCode());
+                    dto.setDepartmentName(employee.getDepartment().getName());
+                    dto.setPositionName(employee.getPosition().getName());
+                    dto.setHireDate(employee.getHireDate());
+                    dto.setEpsName(employee.getEps().getName());
+                    dto.setPensionFundName(employee.getPensionFund().getName());
+                    dto.setSalary(employee.getSalary());
+
+                    employeeRecordRepository.findFirstByEmployeeIdOrderByRecordDateDesc(id)
+                            .ifPresent(record -> {
+                                dto.setDisabilityRecord(record.getDisabilityRecord());
+                                dto.setVacationRecord(record.getVacationRecord());
+                                dto.setWorkedDays(record.getWorkedDays());
+                                dto.setDisabilityDays(record.getDisabilityDays());
+                                dto.setVacationDays(record.getVacationDays());
+                                dto.setVacationStartDate(record.getVacationStartDate());
+                                dto.setVacationEndDate(record.getVacationEndDate());
+                                dto.setDisabilityStartDate(record.getDisabilityStartDate());
+                                dto.setDisabilityEndDate(record.getDisabilityEndDate());
+                                dto.setBonus(record.getBonus());
+                                dto.setTransportAllowance(record.getTransportAllowance());
+                                dto.setRecordDate(record.getRecordDate());
+                            });
+
+                    return dto;
+                })
+                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
     }
 }

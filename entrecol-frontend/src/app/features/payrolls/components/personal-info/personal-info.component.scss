@@ -1,0 +1,178 @@
+.info-grid {
+  display: grid;
+  gap: 24px;
+  padding: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+.info-card {
+  mat-card-header {
+    margin-bottom: 16px;
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+
+      mat-icon {
+        color: var(--mat-primary-500);
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: 0 16px 16px;
+  }
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  gap: 8px;
+
+  mat-icon {
+    color: var(--mat-primary-500);
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .label {
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+    min-width: 140px;
+  }
+
+  .value {
+    color: rgba(0, 0, 0, 0.87);
+    flex: 1;
+  }
+
+  .date-range {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    margin-left: 168px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: rgba(0, 0, 0, 0.6);
+    }
+  }
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 0;
+  color: rgba(0, 0, 0, 0.54);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    margin: 0;
+    text-align: center;
+  }
+}
+
+:host-context(.dark-theme) {
+  .info-item {
+    .label {
+      color: rgba(255, 255, 255, 0.87);
+    }
+
+    .value {
+      color: rgba(255, 255, 255, 0.87);
+    }
+
+    .date-range {
+      color: rgba(255, 255, 255, 0.6);
+
+      mat-icon {
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
+
+  .no-data {
+    color: rgba(255, 255, 255, 0.54);
+  }
+}
+
+@media (max-width: 1600px) {
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 1400px;
+  }
+}
+
+@media (max-width: 900px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .info-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .info-grid {
+    gap: 16px;
+    padding: 8px;
+  }
+
+  .info-item {
+    .label {
+      min-width: 120px;
+    }
+
+    .date-range {
+      margin-left: 28px;
+    }
+  }
+
+  .info-card {
+    mat-card-header {
+      margin-bottom: 12px;
+    }
+
+    mat-card-content {
+      padding: 0 12px 12px;
+    }
+  }
+}
+
+@media (max-width: 400px) {
+  .info-item {
+    .label {
+      min-width: 100px;
+    }
+
+    .value {
+      font-size: 0.9em;
+    }
+
+    .date-range {
+      font-size: 0.85em;
+      margin-left: 20px;
+    }
+  }
+}

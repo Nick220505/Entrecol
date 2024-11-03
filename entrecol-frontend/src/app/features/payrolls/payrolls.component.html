@@ -1,3 +1,62 @@
-<app-payroll-file-upload></app-payroll-file-upload>
-<app-payroll-list></app-payroll-list>
-<app-payroll-report></app-payroll-report>
+<mat-tab-group>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">upload_file</mat-icon>
+      Cargar Nómina
+    </ng-template>
+    <app-payroll-file-upload></app-payroll-file-upload>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">list</mat-icon>
+      Lista de Empleados
+    </ng-template>
+    <app-payroll-list></app-payroll-list>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">person</mat-icon>
+      Información Personal
+    </ng-template>
+    <mat-card appearance="outlined" class="select-employee-card">
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="employee-select">
+          <mat-label>Buscar Empleado</mat-label>
+          <input
+            type="text"
+            matInput
+            [formControl]="employeeSearchControl"
+            [matAutocomplete]="auto"
+            placeholder="Buscar por nombre o código"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            [displayWith]="displayFn"
+            (optionSelected)="onEmployeeSelected($event)"
+          >
+            @for (employee of filteredEmployees(); track employee.id) {
+              <mat-option [value]="employee">
+                {{ employee.fullName }} ({{ employee.code }})
+              </mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    @if (selectedEmployee()) {
+      <app-personal-info [employee]="selectedEmployee()!" />
+    }
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">insert_chart</mat-icon>
+      Reportes Gráficos
+    </ng-template>
+    <app-payroll-report></app-payroll-report>
+  </mat-tab>
+</mat-tab-group>

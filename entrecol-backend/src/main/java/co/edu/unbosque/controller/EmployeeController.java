@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import co.edu.unbosque.dto.EmployeePersonalInfoDTO;
 import co.edu.unbosque.model.Employee;
 import co.edu.unbosque.service.EmployeeService;
 
@@ -122,5 +123,10 @@ public class EmployeeController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @GetMapping("/{id}/personal-info")
+    public ResponseEntity<EmployeePersonalInfoDTO> getEmployeePersonalInfo(@PathVariable Long id) {
+        return ResponseEntity.ok(employeeService.getEmployeePersonalInfo(id));
     }
 }
