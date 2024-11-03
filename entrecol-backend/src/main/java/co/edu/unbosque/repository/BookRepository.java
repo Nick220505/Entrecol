@@ -3,6 +3,7 @@ package co.edu.unbosque.repository;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,16 @@ public interface BookRepository extends JpaRepository<Book, Long> {
                         "WHERE b.publicationDate BETWEEN :startDate AND :endDate " +
                         "GROUP BY YEAR(b.publicationDate) ORDER BY year")
         List<Object[]> getBookCountByYear(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+        @Query("SELECT b FROM Book b " +
+                        "WHERE (:title IS NULL OR LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+                        "AND (:authorId IS NULL OR EXISTS (SELECT 1 FROM b.authors a WHERE a.id = :authorId)) " +
+                        "AND (:publisherId IS NULL OR b.publisher.id = :publisherId) " +
+                        "AND (:languageId IS NULL OR b.language.id = :languageId)")
+        Page<Book> searchBooks(
+                        @Param("title") String title,
+                        @Param("authorId") Long authorId,
+                        @Param("publisherId") Long publisherId,
+                        @Param("languageId") Long languageId,
+                        Pageable pageable);
 }

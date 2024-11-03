@@ -25,7 +25,7 @@ export class PayrollService {
   private readonly http = inject(HttpClient);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
-  private readonly apiUrl = `${environment.apiUrl}/employees`;
+  private readonly apiUrl = `${environment.apiUrl}/api/employees`;
 
   readonly employees = signal<State<Employee[]>>({
     data: [],
