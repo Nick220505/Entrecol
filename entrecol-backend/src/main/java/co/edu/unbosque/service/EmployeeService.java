@@ -48,19 +48,23 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import co.edu.unbosque.dto.EmployeeNoveltyDTO;
 import co.edu.unbosque.dto.EmployeePersonalInfoDTO;
 import co.edu.unbosque.dto.HealthPensionReportDTO;
+import co.edu.unbosque.dto.NoveltyReportDTO;
 import co.edu.unbosque.model.ARL;
 import co.edu.unbosque.model.Department;
 import co.edu.unbosque.model.EPS;
 import co.edu.unbosque.model.Employee;
 import co.edu.unbosque.model.EmployeeHealthPensionStats;
+import co.edu.unbosque.model.EmployeeNoveltyStats;
 import co.edu.unbosque.model.EmployeeRecord;
 import co.edu.unbosque.model.PensionFund;
 import co.edu.unbosque.model.Position;
 import co.edu.unbosque.repository.ARLRepository;
 import co.edu.unbosque.repository.DepartmentRepository;
 import co.edu.unbosque.repository.EPSRepository;
+import co.edu.unbosque.repository.EmployeeNoveltyStatsRepository;
 import co.edu.unbosque.repository.EmployeeRecordRepository;
 import co.edu.unbosque.repository.EmployeeRepository;
 import co.edu.unbosque.repository.PensionFundRepository;
@@ -75,6 +79,7 @@ public class EmployeeService {
     private final EPSRepository epsRepository;
     private final ARLRepository arlRepository;
     private final PensionFundRepository pensionFundRepository;
+    private final EmployeeNoveltyStatsRepository employeeNoveltyStatsRepository;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     public EmployeeService(
@@ -84,7 +89,8 @@ public class EmployeeService {
             PositionRepository positionRepository,
             EPSRepository epsRepository,
             ARLRepository arlRepository,
-            PensionFundRepository pensionFundRepository) {
+            PensionFundRepository pensionFundRepository,
+            EmployeeNoveltyStatsRepository employeeNoveltyStatsRepository) {
         this.employeeRepository = employeeRepository;
         this.employeeRecordRepository = employeeRecordRepository;
         this.departmentRepository = departmentRepository;
@@ -92,6 +98,7 @@ public class EmployeeService {
         this.epsRepository = epsRepository;
         this.arlRepository = arlRepository;
         this.pensionFundRepository = pensionFundRepository;
+        this.employeeNoveltyStatsRepository = employeeNoveltyStatsRepository;
     }
 
     public List<Employee> getAllEmployees() {
@@ -1145,5 +1152,226 @@ public class EmployeeService {
                         Collectors.collectingAndThen(
                                 Collectors.toList(),
                                 list -> list.get(0).getPensionFundCount())));
+    }
+
+    public NoveltyReportDTO getNoveltyReport(Date startDate, Date endDate) {
+        NoveltyReportDTO report = new NoveltyReportDTO();
+
+        List<EmployeeNoveltyStats> stats = employeeNoveltyStatsRepository
+                .findNoveltyStatsByDateRange(startDate, endDate);
+
+        report.setEmployees(stats.stream()
+                .map(this::mapToEmployeeNoveltyDTO)
+                .collect(Collectors.toList()));
+
+        report.setTotalNovelties((long) stats.size());
+
+        Map<String, Long> departmentStats = new HashMap<>();
+        departmentRepository.findAll().forEach(department -> {
+            Long count = employeeNoveltyStatsRepository
+                    .countNoveltyByDepartmentAndDateRange(department.getId(), startDate, endDate);
+            if (count > 0) {
+                departmentStats.put(department.getName(), count);
+            }
+        });
+        report.setDepartmentStats(departmentStats);
+
+        Map<String, Map<String, Long>> departmentPositionStats = new HashMap<>();
+        departmentRepository.findAll().forEach(department -> {
+            Map<String, Long> positionStats = new HashMap<>();
+            positionRepository.findAll().forEach(position -> {
+                Long count = employeeNoveltyStatsRepository
+                        .countNoveltyByDepartmentPositionAndDateRange(
+                                department.getId(), position.getId(), startDate, endDate);
+                if (count > 0) {
+                    positionStats.put(position.getName(), count);
+                }
+            });
+            if (!positionStats.isEmpty()) {
+                departmentPositionStats.put(department.getName(), positionStats);
+            }
+        });
+        report.setDepartmentPositionStats(departmentPositionStats);
+
+        return report;
+    }
+
+    private EmployeeNoveltyDTO mapToEmployeeNoveltyDTO(EmployeeNoveltyStats stats) {
+        EmployeeNoveltyDTO dto = new EmployeeNoveltyDTO();
+        dto.setEmployeeId(stats.getEmployeeId());
+        dto.setFullName(stats.getFullName());
+        dto.setCode(stats.getCode());
+        dto.setDepartmentName(stats.getDepartmentName());
+        dto.setPositionName(stats.getPositionName());
+        dto.setDisabilityRecord(stats.getDisabilityRecord());
+        dto.setVacationRecord(stats.getVacationRecord());
+        dto.setDisabilityDays(stats.getDisabilityDays());
+        dto.setVacationDays(stats.getVacationDays());
+        dto.setDisabilityStartDate(stats.getDisabilityStartDate());
+        dto.setDisabilityEndDate(stats.getDisabilityEndDate());
+        dto.setVacationStartDate(stats.getVacationStartDate());
+        dto.setVacationEndDate(stats.getVacationEndDate());
+        dto.setBonus(stats.getBonus());
+        dto.setTransportAllowance(stats.getTransportAllowance());
+        dto.setRecordDate(stats.getRecordDate());
+        return dto;
+    }
+
+    public byte[] generateNoveltyReportPdf(Date startDate, Date endDate) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Document document = new Document(PageSize.A4.rotate());
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+            Font normalFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+
+            NoveltyReportDTO report = getNoveltyReport(startDate, endDate);
+
+            Paragraph mainTitle = new Paragraph("Reporte de Novedades", titleFont);
+            mainTitle.setAlignment(Element.ALIGN_CENTER);
+            mainTitle.setSpacingAfter(20);
+            document.add(mainTitle);
+
+            SimpleDateFormat monthYearFormat = new SimpleDateFormat("MM/yyyy");
+            Paragraph period = new Paragraph(
+                    String.format("Período: %s - %s",
+                            monthYearFormat.format(startDate),
+                            monthYearFormat.format(endDate)),
+                    normalFont);
+            period.setSpacingAfter(20);
+            document.add(period);
+
+            Paragraph total = new Paragraph(
+                    String.format("Total de Empleados con Novedades: %d", report.getTotalNovelties()),
+                    normalFont);
+            total.setSpacingAfter(20);
+            document.add(total);
+
+            addNoveltyTable(document, report.getEmployees());
+
+            document.newPage();
+
+            PdfPTable chartsTable = new PdfPTable(1);
+            chartsTable.setWidthPercentage(100);
+
+            addChartSection(chartsTable, "Novedades por Departamento",
+                    createDepartmentNoveltyChart(report.getDepartmentStats()));
+
+            addChartSection(chartsTable, "Novedades por Departamento y Cargo",
+                    createDepartmentPositionNoveltyChart(report.getDepartmentPositionStats()));
+
+            document.add(chartsTable);
+
+            document.close();
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating novelty report PDF", e);
+        }
+    }
+
+    private void addNoveltyTable(Document document, List<EmployeeNoveltyDTO> employees) throws DocumentException {
+        PdfPTable table = new PdfPTable(8);
+        table.setWidthPercentage(100);
+        float[] columnWidths = { 3f, 1.5f, 2f, 2f, 1.5f, 1.5f, 2f, 2f };
+        table.setWidths(columnWidths);
+
+        String[] headers = {
+                "Nombre", "Código", "Departamento", "Cargo",
+                "Incapacidad", "Vacaciones", "Bonificación", "Aux. Transporte"
+        };
+
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
+        for (String header : headers) {
+            PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell.setPadding(5);
+            table.addCell(cell);
+        }
+
+        Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10);
+        for (EmployeeNoveltyDTO employee : employees) {
+            addCell(table, employee.getFullName(), dataFont, Element.ALIGN_LEFT);
+            addCell(table, employee.getCode(), dataFont, Element.ALIGN_CENTER);
+            addCell(table, employee.getDepartmentName(), dataFont, Element.ALIGN_LEFT);
+            addCell(table, employee.getPositionName(), dataFont, Element.ALIGN_LEFT);
+            addCell(table, employee.getDisabilityRecord() ? "Sí" : "No", dataFont, Element.ALIGN_CENTER);
+            addCell(table, employee.getVacationRecord() ? "Sí" : "No", dataFont, Element.ALIGN_CENTER);
+            addCell(table, employee.getBonus().compareTo(BigDecimal.ZERO) > 0 ? "Sí" : "No", dataFont,
+                    Element.ALIGN_CENTER);
+            addCell(table, employee.getTransportAllowance().compareTo(BigDecimal.ZERO) > 0 ? "Sí" : "No", dataFont,
+                    Element.ALIGN_CENTER);
+        }
+
+        document.add(table);
+    }
+
+    private JFreeChart createDepartmentNoveltyChart(Map<String, Long> stats) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        stats.forEach((department, count) -> dataset.addValue(count, "Novedades", department));
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                null,
+                "Departamento",
+                "Cantidad",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false);
+
+        customizeChart(chart);
+        return chart;
+    }
+
+    private JFreeChart createDepartmentPositionNoveltyChart(Map<String, Map<String, Long>> stats) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        stats.forEach((department, positions) -> positions
+                .forEach((position, count) -> dataset.addValue(count, position, department)));
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                null,
+                "Departamento",
+                "Cantidad",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false);
+
+        customizeChart(chart);
+        return chart;
+    }
+
+    private void customizeChart(JFreeChart chart) {
+        chart.setBackgroundPaint(Color.WHITE);
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setRangeGridlinePaint(Color.GRAY);
+        plot.setRangeGridlinesVisible(true);
+
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setDrawBarOutline(false);
+        renderer.setShadowVisible(false);
+    }
+
+    private void addChartSection(PdfPTable table, String title, JFreeChart chart)
+            throws DocumentException, IOException {
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+
+        PdfPCell titleCell = new PdfPCell(new Paragraph(title, titleFont));
+        titleCell.setBorder(0);
+        titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        titleCell.setPaddingBottom(10);
+        table.addCell(titleCell);
+
+        BufferedImage chartImage = chart.createBufferedImage(700, 400);
+        Image chartPdfImage = Image.getInstance(chartImage, null);
+        PdfPCell chartCell = new PdfPCell(chartPdfImage);
+        chartCell.setBorder(0);
+        chartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        chartCell.setPaddingBottom(20);
+        table.addCell(chartCell);
     }
 }

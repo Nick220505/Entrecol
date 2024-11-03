@@ -6,6 +6,7 @@ import { PayrollService } from './services/payroll.service';
 
 import { EmployeeListComponent } from './components/employee-list/employee-list.component';
 import { HealthPensionReportComponent } from './components/health-pension-report/health-pension-report.component';
+import { NoveltyReportComponent } from './components/novelty-report/novelty-report.component';
 import { PayrollFileUploadComponent } from './components/payroll-file-upload/payroll-file-upload.component';
 import { PayrollReportComponent } from './components/payroll-report/payroll-report.component';
 import { PersonalInfoReportComponent } from './components/personal-info-report/personal-info-report.component';
@@ -22,6 +23,7 @@ import { PersonalInfoReportComponent } from './components/personal-info-report/p
     PayrollReportComponent,
     PersonalInfoReportComponent,
     HealthPensionReportComponent,
+    NoveltyReportComponent,
   ],
   templateUrl: './payrolls.component.html',
   styleUrl: './payrolls.component.scss',

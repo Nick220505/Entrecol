@@ -1,0 +1,181 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Reporte de Novedades</mat-card-title>
+    <div class="header-actions">
+      <button
+        mat-button
+        (click)="exportToPdf()"
+        [disabled]="
+          !report().data ||
+          report().loading ||
+          payrollService.pdfExportingNovelty()
+        "
+      >
+        <mat-icon>picture_as_pdf</mat-icon>
+        {{
+          payrollService.pdfExportingNovelty()
+            ? "Generando reporte..."
+            : "Generar reporte en PDF"
+        }}
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (payrollService.employees().data.length === 0) {
+      <div class="no-data">
+        <mat-icon>event_note</mat-icon>
+        <p>No hay datos para mostrar</p>
+        <p>Sube algunos empleados para comenzar</p>
+      </div>
+    } @else {
+      <mat-card appearance="outlined" class="date-range-card">
+        <mat-card-content>
+          <form [formGroup]="dateForm" (ngSubmit)="onSearch()">
+            <div class="date-inputs">
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha Inicial (MM/AAAA)</mat-label>
+                <input
+                  matInput
+                  formControlName="startDate"
+                  placeholder="MM/AAAA"
+                />
+                <mat-error>Formato inválido. Use MM/AAAA</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha Final (MM/AAAA)</mat-label>
+                <input
+                  matInput
+                  formControlName="endDate"
+                  placeholder="MM/AAAA"
+                />
+                <mat-error>Formato inválido. Use MM/AAAA</mat-error>
+              </mat-form-field>
+
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="dateForm.invalid || report().loading"
+              >
+                <mat-icon>search</mat-icon>
+                Buscar
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      @if (report().initialLoad && report().loading) {
+        <app-loading-spinner
+          loadingText="Cargando reporte..."
+        ></app-loading-spinner>
+      } @else if (!report().data && !dateForm.dirty) {
+        <div class="no-data">
+          <mat-icon>event_note</mat-icon>
+          <p>Selecciona un rango de fechas para ver el reporte</p>
+        </div>
+      } @else if (!report().data?.employees?.length) {
+        <div class="no-data">
+          <mat-icon>event_busy</mat-icon>
+          <p>No se encontraron novedades en el rango de fechas seleccionado</p>
+        </div>
+      } @else {
+        <section>
+          <h2>Empleados con Novedades</h2>
+          <table mat-table [dataSource]="report().data!.employees">
+            <ng-container matColumnDef="fullName">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let employee">
+                {{ employee.fullName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef>Código</th>
+              <td mat-cell *matCellDef="let employee">{{ employee.code }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="departmentName">
+              <th mat-header-cell *matHeaderCellDef>Departamento</th>
+              <td mat-cell *matCellDef="let employee">
+                {{ employee.departmentName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="positionName">
+              <th mat-header-cell *matHeaderCellDef>Cargo</th>
+              <td mat-cell *matCellDef="let employee">
+                {{ employee.positionName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="noveltyType">
+              <th mat-header-cell *matHeaderCellDef>Tipos de Novedad</th>
+              <td mat-cell *matCellDef="let employee">
+                {{ getNoveltyTypes(employee).join(", ") }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="startDate">
+              <th mat-header-cell *matHeaderCellDef>Fecha Inicio</th>
+              <td mat-cell *matCellDef="let employee">
+                {{ getStartDate(employee) | date: "dd/MM/yyyy" }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="endDate">
+              <th mat-header-cell *matHeaderCellDef>Fecha Fin</th>
+              <td mat-cell *matCellDef="let employee">
+                {{ getEndDate(employee) | date: "dd/MM/yyyy" }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </section>
+
+        <section>
+          <h2>Novedades por Departamento</h2>
+          <div class="stats-grid">
+            @for (
+              entry of report().data!.departmentStats | keyvalue;
+              track entry.key
+            ) {
+              <mat-card appearance="outlined" class="stat-card">
+                <mat-card-content>
+                  <div class="stat-value">{{ entry.value }}</div>
+                  <div class="stat-label">{{ entry.key }}</div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        </section>
+
+        <section>
+          <h2>Novedades por Departamento y Cargo</h2>
+          @for (
+            dept of report().data!.departmentPositionStats | keyvalue;
+            track dept.key
+          ) {
+            <div class="department-stats">
+              <h3>{{ dept.key }}</h3>
+              <div class="stats-grid">
+                @for (pos of dept.value | keyvalue; track pos.key) {
+                  <mat-card appearance="outlined" class="stat-card">
+                    <mat-card-content>
+                      <div class="stat-value">{{ pos.value }}</div>
+                      <div class="stat-label">{{ pos.key }}</div>
+                    </mat-card-content>
+                  </mat-card>
+                }
+              </div>
+            </div>
+          }
+        </section>
+      }
+    }
+  </mat-card-content>
+</mat-card>

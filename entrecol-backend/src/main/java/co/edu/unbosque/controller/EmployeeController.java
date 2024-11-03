@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import co.edu.unbosque.dto.EmployeePersonalInfoDTO;
 import co.edu.unbosque.dto.HealthPensionReportDTO;
+import co.edu.unbosque.dto.NoveltyReportDTO;
 import co.edu.unbosque.model.Employee;
 import co.edu.unbosque.service.EmployeeService;
 
@@ -191,6 +192,36 @@ public class EmployeeController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/novelty-report")
+    public ResponseEntity<Map<String, Object>> getNoveltyReport(
+            @RequestParam @DateTimeFormat(pattern = "MM/yyyy") Date startDate,
+            @RequestParam @DateTimeFormat(pattern = "MM/yyyy") Date endDate) {
+        try {
+            NoveltyReportDTO report = employeeService.getNoveltyReport(startDate, endDate);
+            return ResponseEntity.ok(Map.of("data", report));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/novelty-report/export/pdf")
+    public ResponseEntity<byte[]> exportNoveltyReportPdf(
+            @RequestParam @DateTimeFormat(pattern = "MM/yyyy") Date startDate,
+            @RequestParam @DateTimeFormat(pattern = "MM/yyyy") Date endDate) {
+        try {
+            byte[] pdfBytes = employeeService.generateNoveltyReportPdf(startDate, endDate);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("filename", "reporte-novedades.pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }

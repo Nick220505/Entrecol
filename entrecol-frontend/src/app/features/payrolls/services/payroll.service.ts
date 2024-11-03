@@ -8,6 +8,7 @@ import { environment } from '@env';
 import { EmployeePersonalInfo } from '@payrolls/models/employee-personal-info.model';
 import { PdfPreviewDialogComponent } from '../components/pdf-preview-dialog/pdf-preview-dialog.component';
 import { HealthPensionReport } from '../models/health-pension-report.model';
+import { NoveltyReport } from '../models/novelty-report.model';
 import { Employee } from '../models/payroll.model';
 import { EmployeeReport } from '../models/report.model';
 
@@ -68,6 +69,14 @@ export class PayrollService {
     loading: false,
     initialLoad: true,
   });
+
+  readonly noveltyReport = signal<State<NoveltyReport | null>>({
+    data: null,
+    loading: false,
+    initialLoad: true,
+  });
+
+  readonly pdfExportingNovelty = signal(false);
 
   getAll(): void {
     this.employees.update((state) => ({ ...state, loading: true }));
@@ -305,6 +314,58 @@ export class PayrollService {
             'Cerrar',
           );
         },
+      });
+  }
+
+  getNoveltyReport(startDate: string, endDate: string): void {
+    this.noveltyReport.update((state) => ({ ...state, loading: true }));
+
+    this.http
+      .get<{
+        data: NoveltyReport;
+      }>(`${this.apiUrl}/novelty-report?startDate=${startDate}&endDate=${endDate}`)
+      .subscribe({
+        next: ({ data }) => {
+          this.noveltyReport.set({
+            data,
+            loading: false,
+            initialLoad: false,
+          });
+        },
+        error: () => {
+          this.noveltyReport.update((state) => ({ ...state, loading: false }));
+          this.snackBar.open(
+            'Error al cargar el reporte de novedades',
+            'Cerrar',
+          );
+        },
+      });
+  }
+
+  exportNoveltyReportToPdf(startDate: string, endDate: string): void {
+    this.pdfExportingNovelty.set(true);
+
+    this.http
+      .get(`${this.apiUrl}/novelty-report/export/pdf`, {
+        params: { startDate, endDate },
+        responseType: 'blob',
+      })
+      .pipe(finalize(() => this.pdfExportingNovelty.set(false)))
+      .subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const dialogRef = this.dialog.open(PdfPreviewDialogComponent, {
+            width: '90vw',
+            height: '90vh',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+          });
+          dialogRef.componentInstance.pdfUrl.set(url);
+          dialogRef.afterClosed().subscribe(() => {
+            window.URL.revokeObjectURL(url);
+          });
+        },
+        error: () => this.snackBar.open('Error al exportar el PDF', 'Cerrar'),
       });
   }
 }

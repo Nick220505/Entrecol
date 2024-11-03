@@ -207,3 +207,33 @@ JOIN department d ON e.department_id = d.id
 JOIN eps ON e.eps_id = eps.id
 JOIN pension_fund pf ON e.pension_fund_id = pf.id
 JOIN position p ON e.position_id = p.id;
+
+CREATE OR REPLACE VIEW employee_novelty_stats AS
+SELECT 
+    e.id as employee_id,
+    e.full_name,
+    e.code,
+    d.id as department_id,
+    d.name as department_name,
+    p.id as position_id,
+    p.name as position_name,
+    er.record_date,
+    er.disability_record,
+    er.vacation_record,
+    er.disability_days,
+    er.vacation_days,
+    er.disability_start_date,
+    er.disability_end_date,
+    er.vacation_start_date,
+    er.vacation_end_date,
+    er.bonus,
+    er.transport_allowance,
+    CASE 
+        WHEN er.disability_record = true OR er.vacation_record = true OR er.bonus > 0 OR er.transport_allowance > 0 
+        THEN true 
+        ELSE false 
+    END as has_novelty
+FROM employee e
+JOIN department d ON e.department_id = d.id
+JOIN position p ON e.position_id = p.id
+LEFT JOIN employee_record er ON e.id = er.employee_id;
