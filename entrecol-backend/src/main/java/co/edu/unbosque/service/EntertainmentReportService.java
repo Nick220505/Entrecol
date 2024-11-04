@@ -98,7 +98,7 @@ public class EntertainmentReportService {
 
             final Sort.Direction movieDirection = moviesByGenreCountAscending ? Sort.Direction.ASC
                     : Sort.Direction.DESC;
-            List<Movie> moviesByGenreCount = movieRepository.findMoviesByGenreCount(genreCount);
+            List<Movie> moviesByGenreCount = movieRepository.findMoviesByGenreCount(genreCount, startDate, endDate);
             if (moviesByGenreCount != null) {
                 final Sort.Direction finalMovieDirection = movieDirection;
                 moviesByGenreCount.sort((m1, m2) -> {
@@ -112,7 +112,7 @@ public class EntertainmentReportService {
             report.setMoviesGroupedByGenreCount(moviesGrouped);
             report.setTotalMovies((long) (moviesByGenreCount != null ? moviesByGenreCount.size() : 0));
 
-            List<Object[]> genreStats = movieRepository.getMovieCountByGenre();
+            List<Object[]> genreStats = movieRepository.getMovieCountByGenre(startDate, endDate);
             Map<String, Long> genreStatsMap = new LinkedHashMap<>();
 
             if (genreStats != null) {
