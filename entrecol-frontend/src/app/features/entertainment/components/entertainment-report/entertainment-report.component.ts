@@ -45,7 +45,6 @@ export class EntertainmentReportComponent {
     endDate: ['', Validators.required],
     topN: [10, [Validators.required, Validators.min(1)]],
     genreCount: [2, [Validators.required, Validators.min(1)]],
-    ascending: [true],
     moviesByGenreAscending: [true],
     topRatedBooksAscending: [true],
     topBottomBooksByYearAscending: [true],
@@ -80,6 +79,7 @@ export class EntertainmentReportComponent {
         moviesByGenreCountAscending,
       } = this.form.value;
 
+      console.log(this.form.value);
       this.entertainmentReportService.getReport(
         formatDate(startDate, 'yyyy-MM-dd', 'en-US'),
         formatDate(endDate, 'yyyy-MM-dd', 'en-US'),
@@ -95,15 +95,26 @@ export class EntertainmentReportComponent {
 
   exportToPdf(): void {
     if (this.form.valid) {
-      const { startDate, endDate, topN, genreCount, ascending } =
-        this.form.value;
+      const {
+        startDate,
+        endDate,
+        topN,
+        genreCount,
+        moviesByGenreAscending,
+        topRatedBooksAscending,
+        topBottomBooksByYearAscending,
+        moviesByGenreCountAscending,
+      } = this.form.value;
 
       this.entertainmentReportService.exportToPdf(
         formatDate(startDate, 'yyyy-MM-dd', 'en-US'),
         formatDate(endDate, 'yyyy-MM-dd', 'en-US'),
         topN,
         genreCount,
-        ascending,
+        moviesByGenreAscending,
+        topRatedBooksAscending,
+        topBottomBooksByYearAscending,
+        moviesByGenreCountAscending,
       );
     }
   }

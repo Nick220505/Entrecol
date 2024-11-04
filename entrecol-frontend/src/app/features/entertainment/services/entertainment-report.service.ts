@@ -78,13 +78,25 @@ export class EntertainmentReportService {
     endDate: string,
     topN: number,
     genreCount: number,
-    ascending: boolean,
+    moviesByGenreAscending: boolean,
+    topRatedBooksAscending: boolean,
+    topBottomBooksByYearAscending: boolean,
+    moviesByGenreCountAscending: boolean,
   ): void {
     this.pdfExporting.set(true);
 
     this.http
       .get(`${this.apiUrl}/export/pdf`, {
-        params: { startDate, endDate, topN, genreCount, ascending },
+        params: {
+          startDate,
+          endDate,
+          topN,
+          genreCount,
+          moviesByGenreAscending,
+          topRatedBooksAscending,
+          topBottomBooksByYearAscending,
+          moviesByGenreCountAscending,
+        },
         responseType: 'blob',
       })
       .pipe(finalize(() => this.pdfExporting.set(false)))

@@ -119,7 +119,8 @@ public class EntertainmentReportService {
     }
 
     public byte[] generateEntertainmentReportPdf(Date startDate, Date endDate, int topN, int genreCount,
-            boolean ascending) {
+            boolean moviesByGenreAscending, boolean topRatedBooksAscending,
+            boolean topBottomBooksByYearAscending, boolean moviesByGenreCountAscending) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream(8192)) {
             Document document = new Document(PageSize.A4.rotate());
             PdfWriter writer = PdfWriter.getInstance(document, out);
@@ -145,7 +146,8 @@ public class EntertainmentReportService {
 
             EntertainmentReportDTO report = getEntertainmentReport(
                     startDate, endDate, topN, genreCount,
-                    ascending, ascending, ascending, ascending);
+                    moviesByGenreAscending, topRatedBooksAscending,
+                    topBottomBooksByYearAscending, moviesByGenreCountAscending);
 
             PdfPTable movieTable = new PdfPTable(1);
             movieTable.setWidthPercentage(100);
@@ -185,7 +187,8 @@ public class EntertainmentReportService {
             yearlyBooksTable.setWidthPercentage(100);
             addYearlyTopBooksSection(yearlyBooksTable, report.getTopAndBottomBooksByYear(),
                     String.format("Top 5 Libros por Año (%d - %d)", startYear, endYear),
-                    sectionTitleFont, yearFont, contentFont, ratingFont);
+                    sectionTitleFont, yearFont, contentFont, ratingFont,
+                    topBottomBooksByYearAscending);
             document.add(yearlyBooksTable);
 
             document.close();
@@ -349,7 +352,8 @@ public class EntertainmentReportService {
     }
 
     private void addYearlyTopBooksSection(PdfPTable table, Map<Integer, List<Book>> booksByYear,
-            String title, Font titleFont, Font yearFont, Font contentFont, Font ratingFont) throws Exception {
+            String title, Font titleFont, Font yearFont, Font contentFont, Font ratingFont,
+            boolean isAscending) throws Exception {
         PdfPCell titleCell = new PdfPCell(new Paragraph(title, titleFont));
         titleCell.setBorder(0);
         titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -357,7 +361,11 @@ public class EntertainmentReportService {
         table.addCell(titleCell);
 
         List<Integer> sortedYears = new ArrayList<>(booksByYear.keySet());
-        sortedYears.sort((y1, y2) -> y2.compareTo(y1));
+        if (isAscending) {
+            sortedYears.sort(Integer::compareTo);
+        } else {
+            sortedYears.sort((y1, y2) -> y2.compareTo(y1));
+        }
 
         for (Integer year : sortedYears) {
             PdfPCell yearCell = new PdfPCell(new Paragraph(year.toString(), yearFont));

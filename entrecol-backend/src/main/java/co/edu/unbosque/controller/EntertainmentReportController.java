@@ -57,10 +57,15 @@ public class EntertainmentReportController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @RequestParam(defaultValue = "10") int topN,
             @RequestParam(defaultValue = "2") int genreCount,
-            @RequestParam(defaultValue = "true") boolean ascending) {
+            @RequestParam(defaultValue = "true") boolean moviesByGenreAscending,
+            @RequestParam(defaultValue = "true") boolean topRatedBooksAscending,
+            @RequestParam(defaultValue = "true") boolean topBottomBooksByYearAscending,
+            @RequestParam(defaultValue = "true") boolean moviesByGenreCountAscending) {
         try {
             byte[] pdfBytes = entertainmentReportService.generateEntertainmentReportPdf(
-                    startDate, endDate, topN, genreCount, ascending);
+                    startDate, endDate, topN, genreCount,
+                    moviesByGenreAscending, topRatedBooksAscending,
+                    topBottomBooksByYearAscending, moviesByGenreCountAscending);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
