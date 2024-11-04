@@ -57,7 +57,7 @@ Entrecol is a full-stack web application for managing and analyzing entertainmen
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/entrecol.git
+   git clone https://github.com/Nick220505/Databases-I-Final-Project.git
    cd entrecol
    ```
 
