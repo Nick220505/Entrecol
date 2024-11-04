@@ -128,14 +128,13 @@ public class EntertainmentReportService {
 
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
             Font sectionTitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
-            Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
             Font yearFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
             Font contentFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
             Font ratingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
 
             Paragraph title = new Paragraph("Reporte de Entretenimiento", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
-            title.setSpacingAfter(10);
+            title.setSpacingAfter(20);
             document.add(title);
 
             Calendar calendar = Calendar.getInstance();
@@ -143,12 +142,6 @@ public class EntertainmentReportService {
             int startYear = calendar.get(Calendar.YEAR);
             calendar.setTime(endDate);
             int endYear = calendar.get(Calendar.YEAR);
-
-            Paragraph dateRange = new Paragraph(
-                    String.format("Período: %d - %d", startYear, endYear), subtitleFont);
-            dateRange.setAlignment(Element.ALIGN_CENTER);
-            dateRange.setSpacingAfter(20);
-            document.add(dateRange);
 
             EntertainmentReportDTO report = getEntertainmentReport(
                     startDate, endDate, topN, genreCount,
