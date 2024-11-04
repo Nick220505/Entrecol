@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { Book } from '@books/models/book.model';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 
@@ -113,10 +114,20 @@ export class EntertainmentReportComponent implements OnInit {
     return sortedYears.map((year) => {
       const books = booksByYear[year];
       const midPoint = Math.floor(books.length / 2);
+      const topBooks = books.slice(0, midPoint);
+      const bottomBooks = books.slice(midPoint);
+
+      const sortBooks = (bookList: Book[]) => {
+        return [...bookList].sort((a, b) => {
+          const comparison = a.title.localeCompare(b.title);
+          return isAscending ? comparison : -comparison;
+        });
+      };
+
       return {
         year,
-        topBooks: books.slice(0, midPoint),
-        bottomBooks: books.slice(midPoint),
+        topBooks: sortBooks(topBooks),
+        bottomBooks: sortBooks(bottomBooks),
       };
     });
   });

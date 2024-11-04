@@ -75,10 +75,16 @@ public class EntertainmentReportService {
                         PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "averageRating")));
                 List<Book> yearBottomBooks = bookRepository.findBottomBooksByYear(year,
                         PageRequest.of(0, 5, Sort.by(Sort.Direction.ASC, "averageRating")));
-                if (yearTopBooks != null) {
-                    if (yearBottomBooks != null) {
-                        yearTopBooks.addAll(yearBottomBooks);
+
+                if (yearTopBooks != null && yearBottomBooks != null) {
+                    if (topBottomBooksByYearAscending) {
+                        yearTopBooks.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
+                        yearBottomBooks.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
+                    } else {
+                        yearTopBooks.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
+                        yearBottomBooks.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
                     }
+                    yearTopBooks.addAll(yearBottomBooks);
                     booksByYear.put(year, yearTopBooks);
                     years.add(year);
                 }
@@ -220,20 +226,29 @@ public class EntertainmentReportService {
 
                 List<Book> yearBooks = report.getTopAndBottomBooksByYear().get(year);
                 int midPoint = yearBooks.size() / 2;
+                List<Book> topBooks = yearBooks.subList(0, midPoint);
+                List<Book> bottomBooks = yearBooks.subList(midPoint, yearBooks.size());
+
+                if (topBottomBooksByYearAscending) {
+                    topBooks.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
+                    bottomBooks.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
+                } else {
+                    topBooks.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
+                    bottomBooks.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
+                }
 
                 PdfPCell topBooksTitle = new PdfPCell(new Paragraph("Mejor Rating", contentFont));
                 topBooksTitle.setBorder(0);
                 topBooksTitle.setPaddingBottom(10);
                 yearlyBooksTable.addCell(topBooksTitle);
-                addBooksToTable(yearlyBooksTable, yearBooks.subList(0, midPoint), contentFont, ratingFont);
+                addBooksToTable(yearlyBooksTable, topBooks, contentFont, ratingFont);
 
                 PdfPCell bottomBooksTitle = new PdfPCell(new Paragraph("Peor Rating", contentFont));
                 bottomBooksTitle.setBorder(0);
                 bottomBooksTitle.setPaddingTop(20);
                 bottomBooksTitle.setPaddingBottom(10);
                 yearlyBooksTable.addCell(bottomBooksTitle);
-                addBooksToTable(yearlyBooksTable, yearBooks.subList(midPoint, yearBooks.size()), contentFont,
-                        ratingFont);
+                addBooksToTable(yearlyBooksTable, bottomBooks, contentFont, ratingFont);
             }
             document.add(yearlyBooksTable);
             document.newPage();
