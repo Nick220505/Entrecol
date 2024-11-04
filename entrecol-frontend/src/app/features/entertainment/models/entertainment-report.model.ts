@@ -4,6 +4,7 @@ import { Movie } from '@movies/models/movie.model';
 export interface EntertainmentReport {
   moviesByGenre: Movie[];
   topRatedBooks: Book[];
+  bottomRatedBooks: Book[];
   topAndBottomBooksByYear: Record<number, Book[]>;
   moviesGroupedByGenreCount: Record<number, Movie[]>;
   totalMovies: number;

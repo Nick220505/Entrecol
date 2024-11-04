@@ -6,11 +6,16 @@ import java.util.Map;
 import co.edu.unbosque.model.Book;
 import co.edu.unbosque.model.Movie;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
+@Getter
+@Setter
 public class EntertainmentReportDTO {
     private List<Movie> moviesByGenre;
     private List<Book> topRatedBooks;
+    private List<Book> bottomRatedBooks;
     private Map<Integer, List<Book>> topAndBottomBooksByYear;
     private Map<Integer, List<Movie>> moviesGroupedByGenreCount;
     private Long totalMovies;

@@ -37,4 +37,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
                         @Param("publisherId") Long publisherId,
                         @Param("languageId") Long languageId,
                         Pageable pageable);
+
+        @Query("SELECT b FROM Book b WHERE b.averageRating > 0 ORDER BY b.averageRating ASC, b.title ASC")
+        List<Book> findBottomNByRating(Pageable pageable);
 }

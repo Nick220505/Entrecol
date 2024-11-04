@@ -88,6 +88,17 @@ export class EntertainmentReportComponent implements OnInit {
     });
   });
 
+  readonly bottomRatedBooks = computed(() => {
+    const books = this.report()?.data?.bottomRatedBooks;
+    if (!books) return [];
+
+    const isAscending = this.form.get('topRatedBooksAscending')?.value;
+    return [...books].sort((a, b) => {
+      const comparison = a.title.localeCompare(b.title);
+      return isAscending ? comparison : -comparison;
+    });
+  });
+
   readonly sortedYearlyBooks = computed(() => {
     const booksByYear = this.report()?.data?.topAndBottomBooksByYear;
     if (!booksByYear) return [];
@@ -99,10 +110,15 @@ export class EntertainmentReportComponent implements OnInit {
       ? years.sort((a, b) => a - b)
       : years.sort((a, b) => b - a);
 
-    return sortedYears.map((year) => ({
-      year,
-      books: booksByYear[year],
-    }));
+    return sortedYears.map((year) => {
+      const books = booksByYear[year];
+      const midPoint = Math.floor(books.length / 2);
+      return {
+        year,
+        topBooks: books.slice(0, midPoint),
+        bottomBooks: books.slice(midPoint),
+      };
+    });
   });
 
   readonly moviesWithGenres = computed(() => {

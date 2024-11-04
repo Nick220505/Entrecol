@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
@@ -62,7 +63,10 @@ public class EntertainmentReportService {
             final Sort.Direction topRatedDirection = topRatedBooksAscending ? Sort.Direction.ASC : Sort.Direction.DESC;
             List<Book> topBooks = bookRepository.findTopNByRating(
                     PageRequest.of(0, topN, Sort.by(topRatedDirection, "title")));
+            List<Book> bottomBooks = bookRepository.findBottomNByRating(
+                    PageRequest.of(0, topN, Sort.by(topRatedDirection, "title")));
             report.setTopRatedBooks(topBooks != null ? topBooks : new ArrayList<>());
+            report.setBottomRatedBooks(bottomBooks != null ? bottomBooks : new ArrayList<>());
 
             Map<Integer, List<Book>> booksByYear = new HashMap<>();
             List<Integer> years = new ArrayList<>();
@@ -197,7 +201,7 @@ public class EntertainmentReportService {
 
             PdfPTable booksTable = new PdfPTable(1);
             booksTable.setWidthPercentage(100);
-            addTopRatedBooksSection(booksTable, report.getTopRatedBooks(),
+            addTopRatedBooksSection(booksTable, report.getTopRatedBooks(), report.getBottomRatedBooks(),
                     String.format("Top %d Libros con Mejor Rating (%d - %d)",
                             topN, startYear, endYear),
                     sectionTitleFont, contentFont, ratingFont);
@@ -330,47 +334,71 @@ public class EntertainmentReportService {
         table.addCell(chartCell);
     }
 
-    private void addTopRatedBooksSection(PdfPTable table, List<Book> books, String title,
-            Font titleFont, Font contentFont, Font ratingFont) throws Exception {
+    private void addTopRatedBooksSection(PdfPTable table, List<Book> topBooks, List<Book> bottomBooks,
+            String title, Font titleFont, Font contentFont, Font ratingFont) throws Exception {
         PdfPCell titleCell = new PdfPCell(new Paragraph(title, titleFont));
         titleCell.setBorder(0);
         titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         titleCell.setPaddingBottom(20);
         table.addCell(titleCell);
 
-        PdfPTable booksTable = new PdfPTable(2);
-        booksTable.setWidthPercentage(95);
-        booksTable.setWidths(new float[] { 0.8f, 0.2f });
-        booksTable.setSpacingBefore(10);
+        PdfPCell topBooksTitle = new PdfPCell(new Paragraph("Mejor Rating", titleFont));
+        topBooksTitle.setBorder(0);
+        topBooksTitle.setPaddingBottom(10);
+        topBooksTitle.setPaddingLeft(20);
+        table.addCell(topBooksTitle);
 
-        for (Book book : books) {
-            PdfPCell bookCell = new PdfPCell(new Paragraph(book.getTitle(), contentFont));
-            bookCell.setBorder(0);
-            bookCell.setPaddingBottom(10);
-            bookCell.setPaddingTop(10);
-            bookCell.setPaddingLeft(20);
-            booksTable.addCell(bookCell);
+        addBooksToTable(table, topBooks, contentFont, ratingFont);
 
-            PdfPCell ratingCell = new PdfPCell(
-                    new Paragraph(String.format("%.1f", book.getAverageRating()), ratingFont));
-            ratingCell.setBorder(0);
-            ratingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            ratingCell.setPaddingBottom(10);
-            ratingCell.setPaddingTop(10);
-            booksTable.addCell(ratingCell);
+        PdfPCell bottomBooksTitle = new PdfPCell(new Paragraph("Peor Rating", titleFont));
+        bottomBooksTitle.setBorder(0);
+        bottomBooksTitle.setPaddingTop(20);
+        bottomBooksTitle.setPaddingBottom(10);
+        bottomBooksTitle.setPaddingLeft(20);
+        table.addCell(bottomBooksTitle);
 
-            PdfPCell separatorCell = new PdfPCell();
-            separatorCell.setColspan(2);
-            separatorCell.setBorder(PdfPCell.BOTTOM);
-            separatorCell.setBorderColor(new com.itextpdf.text.BaseColor(211, 211, 211));
-            separatorCell.setPaddingBottom(5);
-            booksTable.addCell(separatorCell);
+        addBooksToTable(table, bottomBooks, contentFont, ratingFont);
+    }
+
+    private void addBooksToTable(PdfPTable table, List<Book> books, Font contentFont, Font ratingFont)
+            throws DocumentException {
+        try {
+            PdfPTable booksTable = new PdfPTable(2);
+            booksTable.setWidthPercentage(95);
+            booksTable.setWidths(new float[] { 0.8f, 0.2f });
+            booksTable.setSpacingBefore(10);
+
+            for (Book book : books) {
+                PdfPCell bookCell = new PdfPCell(new Paragraph(book.getTitle(), contentFont));
+                bookCell.setBorder(0);
+                bookCell.setPaddingBottom(10);
+                bookCell.setPaddingTop(10);
+                bookCell.setPaddingLeft(20);
+                booksTable.addCell(bookCell);
+
+                PdfPCell ratingCell = new PdfPCell(
+                        new Paragraph(String.format("%.1f", book.getAverageRating()), ratingFont));
+                ratingCell.setBorder(0);
+                ratingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                ratingCell.setPaddingBottom(10);
+                ratingCell.setPaddingTop(10);
+                booksTable.addCell(ratingCell);
+
+                PdfPCell separatorCell = new PdfPCell();
+                separatorCell.setColspan(2);
+                separatorCell.setBorder(PdfPCell.BOTTOM);
+                separatorCell.setBorderColor(new com.itextpdf.text.BaseColor(211, 211, 211));
+                separatorCell.setPaddingBottom(5);
+                booksTable.addCell(separatorCell);
+            }
+
+            PdfPCell tableCell = new PdfPCell(booksTable);
+            tableCell.setBorder(0);
+            tableCell.setPaddingBottom(20);
+            table.addCell(tableCell);
+        } catch (DocumentException e) {
+            throw new DocumentException("Error creating book table: " + e.getMessage());
         }
-
-        PdfPCell tableCell = new PdfPCell(booksTable);
-        tableCell.setBorder(0);
-        tableCell.setPaddingBottom(20);
-        table.addCell(tableCell);
     }
 
     private void addYearlyTopBooksSection(PdfPTable table, Map<Integer, List<Book>> booksByYear,

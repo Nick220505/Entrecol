@@ -219,3 +219,40 @@
     }
   }
 }
+
+.rating-sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+
+  @media (min-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.rating-section {
+  h3 {
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+  }
+}
+
+.rating {
+  float: right;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:host-context(.dark-theme) {
+  .rating-section {
+    h3 {
+      color: rgba(255, 255, 255, 0.87);
+    }
+  }
+
+  .rating {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
