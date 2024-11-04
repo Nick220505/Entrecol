@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -34,7 +34,7 @@ import { EntertainmentReportService } from '../../services/entertainment-report.
   templateUrl: './entertainment-report.component.html',
   styleUrl: './entertainment-report.component.scss',
 })
-export class EntertainmentReportComponent {
+export class EntertainmentReportComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly entertainmentReportService = inject(
     EntertainmentReportService,
@@ -77,6 +77,17 @@ export class EntertainmentReportComponent {
     return Object.entries(stats).map(([name, value]) => ({ name, value }));
   });
 
+  readonly topRatedBooks = computed(() => {
+    const books = this.report()?.data?.topRatedBooks;
+    if (!books) return [];
+
+    const isAscending = this.form.get('topRatedBooksAscending')?.value;
+    return [...books].sort((a, b) => {
+      const comparison = a.title.localeCompare(b.title);
+      return isAscending ? comparison : -comparison;
+    });
+  });
+
   readonly sortedYearlyBooks = computed(() => {
     const booksByYear = this.report()?.data?.topAndBottomBooksByYear;
     if (!booksByYear) return [];
@@ -92,6 +103,20 @@ export class EntertainmentReportComponent {
       year,
       books: booksByYear[year],
     }));
+  });
+
+  readonly moviesWithGenres = computed(() => {
+    const movies =
+      this.report()?.data?.moviesGroupedByGenreCount?.[
+        this.form.value.genreCount
+      ];
+    if (!movies) return [];
+
+    const isAscending = this.form.get('moviesByGenreCountAscending')?.value;
+    return [...movies].sort((a, b) => {
+      const comparison = a.title.localeCompare(b.title);
+      return isAscending ? comparison : -comparison;
+    });
   });
 
   onSubmit(): void {
@@ -144,5 +169,61 @@ export class EntertainmentReportComponent {
         moviesByGenreCountAscending,
       );
     }
+  }
+
+  ngOnInit() {
+    this.form.get('moviesByGenreAscending')?.valueChanges.subscribe(() => {
+      this.entertainmentReportService.report.update((currentState) => ({
+        ...currentState,
+        data: currentState.data
+          ? {
+              ...currentState.data,
+              moviesByGenreStats: { ...currentState.data.moviesByGenreStats },
+            }
+          : null,
+      }));
+    });
+
+    this.form.get('topRatedBooksAscending')?.valueChanges.subscribe(() => {
+      this.entertainmentReportService.report.update((currentState) => ({
+        ...currentState,
+        data: currentState.data
+          ? {
+              ...currentState.data,
+              topRatedBooks: [...currentState.data.topRatedBooks],
+            }
+          : null,
+      }));
+    });
+
+    this.form
+      .get('topBottomBooksByYearAscending')
+      ?.valueChanges.subscribe(() => {
+        this.entertainmentReportService.report.update((currentState) => ({
+          ...currentState,
+          data: currentState.data
+            ? {
+                ...currentState.data,
+                topAndBottomBooksByYear: {
+                  ...currentState.data.topAndBottomBooksByYear,
+                },
+              }
+            : null,
+        }));
+      });
+
+    this.form.get('moviesByGenreCountAscending')?.valueChanges.subscribe(() => {
+      this.entertainmentReportService.report.update((currentState) => ({
+        ...currentState,
+        data: currentState.data
+          ? {
+              ...currentState.data,
+              moviesGroupedByGenreCount: {
+                ...currentState.data.moviesGroupedByGenreCount,
+              },
+            }
+          : null,
+      }));
+    });
   }
 }

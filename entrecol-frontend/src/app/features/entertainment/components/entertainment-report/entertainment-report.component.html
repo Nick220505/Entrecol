@@ -125,7 +125,7 @@
         <section>
           <h2>Top {{ form.value.topN }} Libros con Mejor Rating</h2>
           <ul class="book-list">
-            @for (book of report().data?.topRatedBooks; track book.id) {
+            @for (book of topRatedBooks(); track book.id) {
               <li>{{ book.title }}</li>
             }
           </ul>
@@ -149,12 +149,7 @@
           <h2>Películas con {{ form.value.genreCount }} Géneros</h2>
           <p>Total: {{ report().data?.totalMovies }}</p>
           <ul class="movie-list">
-            @for (
-              movie of report().data?.moviesGroupedByGenreCount?.[
-                form.value.genreCount
-              ] ?? [];
-              track movie.id
-            ) {
+            @for (movie of moviesWithGenres(); track movie.id) {
               <li>
                 {{ movie.title }}
                 <span class="genres">
