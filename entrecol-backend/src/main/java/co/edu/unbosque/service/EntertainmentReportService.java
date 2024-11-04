@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
@@ -121,47 +120,83 @@ public class EntertainmentReportService {
 
     public byte[] generateEntertainmentReportPdf(Date startDate, Date endDate, int topN, int genreCount,
             boolean ascending) {
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream(8192)) {
             Document document = new Document(PageSize.A4.rotate());
-            PdfWriter.getInstance(document, out);
+            PdfWriter writer = PdfWriter.getInstance(document, out);
+            writer.setFullCompression();
             document.open();
 
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+            Font sectionTitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
+            Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+            Font yearFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+            Font contentFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+            Font ratingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+
             Paragraph title = new Paragraph("Reporte de Entretenimiento", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
-            title.setSpacingAfter(20);
+            title.setSpacingAfter(10);
             document.add(title);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            int startYear = calendar.get(Calendar.YEAR);
+            calendar.setTime(endDate);
+            int endYear = calendar.get(Calendar.YEAR);
+
+            Paragraph dateRange = new Paragraph(
+                    String.format("Período: %d - %d", startYear, endYear), subtitleFont);
+            dateRange.setAlignment(Element.ALIGN_CENTER);
+            dateRange.setSpacingAfter(20);
+            document.add(dateRange);
 
             EntertainmentReportDTO report = getEntertainmentReport(
                     startDate, endDate, topN, genreCount,
                     ascending, ascending, ascending, ascending);
 
-            PdfPTable mainTable = new PdfPTable(1);
-            mainTable.setWidthPercentage(100);
+            PdfPTable movieTable = new PdfPTable(1);
+            movieTable.setWidthPercentage(100);
 
             JFreeChart movieGenreChart = createMovieGenreChart(report.getMoviesByGenreStats());
-            addChartSection(mainTable, "Películas por Género", movieGenreChart);
+            addChartSection(movieTable,
+                    String.format("Películas por Género (%d - %d)", startYear, endYear),
+                    movieGenreChart);
+
+            document.add(movieTable);
+
+            document.newPage();
+
+            PdfPTable bookTable = new PdfPTable(1);
+            bookTable.setWidthPercentage(100);
 
             JFreeChart bookPublicationChart = createBookPublicationChart(report.getBookPublicationStats());
-            addChartSection(mainTable, "Frecuencia de Publicación de Libros", bookPublicationChart);
+            addChartSection(bookTable,
+                    String.format("Frecuencia de Publicación de Libros (%d - %d)", startYear, endYear),
+                    bookPublicationChart);
 
-            document.add(mainTable);
+            document.add(bookTable);
 
             document.newPage();
 
             PdfPTable booksTable = new PdfPTable(1);
             booksTable.setWidthPercentage(100);
-            addTopRatedBooksSection(booksTable, report.getTopRatedBooks());
+            addTopRatedBooksSection(booksTable, report.getTopRatedBooks(),
+                    String.format("Top %d Libros con Mejor Rating (%d - %d)",
+                            topN, startYear, endYear),
+                    sectionTitleFont, contentFont, ratingFont);
             document.add(booksTable);
 
             document.newPage();
 
             PdfPTable yearlyBooksTable = new PdfPTable(1);
             yearlyBooksTable.setWidthPercentage(100);
-            addYearlyTopBooksSection(yearlyBooksTable, report.getTopAndBottomBooksByYear());
+            addYearlyTopBooksSection(yearlyBooksTable, report.getTopAndBottomBooksByYear(),
+                    String.format("Top 5 Libros por Año (%d - %d)", startYear, endYear),
+                    sectionTitleFont, yearFont, contentFont, ratingFont);
             document.add(yearlyBooksTable);
 
             document.close();
+            writer.close();
 
             return out.toByteArray();
         } catch (Exception e) {
@@ -190,6 +225,17 @@ public class EntertainmentReportService {
                 new Color(255, 215, 0),
                 new Color(138, 43, 226)
         });
+
+        org.jfree.chart.axis.CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();
+        domainAxis.setCategoryLabelPositions(
+                org.jfree.chart.axis.CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 4.0));
+        domainAxis.setMaximumCategoryLabelLines(2);
+        domainAxis.setLabelFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 11));
+
+        chart.getCategoryPlot().setDomainAxisLocation(org.jfree.chart.axis.AxisLocation.BOTTOM_OR_RIGHT);
+        chart.getCategoryPlot().getDomainAxis().setLowerMargin(0.02);
+        chart.getCategoryPlot().getDomainAxis().setUpperMargin(0.02);
+
         return chart;
     }
 
@@ -214,6 +260,17 @@ public class EntertainmentReportService {
                 new Color(75, 0, 130),
                 new Color(184, 134, 11)
         });
+
+        org.jfree.chart.axis.CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();
+        domainAxis.setCategoryLabelPositions(
+                org.jfree.chart.axis.CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
+        domainAxis.setMaximumCategoryLabelLines(1);
+        domainAxis.setLabelFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 11));
+
+        chart.getCategoryPlot().setDomainAxisLocation(org.jfree.chart.axis.AxisLocation.BOTTOM_OR_RIGHT);
+        chart.getCategoryPlot().getDomainAxis().setLowerMargin(0.02);
+        chart.getCategoryPlot().getDomainAxis().setUpperMargin(0.02);
+
         return chart;
     }
 
@@ -221,8 +278,15 @@ public class EntertainmentReportService {
         chart.setBackgroundPaint(Color.WHITE);
         org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(Color.WHITE);
+        plot.setRangeGridlinePaint(new Color(220, 220, 220));
+        plot.setDomainGridlinesVisible(false);
+        plot.setOutlineVisible(false);
 
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setMaximumBarWidth(0.1);
+        renderer.setDrawBarOutline(false);
+        renderer.setShadowVisible(false);
+
         int colorIndex = 0;
         for (int series = 0; series < renderer.getRowCount(); series++) {
             renderer.setSeriesPaint(series, colors[colorIndex % colors.length]);
@@ -239,7 +303,7 @@ public class EntertainmentReportService {
         titleCell.setPaddingBottom(10);
         table.addCell(titleCell);
 
-        java.awt.image.BufferedImage chartImage = chart.createBufferedImage(700, 400);
+        java.awt.image.BufferedImage chartImage = chart.createBufferedImage(800, 350);
         com.itextpdf.text.Image chartPdfImage = com.itextpdf.text.Image.getInstance(chartImage, null);
         PdfPCell chartCell = new PdfPCell(chartPdfImage);
         chartCell.setBorder(0);
@@ -248,12 +312,9 @@ public class EntertainmentReportService {
         table.addCell(chartCell);
     }
 
-    private void addTopRatedBooksSection(PdfPTable table, List<Book> books) throws Exception {
-        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
-        Font contentFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
-        Font ratingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
-
-        PdfPCell titleCell = new PdfPCell(new Paragraph("Top Libros con Mejor Rating", titleFont));
+    private void addTopRatedBooksSection(PdfPTable table, List<Book> books, String title,
+            Font titleFont, Font contentFont, Font ratingFont) throws Exception {
+        PdfPCell titleCell = new PdfPCell(new Paragraph(title, titleFont));
         titleCell.setBorder(0);
         titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         titleCell.setPaddingBottom(20);
@@ -261,11 +322,7 @@ public class EntertainmentReportService {
 
         PdfPTable booksTable = new PdfPTable(2);
         booksTable.setWidthPercentage(95);
-        try {
-            booksTable.setWidths(new float[] { 0.8f, 0.2f });
-        } catch (DocumentException e) {
-            throw new Exception("Error setting table widths: " + e.getMessage(), e);
-        }
+        booksTable.setWidths(new float[] { 0.8f, 0.2f });
         booksTable.setSpacingBefore(10);
 
         for (Book book : books) {
@@ -284,7 +341,7 @@ public class EntertainmentReportService {
             ratingCell.setPaddingTop(10);
             booksTable.addCell(ratingCell);
 
-            PdfPCell separatorCell = new PdfPCell(new Paragraph(""));
+            PdfPCell separatorCell = new PdfPCell();
             separatorCell.setColspan(2);
             separatorCell.setBorder(PdfPCell.BOTTOM);
             separatorCell.setBorderColor(new com.itextpdf.text.BaseColor(211, 211, 211));
@@ -298,13 +355,9 @@ public class EntertainmentReportService {
         table.addCell(tableCell);
     }
 
-    private void addYearlyTopBooksSection(PdfPTable table, Map<Integer, List<Book>> booksByYear) throws Exception {
-        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
-        Font yearFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
-        Font contentFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
-        Font ratingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
-
-        PdfPCell titleCell = new PdfPCell(new Paragraph("Top 5 Libros por Año", titleFont));
+    private void addYearlyTopBooksSection(PdfPTable table, Map<Integer, List<Book>> booksByYear,
+            String title, Font titleFont, Font yearFont, Font contentFont, Font ratingFont) throws Exception {
+        PdfPCell titleCell = new PdfPCell(new Paragraph(title, titleFont));
         titleCell.setBorder(0);
         titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         titleCell.setPaddingBottom(20);
@@ -324,11 +377,7 @@ public class EntertainmentReportService {
 
             PdfPTable booksTable = new PdfPTable(2);
             booksTable.setWidthPercentage(95);
-            try {
-                booksTable.setWidths(new float[] { 0.8f, 0.2f });
-            } catch (DocumentException e) {
-                throw new Exception("Error setting table widths: " + e.getMessage(), e);
-            }
+            booksTable.setWidths(new float[] { 0.8f, 0.2f });
 
             List<Book> yearBooks = booksByYear.get(year);
             for (Book book : yearBooks) {
@@ -347,7 +396,7 @@ public class EntertainmentReportService {
                 ratingCell.setPaddingTop(10);
                 booksTable.addCell(ratingCell);
 
-                PdfPCell separatorCell = new PdfPCell(new Paragraph(""));
+                PdfPCell separatorCell = new PdfPCell();
                 separatorCell.setColspan(2);
                 separatorCell.setBorder(PdfPCell.BOTTOM);
                 separatorCell.setBorderColor(new com.itextpdf.text.BaseColor(211, 211, 211));
