@@ -13,12 +13,14 @@ import java.util.stream.Collectors;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
@@ -57,13 +59,11 @@ public class EntertainmentReportService {
             calendar.setTime(endDate);
             int endYear = calendar.get(Calendar.YEAR);
 
-            // Para libros con mejor rating
             final Sort.Direction topRatedDirection = topRatedBooksAscending ? Sort.Direction.ASC : Sort.Direction.DESC;
             List<Book> topBooks = bookRepository.findTopNByRating(
                     PageRequest.of(0, topN, Sort.by(topRatedDirection, "title")));
             report.setTopRatedBooks(topBooks != null ? topBooks : new ArrayList<>());
 
-            // Para libros por año
             final Sort.Direction yearDirection = topBottomBooksByYearAscending ? Sort.Direction.ASC
                     : Sort.Direction.DESC;
             Map<Integer, List<Book>> booksByYear = new HashMap<>();
@@ -81,7 +81,6 @@ public class EntertainmentReportService {
             }
             report.setTopAndBottomBooksByYear(booksByYear);
 
-            // Para películas por cantidad de géneros
             final Sort.Direction movieDirection = moviesByGenreCountAscending ? Sort.Direction.ASC
                     : Sort.Direction.DESC;
             List<Movie> moviesByGenreCount = movieRepository.findMoviesByGenreCount(genreCount);
@@ -133,7 +132,6 @@ public class EntertainmentReportService {
             title.setSpacingAfter(20);
             document.add(title);
 
-            // Llamar al método getEntertainmentReport con todos los parámetros necesarios
             EntertainmentReportDTO report = getEntertainmentReport(
                     startDate, endDate, topN, genreCount,
                     ascending, ascending, ascending, ascending);
@@ -148,6 +146,21 @@ public class EntertainmentReportService {
             addChartSection(mainTable, "Frecuencia de Publicación de Libros", bookPublicationChart);
 
             document.add(mainTable);
+
+            document.newPage();
+
+            PdfPTable booksTable = new PdfPTable(1);
+            booksTable.setWidthPercentage(100);
+            addTopRatedBooksSection(booksTable, report.getTopRatedBooks());
+            document.add(booksTable);
+
+            document.newPage();
+
+            PdfPTable yearlyBooksTable = new PdfPTable(1);
+            yearlyBooksTable.setWidthPercentage(100);
+            addYearlyTopBooksSection(yearlyBooksTable, report.getTopAndBottomBooksByYear());
+            document.add(yearlyBooksTable);
+
             document.close();
 
             return out.toByteArray();
@@ -170,7 +183,13 @@ public class EntertainmentReportService {
                 true,
                 false);
 
-        customizeChart(chart);
+        customizeChart(chart, new Color[] {
+                new Color(70, 130, 180),
+                new Color(255, 99, 71),
+                new Color(50, 205, 50),
+                new Color(255, 215, 0),
+                new Color(138, 43, 226)
+        });
         return chart;
     }
 
@@ -188,13 +207,27 @@ public class EntertainmentReportService {
                 true,
                 false);
 
-        customizeChart(chart);
+        customizeChart(chart, new Color[] {
+                new Color(255, 140, 0),
+                new Color(46, 139, 87),
+                new Color(220, 20, 60),
+                new Color(75, 0, 130),
+                new Color(184, 134, 11)
+        });
         return chart;
     }
 
-    private void customizeChart(JFreeChart chart) {
+    private void customizeChart(JFreeChart chart, Color[] colors) {
         chart.setBackgroundPaint(Color.WHITE);
-        chart.getCategoryPlot().setBackgroundPaint(Color.WHITE);
+        org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        int colorIndex = 0;
+        for (int series = 0; series < renderer.getRowCount(); series++) {
+            renderer.setSeriesPaint(series, colors[colorIndex % colors.length]);
+            colorIndex++;
+        }
     }
 
     private void addChartSection(PdfPTable table, String title, JFreeChart chart) throws Exception {
@@ -213,5 +246,119 @@ public class EntertainmentReportService {
         chartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         chartCell.setPaddingBottom(20);
         table.addCell(chartCell);
+    }
+
+    private void addTopRatedBooksSection(PdfPTable table, List<Book> books) throws Exception {
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
+        Font contentFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+        Font ratingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+
+        PdfPCell titleCell = new PdfPCell(new Paragraph("Top Libros con Mejor Rating", titleFont));
+        titleCell.setBorder(0);
+        titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        titleCell.setPaddingBottom(20);
+        table.addCell(titleCell);
+
+        PdfPTable booksTable = new PdfPTable(2);
+        booksTable.setWidthPercentage(95);
+        try {
+            booksTable.setWidths(new float[] { 0.8f, 0.2f });
+        } catch (DocumentException e) {
+            throw new Exception("Error setting table widths: " + e.getMessage(), e);
+        }
+        booksTable.setSpacingBefore(10);
+
+        for (Book book : books) {
+            PdfPCell bookCell = new PdfPCell(new Paragraph(book.getTitle(), contentFont));
+            bookCell.setBorder(0);
+            bookCell.setPaddingBottom(10);
+            bookCell.setPaddingTop(10);
+            bookCell.setPaddingLeft(20);
+            booksTable.addCell(bookCell);
+
+            PdfPCell ratingCell = new PdfPCell(
+                    new Paragraph(String.format("%.1f", book.getAverageRating()), ratingFont));
+            ratingCell.setBorder(0);
+            ratingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            ratingCell.setPaddingBottom(10);
+            ratingCell.setPaddingTop(10);
+            booksTable.addCell(ratingCell);
+
+            PdfPCell separatorCell = new PdfPCell(new Paragraph(""));
+            separatorCell.setColspan(2);
+            separatorCell.setBorder(PdfPCell.BOTTOM);
+            separatorCell.setBorderColor(new com.itextpdf.text.BaseColor(211, 211, 211));
+            separatorCell.setPaddingBottom(5);
+            booksTable.addCell(separatorCell);
+        }
+
+        PdfPCell tableCell = new PdfPCell(booksTable);
+        tableCell.setBorder(0);
+        tableCell.setPaddingBottom(20);
+        table.addCell(tableCell);
+    }
+
+    private void addYearlyTopBooksSection(PdfPTable table, Map<Integer, List<Book>> booksByYear) throws Exception {
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
+        Font yearFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+        Font contentFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+        Font ratingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+
+        PdfPCell titleCell = new PdfPCell(new Paragraph("Top 5 Libros por Año", titleFont));
+        titleCell.setBorder(0);
+        titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        titleCell.setPaddingBottom(20);
+        table.addCell(titleCell);
+
+        List<Integer> sortedYears = new ArrayList<>(booksByYear.keySet());
+        sortedYears.sort((y1, y2) -> y2.compareTo(y1));
+
+        for (Integer year : sortedYears) {
+            PdfPCell yearCell = new PdfPCell(new Paragraph(year.toString(), yearFont));
+            yearCell.setBorder(0);
+            yearCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            yearCell.setPaddingBottom(10);
+            yearCell.setPaddingTop(20);
+            yearCell.setPaddingLeft(10);
+            table.addCell(yearCell);
+
+            PdfPTable booksTable = new PdfPTable(2);
+            booksTable.setWidthPercentage(95);
+            try {
+                booksTable.setWidths(new float[] { 0.8f, 0.2f });
+            } catch (DocumentException e) {
+                throw new Exception("Error setting table widths: " + e.getMessage(), e);
+            }
+
+            List<Book> yearBooks = booksByYear.get(year);
+            for (Book book : yearBooks) {
+                PdfPCell bookCell = new PdfPCell(new Paragraph(book.getTitle(), contentFont));
+                bookCell.setBorder(0);
+                bookCell.setPaddingBottom(10);
+                bookCell.setPaddingTop(10);
+                bookCell.setPaddingLeft(20);
+                booksTable.addCell(bookCell);
+
+                PdfPCell ratingCell = new PdfPCell(
+                        new Paragraph(String.format("%.1f", book.getAverageRating()), ratingFont));
+                ratingCell.setBorder(0);
+                ratingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                ratingCell.setPaddingBottom(10);
+                ratingCell.setPaddingTop(10);
+                booksTable.addCell(ratingCell);
+
+                PdfPCell separatorCell = new PdfPCell(new Paragraph(""));
+                separatorCell.setColspan(2);
+                separatorCell.setBorder(PdfPCell.BOTTOM);
+                separatorCell.setBorderColor(new com.itextpdf.text.BaseColor(211, 211, 211));
+                separatorCell.setPaddingBottom(5);
+                booksTable.addCell(separatorCell);
+            }
+
+            PdfPCell tableCell = new PdfPCell(booksTable);
+            tableCell.setBorder(0);
+            tableCell.setPaddingBottom(20);
+            table.addCell(tableCell);
+        }
     }
 }
