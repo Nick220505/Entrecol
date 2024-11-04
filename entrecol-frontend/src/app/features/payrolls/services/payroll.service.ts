@@ -6,7 +6,7 @@ import { finalize } from 'rxjs';
 
 import { environment } from '@env';
 import { EmployeePersonalInfo } from '@payrolls/models/employee-personal-info.model';
-import { PdfPreviewDialogComponent } from '../components/pdf-preview-dialog/pdf-preview-dialog.component';
+import { PdfPreviewDialogComponent } from '../../../shared/components/pdf-preview-dialog/pdf-preview-dialog.component';
 import { HealthPensionReport } from '../models/health-pension-report.model';
 import { NoveltyReport } from '../models/novelty-report.model';
 import { Employee } from '../models/payroll.model';

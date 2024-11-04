@@ -13,7 +13,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { PdfViewerComponent } from '@shared/components/pdf-viewer/pdf-viewer.component';
+import { PdfViewerComponent } from '@shared/components/pdf-preview-dialog/pdf-viewer/pdf-viewer.component';
 import { map, startWith } from 'rxjs/operators';
 
 import { Employee } from '@payrolls/models/payroll.model';

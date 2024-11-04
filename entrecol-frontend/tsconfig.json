@@ -28,6 +28,7 @@
       "@books/*": ["app/features/books/*"],
       "@movies/*": ["app/features/movies/*"],
       "@payrolls/*": ["app/features/payrolls/*"],
+      "@entertainment/*": ["app/features/entertainment/*"],
       "@app/*": ["app/*"]
     }
   },

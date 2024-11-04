@@ -3,7 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '@env';
-import { PdfPreviewDialogComponent } from '@payrolls/components/pdf-preview-dialog/pdf-preview-dialog.component';
+import { PdfPreviewDialogComponent } from '@shared/components/pdf-preview-dialog/pdf-preview-dialog.component';
 import { finalize } from 'rxjs';
 import { EntertainmentReport } from '../models/entertainment-report.model';
 
