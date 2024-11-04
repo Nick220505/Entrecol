@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -63,22 +64,33 @@ public class EntertainmentReportService {
                     PageRequest.of(0, topN, Sort.by(topRatedDirection, "title")));
             report.setTopRatedBooks(topBooks != null ? topBooks : new ArrayList<>());
 
-            final Sort.Direction yearDirection = topBottomBooksByYearAscending ? Sort.Direction.ASC
-                    : Sort.Direction.DESC;
             Map<Integer, List<Book>> booksByYear = new HashMap<>();
+            List<Integer> years = new ArrayList<>();
             for (int year = startYear; year <= endYear; year++) {
                 List<Book> yearTopBooks = bookRepository.findTopBooksByYear(year,
-                        PageRequest.of(0, 5, Sort.by(yearDirection, "title")));
+                        PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "averageRating")));
                 List<Book> yearBottomBooks = bookRepository.findBottomBooksByYear(year,
-                        PageRequest.of(0, 5, Sort.by(yearDirection, "title")));
+                        PageRequest.of(0, 5, Sort.by(Sort.Direction.ASC, "averageRating")));
                 if (yearTopBooks != null) {
                     if (yearBottomBooks != null) {
                         yearTopBooks.addAll(yearBottomBooks);
                     }
                     booksByYear.put(year, yearTopBooks);
+                    years.add(year);
                 }
             }
-            report.setTopAndBottomBooksByYear(booksByYear);
+
+            if (topBottomBooksByYearAscending) {
+                years.sort(Integer::compareTo);
+            } else {
+                years.sort((y1, y2) -> y2.compareTo(y1));
+            }
+
+            Map<Integer, List<Book>> sortedBooksByYear = new LinkedHashMap<>();
+            for (Integer year : years) {
+                sortedBooksByYear.put(year, booksByYear.get(year));
+            }
+            report.setTopAndBottomBooksByYear(sortedBooksByYear);
 
             final Sort.Direction movieDirection = moviesByGenreCountAscending ? Sort.Direction.ASC
                     : Sort.Direction.DESC;
@@ -97,11 +109,21 @@ public class EntertainmentReportService {
             report.setTotalMovies((long) (moviesByGenreCount != null ? moviesByGenreCount.size() : 0));
 
             List<Object[]> genreStats = movieRepository.getMovieCountByGenre();
-            Map<String, Long> genreStatsMap = genreStats != null ? genreStats.stream()
-                    .collect(Collectors.toMap(
-                            row -> (String) row[0],
-                            row -> (Long) row[1]))
-                    : new HashMap<>();
+            Map<String, Long> genreStatsMap = new LinkedHashMap<>();
+
+            if (genreStats != null) {
+                List<Object[]> sortedStats = new ArrayList<>(genreStats);
+                if (moviesByGenreAscending) {
+                    sortedStats.sort((a, b) -> ((String) a[0]).compareTo((String) b[0]));
+                } else {
+                    sortedStats.sort((a, b) -> ((String) b[0]).compareTo((String) a[0]));
+                }
+
+                for (Object[] row : sortedStats) {
+                    genreStatsMap.put((String) row[0], (Long) row[1]);
+                }
+            }
+
             report.setMoviesByGenreStats(genreStatsMap);
 
             List<Object[]> bookStats = bookRepository.getBookCountByYear(startDate, endDate);

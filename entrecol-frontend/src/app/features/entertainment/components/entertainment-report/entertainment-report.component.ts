@@ -40,7 +40,7 @@ export class EntertainmentReportComponent {
     EntertainmentReportService,
   );
 
-  readonly form: FormGroup = this.formBuilder.group({
+  protected readonly form: FormGroup = this.formBuilder.group({
     startDate: ['', Validators.required],
     endDate: ['', Validators.required],
     topN: [10, [Validators.required, Validators.min(1)]],
@@ -51,19 +51,47 @@ export class EntertainmentReportComponent {
     moviesByGenreCountAscending: [true],
   });
 
-  readonly report = this.entertainmentReportService.report;
-  readonly pdfExporting = this.entertainmentReportService.pdfExporting;
+  readonly report = computed(() => this.entertainmentReportService.report());
+  readonly pdfExporting = computed(() =>
+    this.entertainmentReportService.pdfExporting(),
+  );
 
   readonly moviesByGenreData = computed(() => {
     const stats = this.report()?.data?.moviesByGenreStats;
     if (!stats) return [];
-    return Object.entries(stats).map(([name, value]) => ({ name, value }));
+
+    const data = Object.entries(stats).map(([name, value]) => ({
+      name,
+      value,
+    }));
+    const isAscending = this.form.get('moviesByGenreAscending')?.value;
+
+    return isAscending
+      ? data.sort((a, b) => a.name.localeCompare(b.name))
+      : data.sort((a, b) => b.name.localeCompare(a.name));
   });
 
   readonly bookPublicationData = computed(() => {
     const stats = this.report()?.data?.bookPublicationStats;
     if (!stats) return [];
     return Object.entries(stats).map(([name, value]) => ({ name, value }));
+  });
+
+  readonly sortedYearlyBooks = computed(() => {
+    const booksByYear = this.report()?.data?.topAndBottomBooksByYear;
+    if (!booksByYear) return [];
+
+    const years = Object.keys(booksByYear).map(Number);
+    const isAscending = this.form.get('topBottomBooksByYearAscending')?.value;
+
+    const sortedYears = isAscending
+      ? years.sort((a, b) => a - b)
+      : years.sort((a, b) => b - a);
+
+    return sortedYears.map((year) => ({
+      year,
+      books: booksByYear[year],
+    }));
   });
 
   onSubmit(): void {
@@ -79,7 +107,6 @@ export class EntertainmentReportComponent {
         moviesByGenreCountAscending,
       } = this.form.value;
 
-      console.log(this.form.value);
       this.entertainmentReportService.getReport(
         formatDate(startDate, 'yyyy-MM-dd', 'en-US'),
         formatDate(endDate, 'yyyy-MM-dd', 'en-US'),

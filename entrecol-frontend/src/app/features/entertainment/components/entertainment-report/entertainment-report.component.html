@@ -133,14 +133,11 @@
 
         <section>
           <h2>Top 5 Libros por Año</h2>
-          @for (
-            entry of report().data?.topAndBottomBooksByYear | keyvalue;
-            track entry.key
-          ) {
+          @for (yearData of sortedYearlyBooks(); track yearData.year) {
             <div class="year-section">
-              <h3>{{ entry.key }}</h3>
+              <h3>{{ yearData.year }}</h3>
               <ul class="book-list">
-                @for (book of entry.value; track book.id) {
+                @for (book of yearData.books; track book.id) {
                   <li>{{ book.title }}</li>
                 }
               </ul>
