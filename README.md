@@ -105,5 +105,3 @@ Entrecol is a full-stack web application for managing and analyzing entertainmen
    ```bash
    ./mvnw spring-boot:run
    ```
-
-## Project Structure
