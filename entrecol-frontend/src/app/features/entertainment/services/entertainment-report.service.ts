@@ -63,8 +63,7 @@ export class EntertainmentReportService {
             initialLoad: false,
           });
         },
-        error: (error) => {
-          console.error('Error fetching report:', error);
+        error: () => {
           this.report.update((state) => ({ ...state, loading: false }));
           this.snackBar.open(
             'Error al cargar el reporte de entretenimiento',
@@ -103,8 +102,7 @@ export class EntertainmentReportService {
             window.URL.revokeObjectURL(url);
           });
         },
-        error: (error) => {
-          console.error('Error exporting PDF:', error);
+        error: () => {
           this.snackBar.open('Error al exportar el PDF', 'Cerrar');
         },
       });
