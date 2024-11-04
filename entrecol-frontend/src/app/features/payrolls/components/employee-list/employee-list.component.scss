@@ -6,22 +6,7 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
   margin-left: auto;
-}
-
-.total-employees {
-  font-size: 1rem;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-:host-context(.dark-theme) .total-employees {
-  color: rgba(255, 255, 255, 0.87);
-}
-
-mat-form-field {
-  width: 100%;
-  margin-bottom: 16px;
 }
 
 .no-data {
@@ -29,7 +14,6 @@ mat-form-field {
   flex-direction: column;
   align-items: center;
   padding: 48px 0;
-  color: rgba(0, 0, 0, 0.54);
 
   mat-icon {
     font-size: 48px;
@@ -46,23 +30,5 @@ mat-form-field {
       font-size: 1.1rem;
       margin-bottom: 8px;
     }
-  }
-}
-
-table {
-  width: 100%;
-}
-
-.mat-mdc-row:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-:host-context(.dark-theme) {
-  .no-data {
-    color: rgba(255, 255, 255, 0.54);
-  }
-
-  .mat-mdc-row:hover {
-    background: rgba(255, 255, 255, 0.04);
   }
 }
