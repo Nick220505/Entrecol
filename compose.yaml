@@ -9,8 +9,8 @@ services:
       - MYSQL_ROOT_PASSWORD=123456
     volumes:
       - db-data:/var/lib/mysql
-      - ./entrecol-backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
-      - ./entrecol-backend/src/main/resources/data.sql:/docker-entrypoint-initdb.d/2-data.sql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+      - ./docker/mysql/config:/etc/mysql/conf.d
     healthcheck:
       test:
         [
