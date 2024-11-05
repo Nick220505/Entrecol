@@ -10,6 +10,17 @@
 ::ng-deep {
   .mat-mdc-tab-body-wrapper {
     padding: 24px;
+    min-height: 400px;
+  }
+
+  .mat-mdc-tab-body-content {
+    overflow: hidden !important;
+
+    > * {
+      display: block;
+      height: 100%;
+      overflow: hidden;
+    }
   }
 }
 
