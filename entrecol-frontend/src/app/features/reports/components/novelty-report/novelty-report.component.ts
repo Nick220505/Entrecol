@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -40,10 +40,6 @@ import { NoveltyDepartmentPositionChartComponent } from './novelty-department-po
 })
 export class NoveltyReportComponent {
   protected readonly payrollService = inject(PayrollService);
-  protected readonly report = computed(() =>
-    this.payrollService.noveltyReport(),
-  );
-
   protected readonly dateForm = new FormGroup({
     startDate: new FormControl('', [
       Validators.required,

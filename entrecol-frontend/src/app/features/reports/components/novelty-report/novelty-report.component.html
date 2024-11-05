@@ -1,4 +1,5 @@
 <mat-card appearance="outlined">
+  @let report = payrollService.noveltyReport();
   <mat-card-header>
     <mat-card-title>Reporte de Novedades</mat-card-title>
     <div class="header-actions">
@@ -6,9 +7,7 @@
         mat-button
         (click)="exportToPdf()"
         [disabled]="
-          !report().data ||
-          report().loading ||
-          payrollService.pdfExportingNovelty()
+          !report.data || report.loading || payrollService.pdfExportingNovelty()
         "
       >
         <mat-icon>picture_as_pdf</mat-icon>
@@ -57,7 +56,7 @@
                 mat-raised-button
                 color="primary"
                 type="submit"
-                [disabled]="dateForm.invalid || report().loading"
+                [disabled]="dateForm.invalid || report.loading"
               >
                 <mat-icon>search</mat-icon>
                 Buscar
@@ -67,16 +66,16 @@
         </mat-card-content>
       </mat-card>
 
-      @if (report().initialLoad && report().loading) {
+      @if (report.initialLoad && report.loading) {
         <app-loading-spinner
           loadingText="Cargando reporte..."
         ></app-loading-spinner>
-      } @else if (!report().data && !dateForm.dirty) {
+      } @else if (!report.data && !dateForm.dirty) {
         <div class="no-data">
           <mat-icon>event_note</mat-icon>
           <p>Selecciona un rango de fechas para ver el reporte</p>
         </div>
-      } @else if (!report().data?.employees?.length) {
+      } @else if (!report.data?.employees?.length) {
         <div class="no-data">
           <mat-icon>event_busy</mat-icon>
           <p>No se encontraron novedades en el rango de fechas seleccionado</p>
@@ -96,9 +95,7 @@
             ];
           <table
             mat-table
-            [dataSource]="
-              report().data!.employees.filter(hasNoveltyInDateRange)
-            "
+            [dataSource]="report.data!.employees.filter(hasNoveltyInDateRange)"
           >
             <ng-container matColumnDef="fullName">
               <th mat-header-cell *matHeaderCellDef>Nombre</th>
