@@ -8,8 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import {
   MatPaginator,
-  MatPaginatorIntl,
-  MatPaginatorModule,
+  MatPaginatorModule
 } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -17,7 +16,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Book } from '@books/models/book.model';
 import { BookService } from '@books/services/book.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
-import { CustomPaginatorIntl } from '@shared/config/paginator-intl.config';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';
 
 @Component({
@@ -39,7 +37,6 @@ import { EmptyPipe } from '@shared/pipes/empty.pipe';
     LoadingSpinnerComponent,
     EmptyPipe,
   ],
-  providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.scss',
 })
