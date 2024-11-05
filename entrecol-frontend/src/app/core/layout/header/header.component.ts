@@ -112,7 +112,7 @@ export class HeaderComponent {
     },
     {
       label: 'Reporte de Entretenimiento',
-      route: '/reportes/entretenimiento',
+      route: '/reportes-entretenimiento',
       icon: 'bar_chart',
     },
   ];

@@ -11,7 +11,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { EntertainmentReportService } from '../../../services/entertainment-report.service';
+import { EntertainmentReportService } from '@entertainment-report/services/entertainment-report.service';
 
 @Component({
   selector: 'app-entertainment-report-filters',

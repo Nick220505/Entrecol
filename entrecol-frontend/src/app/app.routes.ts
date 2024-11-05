@@ -56,17 +56,12 @@ export const routes: Routes = [
         title: 'ENTRECOL - Reportes de Empleados',
       },
       {
-        path: 'reportes',
-        children: [
-          {
-            path: 'entretenimiento',
-            loadComponent: () =>
-              import(
-                './features/entertainment/components/entertainment-report/entertainment-report.component'
-              ).then((m) => m.EntertainmentReportComponent),
-            title: 'ENTRECOL - Reporte de Entretenimiento',
-          },
-        ],
+        path: 'reportes-entretenimiento',
+        loadComponent: () =>
+          import(
+            './features/entertainment-report/entertainment-report.component'
+          ).then((m) => m.EntertainmentReportComponent),
+        title: 'ENTRECOL - Reporte de Entretenimiento',
       },
       {
         path: '',

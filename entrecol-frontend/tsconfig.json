@@ -29,7 +29,7 @@
       "@movies/*": ["app/features/movies/*"],
       "@employees/*": ["app/features/employees/*"],
       "@employee-reports/*": ["app/features/employee-reports/*"],
-      "@entertainment/*": ["app/features/entertainment/*"],
+      "@entertainment-report/*": ["app/features/entertainment-report/*"],
       "@app/*": ["app/*"]
     }
   },

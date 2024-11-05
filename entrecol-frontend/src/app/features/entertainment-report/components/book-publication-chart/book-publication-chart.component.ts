@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
+import { EntertainmentReportService } from '@entertainment-report/services/entertainment-report.service';
 import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { EntertainmentReportService } from '../../../services/entertainment-report.service';
 
 @Component({
   selector: 'app-book-publication-chart',

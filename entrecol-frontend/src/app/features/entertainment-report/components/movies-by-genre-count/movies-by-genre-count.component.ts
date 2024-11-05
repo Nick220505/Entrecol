@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
-import { EntertainmentReportService } from '../../../services/entertainment-report.service';
+import { EntertainmentReportService } from '@entertainment-report/services/entertainment-report.service';
 
 @Component({
   selector: 'app-movies-by-genre-count',

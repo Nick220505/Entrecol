@@ -4,13 +4,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
-import { EntertainmentReportService } from '../../services/entertainment-report.service';
-import { BookPublicationChartComponent } from './book-publication-chart/book-publication-chart.component';
-import { EntertainmentReportFiltersComponent } from './entertainment-report-filters/entertainment-report-filters.component';
-import { MovieGenreChartComponent } from './movie-genre-chart/movie-genre-chart.component';
-import { MoviesByGenreCountComponent } from './movies-by-genre-count/movies-by-genre-count.component';
-import { TopRatedBooksListComponent } from './top-rated-books-list/top-rated-books-list.component';
-import { YearlyBooksComparisonComponent } from './yearly-books-comparison/yearly-books-comparison.component';
+import { BookPublicationChartComponent } from './components/book-publication-chart/book-publication-chart.component';
+import { EntertainmentReportFiltersComponent } from './components/entertainment-report-filters/entertainment-report-filters.component';
+import { MovieGenreChartComponent } from './components/movie-genre-chart/movie-genre-chart.component';
+import { MoviesByGenreCountComponent } from './components/movies-by-genre-count/movies-by-genre-count.component';
+import { TopRatedBooksListComponent } from './components/top-rated-books-list/top-rated-books-list.component';
+import { YearlyBooksComparisonComponent } from './components/yearly-books-comparison/yearly-books-comparison.component';
+import { EntertainmentReportService } from './services/entertainment-report.service';
 
 @Component({
   selector: 'app-entertainment-report',

@@ -1,6 +1,6 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
-import { EntertainmentReportService } from '../../../services/entertainment-report.service';
+import { EntertainmentReportService } from '@entertainment-report/services/entertainment-report.service';
 
 @Component({
   selector: 'app-top-rated-books-list',

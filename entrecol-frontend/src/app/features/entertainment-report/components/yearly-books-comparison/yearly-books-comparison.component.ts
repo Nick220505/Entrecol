@@ -1,7 +1,7 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { Book } from '@books/models/book.model';
-import { EntertainmentReportService } from '@entertainment/services/entertainment-report.service';
+import { EntertainmentReportService } from '@entertainment-report/services/entertainment-report.service';
 
 @Component({
   selector: 'app-yearly-books-comparison',
