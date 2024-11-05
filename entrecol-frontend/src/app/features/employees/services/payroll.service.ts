@@ -89,7 +89,10 @@ export class PayrollService {
         });
       },
       error: () => {
-        this.employees.update((state) => ({ ...state, loading: false }));
+        this.employees.update((state) => ({
+          ...state,
+          loading: false,
+        }));
         this.snackBar.open('Error al cargar los empleados', 'Cerrar');
       },
     });
@@ -113,7 +116,6 @@ export class PayrollService {
       .subscribe({
         next: () => {
           this.snackBar.open('Empleados subidos exitosamente', 'Cerrar');
-          this.employees.update((state) => ({ ...state, initialLoad: true }));
           this.fileUploaded.set(true);
           this.getAll();
         },

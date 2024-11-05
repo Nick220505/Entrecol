@@ -6,7 +6,8 @@
         mat-button
         (click)="downloadPdf()"
         [disabled]="
-          payrollService.pdfExporting() || employees().data.length === 0
+          payrollService.pdfExporting() ||
+          payrollService.employees().data.length === 0
         "
       >
         <mat-icon>picture_as_pdf</mat-icon>
@@ -20,12 +21,13 @@
   </mat-card-header>
 
   <mat-card-content>
-    @if (report().initialLoad && report().loading) {
+    @let report = payrollService.report();
+    @if (report.initialLoad && report.loading) {
       <app-loading-spinner
         loadingText="Cargando reportes..."
       ></app-loading-spinner>
     } @else {
-      @if (!report().data) {
+      @if (!report.data) {
         <div class="no-data">
           <mat-icon>insert_chart</mat-icon>
           <p>No hay datos para mostrar</p>

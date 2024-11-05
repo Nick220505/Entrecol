@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,21 +26,6 @@ import { DepartmentPositionBarChartComponent } from './department-position-bar-c
 })
 export class PayrollReportComponent {
   protected readonly payrollService = inject(PayrollService);
-  protected readonly report = computed(() => this.payrollService.report());
-  protected readonly employees = computed(() =>
-    this.payrollService.employees(),
-  );
-
-  constructor() {
-    effect(
-      () => {
-        if (this.payrollService.employees().data.length > 0) {
-          this.payrollService.getEmployeeReport();
-        }
-      },
-      { allowSignalWrites: true },
-    );
-  }
 
   downloadPdf(): void {
     this.payrollService.exportToPdf();
