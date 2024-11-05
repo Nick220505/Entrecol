@@ -2,10 +2,8 @@
   <mat-card-header>
     <mat-card-title>Reporte de Entretenimiento</mat-card-title>
   </mat-card-header>
-
   <mat-card-content>
     <app-entertainment-report-filters></app-entertainment-report-filters>
-
     @let report = entertainmentReportService.report();
     @if (report.loading) {
       <app-loading-spinner
