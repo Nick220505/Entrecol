@@ -1,19 +1,21 @@
 <mat-card appearance="outlined" class="content-card">
+  @let personalInfo = payrollService.personalInfo();
   <mat-card-header>
     <mat-card-title>Reporte de Información Personal</mat-card-title>
     <div class="header-actions">
+      @let pdfExportingPersonalInfo = payrollService.pdfExportingPersonalInfo();
       <button
         mat-button
         (click)="exportToPdf()"
         [disabled]="
           !selectedEmployee() ||
-          personalInfo().loading ||
-          payrollService.pdfExportingPersonalInfo()
+          personalInfo.loading ||
+          pdfExportingPersonalInfo
         "
       >
         <mat-icon>picture_as_pdf</mat-icon>
         {{
-          payrollService.pdfExportingPersonalInfo()
+          pdfExportingPersonalInfo
             ? "Generando reporte..."
             : "Generar reporte en PDF"
         }}
@@ -66,12 +68,12 @@
           </mat-card-header>
 
           <mat-card-content>
-            @if (personalInfo().initialLoad && personalInfo().loading) {
+            @if (personalInfo.initialLoad && personalInfo.loading) {
               <app-loading-spinner
                 loadingText="Cargando información..."
               ></app-loading-spinner>
             } @else {
-              @let personalInfoData = personalInfo().data;
+              @let personalInfoData = personalInfo.data;
               @if (!personalInfoData) {
                 <div class="no-data">
                   <mat-icon>person_off</mat-icon>

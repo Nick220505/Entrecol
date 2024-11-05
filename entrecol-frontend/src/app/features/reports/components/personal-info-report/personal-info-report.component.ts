@@ -45,9 +45,6 @@ export class PersonalInfoReportComponent {
   protected readonly payrollService = inject(PayrollService);
   protected readonly employeeSearchControl = new FormControl('');
   protected readonly selectedEmployee = signal<Employee | null>(null);
-  protected readonly personalInfo = computed(() =>
-    this.payrollService.personalInfo(),
-  );
 
   protected readonly filteredEmployees = computed(() => {
     const searchValue = this.searchValue()?.toLowerCase();
@@ -80,7 +77,6 @@ export class PersonalInfoReportComponent {
   }
 
   exportToPdf(): void {
-    if (!this.selectedEmployee()) return;
     this.payrollService.exportPersonalInfoToPdf(this.selectedEmployee()!.id);
   }
 }
