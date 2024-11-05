@@ -31,10 +31,10 @@ import { EntertainmentReportService } from '../../../services/entertainment-repo
 })
 export class EntertainmentReportFiltersComponent {
   private readonly formBuilder = inject(FormBuilder);
+
   protected readonly entertainmentReportService = inject(
     EntertainmentReportService,
   );
-
   protected readonly form = this.formBuilder.group({
     startDate: [
       this.entertainmentReportService.startDate(),
