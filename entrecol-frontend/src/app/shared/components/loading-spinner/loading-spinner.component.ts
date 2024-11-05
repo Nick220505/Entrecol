@@ -9,6 +9,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrl: './loading-spinner.component.scss',
 })
 export class LoadingSpinnerComponent {
-  readonly diameter = input(60);
+  readonly diameter = input(80);
   readonly loadingText = input<string | null>(null);
 }

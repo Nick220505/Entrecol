@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 import { BookPublicationChartComponent } from './book-publication-chart/book-publication-chart.component';
 import { EntertainmentReportFiltersComponent } from './entertainment-report-filters/entertainment-report-filters.component';
@@ -16,7 +16,7 @@ import { YearlyBooksComparisonComponent } from './yearly-books-comparison/yearly
   imports: [
     CommonModule,
     MatCardModule,
-    MatProgressSpinnerModule,
+    LoadingSpinnerComponent,
     EntertainmentReportFiltersComponent,
     MovieGenreChartComponent,
     BookPublicationChartComponent,
@@ -28,11 +28,7 @@ import { YearlyBooksComparisonComponent } from './yearly-books-comparison/yearly
   styleUrl: './entertainment-report.component.scss',
 })
 export class EntertainmentReportComponent {
-  private readonly entertainmentReportService = inject(
+  protected readonly entertainmentReportService = inject(
     EntertainmentReportService,
-  );
-
-  protected readonly report = computed(() =>
-    this.entertainmentReportService.report(),
   );
 }
