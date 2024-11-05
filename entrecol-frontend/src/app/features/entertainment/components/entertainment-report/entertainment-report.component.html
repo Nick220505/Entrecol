@@ -112,41 +112,9 @@
         </section>
 
         <section>
-          <h2>Top 5 Libros por Año</h2>
-          @for (yearData of sortedYearlyBooks(); track yearData.year) {
-            <div class="year-section">
-              <h3>{{ yearData.year }}</h3>
-              <div class="rating-sections">
-                <div class="rating-section">
-                  <h4>Mejor Rating</h4>
-                  <ul class="book-list">
-                    @for (book of yearData.topBooks; track book.id) {
-                      <li>
-                        {{ book.title }}
-                        <span class="rating">{{
-                          book.averageRating | number: "1.1-1"
-                        }}</span>
-                      </li>
-                    }
-                  </ul>
-                </div>
-
-                <div class="rating-section">
-                  <h4>Peor Rating</h4>
-                  <ul class="book-list">
-                    @for (book of yearData.bottomBooks; track book.id) {
-                      <li>
-                        {{ book.title }}
-                        <span class="rating">{{
-                          book.averageRating | number: "1.1-1"
-                        }}</span>
-                      </li>
-                    }
-                  </ul>
-                </div>
-              </div>
-            </div>
-          }
+          <app-yearly-books-comparison
+            [yearlyData]="sortedYearlyBooks()"
+          ></app-yearly-books-comparison>
         </section>
 
         <section>

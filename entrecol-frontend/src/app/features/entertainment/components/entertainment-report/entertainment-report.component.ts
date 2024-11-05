@@ -19,6 +19,7 @@ import { EntertainmentReportService } from '../../services/entertainment-report.
 import { BookPublicationChartComponent } from './book-publication-chart/book-publication-chart.component';
 import { MovieGenreChartComponent } from './movie-genre-chart/movie-genre-chart.component';
 import { TopRatedBooksListComponent } from './top-rated-books-list/top-rated-books-list.component';
+import { YearlyBooksComparisonComponent } from './yearly-books-comparison/yearly-books-comparison.component';
 
 @Component({
   selector: 'app-entertainment-report',
@@ -37,6 +38,7 @@ import { TopRatedBooksListComponent } from './top-rated-books-list/top-rated-boo
     MovieGenreChartComponent,
     BookPublicationChartComponent,
     TopRatedBooksListComponent,
+    YearlyBooksComparisonComponent,
   ],
   templateUrl: './entertainment-report.component.html',
   styleUrl: './entertainment-report.component.scss',

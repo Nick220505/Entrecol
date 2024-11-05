@@ -1,0 +1,84 @@
+.year-section {
+  margin-bottom: 20px;
+
+  h3 {
+    color: #666;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+  }
+}
+
+.rating-sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+
+  @media (min-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.rating-section {
+  h4 {
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+  }
+}
+
+.book-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+
+  li {
+    padding: 12px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.02);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.rating {
+  float: right;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:host-context(.dark-theme) {
+  .year-section {
+    h3 {
+      color: rgba(255, 255, 255, 0.87);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .rating-section {
+    h4 {
+      color: rgba(255, 255, 255, 0.87);
+    }
+  }
+
+  .book-list {
+    li {
+      background-color: rgba(255, 255, 255, 0.05);
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+    }
+  }
+
+  .rating {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
