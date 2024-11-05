@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +19,7 @@ import { EntertainmentReportService } from '../../../services/entertainment-repo
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
@@ -24,28 +30,48 @@ import { EntertainmentReportService } from '../../../services/entertainment-repo
   styleUrl: './entertainment-report-filters.component.scss',
 })
 export class EntertainmentReportFiltersComponent {
+  private readonly formBuilder = inject(FormBuilder);
   protected readonly entertainmentReportService = inject(
     EntertainmentReportService,
   );
 
+  protected readonly form = this.formBuilder.group({
+    startDate: [
+      this.entertainmentReportService.startDate(),
+      Validators.required,
+    ],
+    endDate: [this.entertainmentReportService.endDate(), Validators.required],
+    topN: [
+      this.entertainmentReportService.topN(),
+      [Validators.required, Validators.min(1)],
+    ],
+    genreCount: [
+      this.entertainmentReportService.genreCount(),
+      [Validators.required, Validators.min(1)],
+    ],
+    moviesByGenreAscending: [
+      this.entertainmentReportService.moviesByGenreAscending(),
+    ],
+    topRatedBooksAscending: [
+      this.entertainmentReportService.topRatedBooksAscending(),
+    ],
+    topBottomBooksByYearAscending: [
+      this.entertainmentReportService.topBottomBooksByYearAscending(),
+    ],
+    moviesByGenreCountAscending: [
+      this.entertainmentReportService.moviesByGenreCountAscending(),
+    ],
+  });
+
   onSubmit(): void {
-    if (this.isValid()) {
+    if (this.form.valid) {
       this.entertainmentReportService.getReport();
     }
   }
 
   onExportPdf(): void {
-    if (this.isValid()) {
+    if (this.form.valid) {
       this.entertainmentReportService.exportToPdf();
     }
-  }
-
-  isValid(): boolean {
-    return (
-      !!this.entertainmentReportService.startDate() &&
-      !!this.entertainmentReportService.endDate() &&
-      this.entertainmentReportService.topN() > 0 &&
-      this.entertainmentReportService.genreCount() > 0
-    );
   }
 }
