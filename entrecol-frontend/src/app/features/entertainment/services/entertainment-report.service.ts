@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,15 +38,16 @@ export class EntertainmentReportService {
 
   readonly topN = signal(10);
   readonly genreCount = signal(2);
+  readonly startDate = signal<Date | null>(null);
+  readonly endDate = signal<Date | null>(null);
 
-  getReport(startDate: string, endDate: string): void {
+  getReport(): void {
     this.report.update((state) => ({ ...state, loading: true }));
-
     this.http
       .get<{ data: EntertainmentReport }>(this.apiUrl, {
         params: {
-          startDate,
-          endDate,
+          startDate: formatDate(this.startDate()!, 'yyyy-MM-dd', 'en-US'),
+          endDate: formatDate(this.endDate()!, 'yyyy-MM-dd', 'en-US'),
           topN: this.topN(),
           genreCount: this.genreCount(),
           moviesByGenreAscending: this.moviesByGenreAscending(),
@@ -72,14 +74,16 @@ export class EntertainmentReportService {
       });
   }
 
-  exportToPdf(startDate: string, endDate: string): void {
+  exportToPdf(): void {
+    if (!this.startDate() || !this.endDate()) return;
+
     this.pdfExporting.set(true);
 
     this.http
       .get(`${this.apiUrl}/export/pdf`, {
         params: {
-          startDate,
-          endDate,
+          startDate: formatDate(this.startDate()!, 'yyyy-MM-dd', 'en-US'),
+          endDate: formatDate(this.endDate()!, 'yyyy-MM-dd', 'en-US'),
           topN: this.topN(),
           genreCount: this.genreCount(),
           moviesByGenreAscending: this.moviesByGenreAscending(),
