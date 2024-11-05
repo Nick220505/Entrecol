@@ -18,6 +18,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 import { BookPublicationChartComponent } from './book-publication-chart/book-publication-chart.component';
 import { MovieGenreChartComponent } from './movie-genre-chart/movie-genre-chart.component';
+import { MoviesByGenreCountComponent } from './movies-by-genre-count/movies-by-genre-count.component';
 import { TopRatedBooksListComponent } from './top-rated-books-list/top-rated-books-list.component';
 import { YearlyBooksComparisonComponent } from './yearly-books-comparison/yearly-books-comparison.component';
 
@@ -39,6 +40,7 @@ import { YearlyBooksComparisonComponent } from './yearly-books-comparison/yearly
     BookPublicationChartComponent,
     TopRatedBooksListComponent,
     YearlyBooksComparisonComponent,
+    MoviesByGenreCountComponent,
   ],
   templateUrl: './entertainment-report.component.html',
   styleUrl: './entertainment-report.component.scss',

@@ -118,20 +118,11 @@
         </section>
 
         <section>
-          <h2>Películas con {{ form.value.genreCount }} Géneros</h2>
-          <p>Total: {{ report().data?.totalMovies }}</p>
-          <ul class="movie-list">
-            @for (movie of moviesWithGenres(); track movie.id) {
-              <li>
-                {{ movie.title }}
-                <span class="genres">
-                  @for (genre of movie.genres; track genre.id) {
-                    <span class="genre-tag">{{ genre.name }}</span>
-                  }
-                </span>
-              </li>
-            }
-          </ul>
+          <app-movies-by-genre-count
+            [movies]="moviesWithGenres()"
+            [genreCount]="form.value.genreCount ?? 0"
+            [totalMovies]="report().data?.totalMovies ?? 0"
+          ></app-movies-by-genre-count>
         </section>
       </div>
     }
