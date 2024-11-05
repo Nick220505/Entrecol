@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { EntertainmentReportService } from '../../../services/entertainment-report.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class MoviesByGenreCountComponent {
     EntertainmentReportService,
   );
 
-  genreCount = input.required<number>();
+  protected readonly genreCount = this.entertainmentReportService.genreCount;
 
   protected readonly movies = computed(() => {
     const movies =

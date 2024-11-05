@@ -35,12 +35,10 @@ export class EntertainmentReportService {
   readonly topBottomBooksByYearAscending = signal(true);
   readonly moviesByGenreCountAscending = signal(true);
 
-  getReport(
-    startDate: string,
-    endDate: string,
-    topN: number,
-    genreCount: number,
-  ): void {
+  readonly topN = signal(10);
+  readonly genreCount = signal(2);
+
+  getReport(startDate: string, endDate: string): void {
     this.report.update((state) => ({ ...state, loading: true }));
 
     this.http
@@ -48,8 +46,8 @@ export class EntertainmentReportService {
         params: {
           startDate,
           endDate,
-          topN,
-          genreCount,
+          topN: this.topN(),
+          genreCount: this.genreCount(),
           moviesByGenreAscending: this.moviesByGenreAscending(),
           topRatedBooksAscending: this.topRatedBooksAscending(),
           topBottomBooksByYearAscending: this.topBottomBooksByYearAscending(),
@@ -74,12 +72,7 @@ export class EntertainmentReportService {
       });
   }
 
-  exportToPdf(
-    startDate: string,
-    endDate: string,
-    topN: number,
-    genreCount: number,
-  ): void {
+  exportToPdf(startDate: string, endDate: string): void {
     this.pdfExporting.set(true);
 
     this.http
@@ -87,8 +80,8 @@ export class EntertainmentReportService {
         params: {
           startDate,
           endDate,
-          topN,
-          genreCount,
+          topN: this.topN(),
+          genreCount: this.genreCount(),
           moviesByGenreAscending: this.moviesByGenreAscending(),
           topRatedBooksAscending: this.topRatedBooksAscending(),
           topBottomBooksByYearAscending: this.topBottomBooksByYearAscending(),

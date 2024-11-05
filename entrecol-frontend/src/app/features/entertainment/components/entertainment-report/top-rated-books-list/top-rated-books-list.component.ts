@@ -1,5 +1,5 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { EntertainmentReportService } from '../../../services/entertainment-report.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class TopRatedBooksListComponent {
     EntertainmentReportService,
   );
 
-  topN = input.required<number>();
+  protected readonly topN = this.entertainmentReportService.topN;
 
   protected readonly books = computed(() => {
     const books = this.entertainmentReportService.report()?.data?.topRatedBooks;

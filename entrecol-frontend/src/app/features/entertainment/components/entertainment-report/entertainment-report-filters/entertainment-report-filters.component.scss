@@ -1,1 +1,28 @@
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: center;
 
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr) auto;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  mat-slide-toggle {
+    margin: 8px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
