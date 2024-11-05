@@ -1,11 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-
-interface ChartData {
-  name: string;
-  value: number;
-}
+import { EntertainmentReportService } from '../../../services/entertainment-report.service';
 
 @Component({
   selector: 'app-book-publication-chart',
@@ -15,7 +11,16 @@ interface ChartData {
   styleUrl: './book-publication-chart.component.scss',
 })
 export class BookPublicationChartComponent {
-  data = input.required<ChartData[]>();
+  private readonly entertainmentReportService = inject(
+    EntertainmentReportService,
+  );
+
+  protected readonly data = computed(() => {
+    const stats =
+      this.entertainmentReportService.report()?.data?.bookPublicationStats;
+    if (!stats) return [];
+    return Object.entries(stats).map(([name, value]) => ({ name, value }));
+  });
 
   protected readonly colorScheme = {
     name: 'custom',

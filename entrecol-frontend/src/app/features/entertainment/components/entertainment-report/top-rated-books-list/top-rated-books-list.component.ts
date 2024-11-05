@@ -1,6 +1,6 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { Component, input } from '@angular/core';
-import { Book } from '@books/models/book.model';
+import { Component, computed, inject, input } from '@angular/core';
+import { EntertainmentReportService } from '../../../services/entertainment-report.service';
 
 @Component({
   selector: 'app-top-rated-books-list',
@@ -10,6 +10,18 @@ import { Book } from '@books/models/book.model';
   styleUrl: './top-rated-books-list.component.scss',
 })
 export class TopRatedBooksListComponent {
-  books = input.required<Book[]>();
+  private readonly entertainmentReportService = inject(
+    EntertainmentReportService,
+  );
+
   topN = input.required<number>();
+
+  protected readonly books = computed(() => {
+    const books = this.entertainmentReportService.report()?.data?.topRatedBooks;
+    if (!books) return [];
+
+    return this.entertainmentReportService.topRatedBooksAscending()
+      ? [...books].sort((a, b) => a.title.localeCompare(b.title))
+      : [...books].sort((a, b) => b.title.localeCompare(a.title));
+  });
 }

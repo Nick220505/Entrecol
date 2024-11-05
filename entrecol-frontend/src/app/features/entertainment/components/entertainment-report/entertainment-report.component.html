@@ -91,35 +91,26 @@
     } @else if (report().data) {
       <div class="report-content">
         <section>
-          <app-movie-genre-chart
-            [data]="moviesByGenreData()"
-          ></app-movie-genre-chart>
+          <app-movie-genre-chart></app-movie-genre-chart>
         </section>
 
         <section>
-          <app-book-publication-chart
-            [data]="bookPublicationData()"
-          ></app-book-publication-chart>
+          <app-book-publication-chart></app-book-publication-chart>
         </section>
 
         <section>
           <app-top-rated-books-list
-            [books]="topRatedBooks()"
             [topN]="form.value.topN"
           ></app-top-rated-books-list>
         </section>
 
         <section>
-          <app-yearly-books-comparison
-            [yearlyData]="sortedYearlyBooks()"
-          ></app-yearly-books-comparison>
+          <app-yearly-books-comparison></app-yearly-books-comparison>
         </section>
 
         <section>
           <app-movies-by-genre-count
-            [movies]="moviesWithGenres()"
-            [genreCount]="form.value.genreCount ?? 0"
-            [totalMovies]="report().data?.totalMovies ?? 0"
+            [genreCount]="form.value.genreCount"
           ></app-movies-by-genre-count>
         </section>
       </div>

@@ -30,15 +30,16 @@ export class EntertainmentReportService {
 
   readonly pdfExporting = signal(false);
 
+  readonly moviesByGenreAscending = signal(true);
+  readonly topRatedBooksAscending = signal(true);
+  readonly topBottomBooksByYearAscending = signal(true);
+  readonly moviesByGenreCountAscending = signal(true);
+
   getReport(
     startDate: string,
     endDate: string,
     topN: number,
     genreCount: number,
-    moviesByGenreAscending: boolean,
-    topRatedBooksAscending: boolean,
-    topBottomBooksByYearAscending: boolean,
-    moviesByGenreCountAscending: boolean,
   ): void {
     this.report.update((state) => ({ ...state, loading: true }));
 
@@ -49,10 +50,10 @@ export class EntertainmentReportService {
           endDate,
           topN,
           genreCount,
-          moviesByGenreAscending,
-          topRatedBooksAscending,
-          topBottomBooksByYearAscending,
-          moviesByGenreCountAscending,
+          moviesByGenreAscending: this.moviesByGenreAscending(),
+          topRatedBooksAscending: this.topRatedBooksAscending(),
+          topBottomBooksByYearAscending: this.topBottomBooksByYearAscending(),
+          moviesByGenreCountAscending: this.moviesByGenreCountAscending(),
         },
       })
       .subscribe({
@@ -78,10 +79,6 @@ export class EntertainmentReportService {
     endDate: string,
     topN: number,
     genreCount: number,
-    moviesByGenreAscending: boolean,
-    topRatedBooksAscending: boolean,
-    topBottomBooksByYearAscending: boolean,
-    moviesByGenreCountAscending: boolean,
   ): void {
     this.pdfExporting.set(true);
 
@@ -92,10 +89,10 @@ export class EntertainmentReportService {
           endDate,
           topN,
           genreCount,
-          moviesByGenreAscending,
-          topRatedBooksAscending,
-          topBottomBooksByYearAscending,
-          moviesByGenreCountAscending,
+          moviesByGenreAscending: this.moviesByGenreAscending(),
+          topRatedBooksAscending: this.topRatedBooksAscending(),
+          topBottomBooksByYearAscending: this.topBottomBooksByYearAscending(),
+          moviesByGenreCountAscending: this.moviesByGenreCountAscending(),
         },
         responseType: 'blob',
       })
