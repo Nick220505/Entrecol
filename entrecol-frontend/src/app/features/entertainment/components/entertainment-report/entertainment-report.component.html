@@ -92,18 +92,9 @@
       <div class="report-content">
         <section>
           <h2>Películas por Género</h2>
-          <div class="chart-container">
-            <ngx-charts-bar-vertical
-              [results]="moviesByGenreData()"
-              [xAxis]="true"
-              [yAxis]="true"
-              [showXAxisLabel]="true"
-              [showYAxisLabel]="true"
-              xAxisLabel="Género"
-              yAxisLabel="Cantidad"
-            >
-            </ngx-charts-bar-vertical>
-          </div>
+          <app-movie-genre-chart
+            [data]="moviesByGenreData()"
+          ></app-movie-genre-chart>
         </section>
 
         <section>

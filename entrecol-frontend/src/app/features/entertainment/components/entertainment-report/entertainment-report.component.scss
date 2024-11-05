@@ -54,62 +54,6 @@
   }
 }
 
-.chart-container {
-  height: 400px;
-  margin: 16px 0;
-  padding: 0 24px 40px 0;
-  overflow: visible;
-
-  @media (min-width: 1200px) {
-    height: 500px;
-  }
-
-  ::ng-deep {
-    .ngx-charts {
-      text {
-        font-size: 14px !important;
-        font-weight: 500 !important;
-      }
-
-      .legend-title {
-        font-size: 14px !important;
-      }
-
-      .legend-label {
-        font-size: 14px !important;
-      }
-
-      .grid-line-path {
-        stroke: rgba(0, 0, 0, 0.1) !important;
-      }
-
-      .x-axis,
-      .y-axis {
-        text {
-          fill: rgba(0, 0, 0, 0.87) !important;
-        }
-      }
-
-      .x-axis {
-        text {
-          transform: rotate(-45deg) translate(-10px, 0);
-          text-anchor: end;
-        }
-      }
-
-      .bar {
-        &:hover {
-          opacity: 0.8;
-        }
-      }
-
-      .legend-entries {
-        margin-left: 16px !important;
-      }
-    }
-  }
-}
-
 .book-list,
 .movie-list {
   list-style: none;
@@ -170,25 +114,6 @@
 
       h2 {
         color: rgba(255, 255, 255, 0.87);
-      }
-    }
-  }
-
-  .chart-container {
-    ::ng-deep {
-      .ngx-charts {
-        text {
-          fill: rgba(255, 255, 255, 0.87) !important;
-        }
-
-        .grid-line-path {
-          stroke: rgba(255, 255, 255, 0.1) !important;
-        }
-
-        .legend-title,
-        .legend-label {
-          fill: rgba(255, 255, 255, 0.87) !important;
-        }
       }
     }
   }
