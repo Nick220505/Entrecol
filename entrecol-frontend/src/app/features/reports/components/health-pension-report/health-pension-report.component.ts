@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,17 +28,11 @@ import { PensionFrequencyChartComponent } from './pension-frequency-chart/pensio
 })
 export class HealthPensionReportComponent {
   protected readonly payrollService = inject(PayrollService);
-  protected readonly report = computed(() =>
-    this.payrollService.healthPensionReport(),
-  );
-  protected readonly employees = computed(() =>
-    this.payrollService.employees(),
-  );
 
   constructor() {
     effect(
       () => {
-        if (this.payrollService.employees().data.length > 0) {
+        if (this.payrollService.employees().data) {
           this.payrollService.getHealthPensionReport();
           this.payrollService.getEpsFrequency();
           this.payrollService.getPensionFrequency();
