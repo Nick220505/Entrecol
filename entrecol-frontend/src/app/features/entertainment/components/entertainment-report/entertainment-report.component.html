@@ -12,27 +12,47 @@
         loadingText="Cargando reporte..."
       ></app-loading-spinner>
     } @else if (report.data) {
-      <div class="report-content">
-        <section>
+      <mat-tab-group>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">pie_chart</mat-icon>
+            Películas por Género
+          </ng-template>
           <app-movie-genre-chart></app-movie-genre-chart>
-        </section>
+        </mat-tab>
 
-        <section>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">bar_chart</mat-icon>
+            Publicación de Libros
+          </ng-template>
           <app-book-publication-chart></app-book-publication-chart>
-        </section>
+        </mat-tab>
 
-        <section>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">star</mat-icon>
+            Top Libros
+          </ng-template>
           <app-top-rated-books-list></app-top-rated-books-list>
-        </section>
+        </mat-tab>
 
-        <section>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">compare</mat-icon>
+            Comparación por Año
+          </ng-template>
           <app-yearly-books-comparison></app-yearly-books-comparison>
-        </section>
+        </mat-tab>
 
-        <section>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">category</mat-icon>
+            Películas por Géneros
+          </ng-template>
           <app-movies-by-genre-count></app-movies-by-genre-count>
-        </section>
-      </div>
+        </mat-tab>
+      </mat-tab-group>
     }
   </mat-card-content>
 </mat-card>

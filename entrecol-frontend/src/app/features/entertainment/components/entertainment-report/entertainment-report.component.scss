@@ -3,18 +3,19 @@
   padding: 20px;
 }
 
-.report-content {
-  section {
-    margin: 32px 0;
+.tab-icon {
+  margin-right: 8px;
+}
+
+::ng-deep {
+  .mat-mdc-tab-body-wrapper {
     padding: 24px;
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 8px;
   }
 }
 
 :host-context(.dark-theme) {
-  .report-content {
-    section {
+  ::ng-deep {
+    .mat-mdc-tab-body-wrapper {
       background: rgba(255, 255, 255, 0.05);
     }
   }

@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 import { BookPublicationChartComponent } from './book-publication-chart/book-publication-chart.component';
@@ -16,6 +18,8 @@ import { YearlyBooksComparisonComponent } from './yearly-books-comparison/yearly
   imports: [
     CommonModule,
     MatCardModule,
+    MatTabsModule,
+    MatIconModule,
     LoadingSpinnerComponent,
     EntertainmentReportFiltersComponent,
     MovieGenreChartComponent,
