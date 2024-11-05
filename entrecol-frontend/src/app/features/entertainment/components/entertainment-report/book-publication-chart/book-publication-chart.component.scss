@@ -4,6 +4,11 @@
   padding: 0 24px 40px 0;
   overflow: visible;
 
+  h2 {
+    margin-bottom: 24px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
   @media (min-width: 1200px) {
     height: 500px;
   }
@@ -18,12 +23,48 @@
       .legend-title {
         font-size: 14px !important;
       }
+
+      .grid-line-path {
+        stroke: rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .x-axis,
+      .y-axis {
+        text {
+          fill: rgba(0, 0, 0, 0.87) !important;
+        }
+
+        .tick text {
+          fill: rgba(0, 0, 0, 0.87) !important;
+        }
+
+        .axis-label {
+          fill: rgba(0, 0, 0, 0.87) !important;
+        }
+      }
+
+      .x-axis {
+        text {
+          transform: rotate(-45deg) translate(-10px, 0);
+          text-anchor: end;
+        }
+      }
+
+      .bar {
+        &:hover {
+          opacity: 0.8;
+        }
+      }
     }
   }
 }
 
 :host-context(.dark-theme) {
   .chart-container {
+    h2 {
+      color: rgba(255, 255, 255, 0.87);
+    }
+
     ::ng-deep {
       .ngx-charts {
         text {
@@ -34,9 +75,24 @@
           stroke: rgba(255, 255, 255, 0.1) !important;
         }
 
-        .legend-title,
-        .legend-label {
-          fill: rgba(255, 255, 255, 0.87) !important;
+        .tick {
+          line {
+            stroke: rgba(255, 255, 255, 0.1) !important;
+          }
+          text {
+            fill: rgba(255, 255, 255, 0.87) !important;
+          }
+        }
+
+        .x-axis,
+        .y-axis {
+          text {
+            fill: rgba(255, 255, 255, 0.87) !important;
+          }
+
+          .axis-label {
+            fill: rgba(255, 255, 255, 0.87) !important;
+          }
         }
       }
     }

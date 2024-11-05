@@ -1,12 +1,16 @@
 <div class="chart-container">
+  <h2>Frecuencia de Publicación de Libros</h2>
   <ngx-charts-bar-vertical
     [results]="data()"
     [xAxis]="true"
     [yAxis]="true"
     [showXAxisLabel]="true"
     [showYAxisLabel]="true"
+    [scheme]="colorScheme"
     xAxisLabel="Año"
     yAxisLabel="Cantidad"
+    [roundDomains]="true"
+    [showGridLines]="true"
   >
   </ngx-charts-bar-vertical>
 </div>

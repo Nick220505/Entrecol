@@ -91,14 +91,12 @@
     } @else if (report().data) {
       <div class="report-content">
         <section>
-          <h2>Películas por Género</h2>
           <app-movie-genre-chart
             [data]="moviesByGenreData()"
           ></app-movie-genre-chart>
         </section>
 
         <section>
-          <h2>Frecuencia de Publicación de Libros</h2>
           <app-book-publication-chart
             [data]="bookPublicationData()"
           ></app-book-publication-chart>

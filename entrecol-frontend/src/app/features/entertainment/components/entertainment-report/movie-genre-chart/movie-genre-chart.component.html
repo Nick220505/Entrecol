@@ -1,12 +1,16 @@
 <div class="chart-container">
+  <h2>Películas por Género</h2>
   <ngx-charts-bar-vertical
     [results]="data()"
     [xAxis]="true"
     [yAxis]="true"
     [showXAxisLabel]="true"
     [showYAxisLabel]="true"
+    [scheme]="colorScheme"
     xAxisLabel="Género"
     yAxisLabel="Cantidad"
+    [roundDomains]="true"
+    [showGridLines]="true"
   >
   </ngx-charts-bar-vertical>
 </div>
