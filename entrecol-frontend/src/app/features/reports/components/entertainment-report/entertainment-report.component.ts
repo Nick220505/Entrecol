@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +15,6 @@ import { EntertainmentReportService } from './services/entertainment-report.serv
   selector: 'app-entertainment-report',
   standalone: true,
   imports: [
-    CommonModule,
     MatCardModule,
     MatTabsModule,
     MatIconModule,

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
@@ -19,7 +18,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   selector: 'app-file-upload',
   standalone: true,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,

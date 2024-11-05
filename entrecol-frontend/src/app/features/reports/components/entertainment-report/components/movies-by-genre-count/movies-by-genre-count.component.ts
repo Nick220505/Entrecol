@@ -1,11 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 
 @Component({
   selector: 'app-movies-by-genre-count',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './movies-by-genre-count.component.html',
   styleUrl: './movies-by-genre-count.component.scss',
 })

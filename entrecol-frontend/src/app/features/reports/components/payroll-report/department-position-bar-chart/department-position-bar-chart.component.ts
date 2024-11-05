@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { PayrollService } from '@employees/services/payroll.service';
 import {
@@ -10,7 +9,7 @@ import {
 @Component({
   selector: 'app-department-position-bar-chart',
   standalone: true,
-  imports: [CommonModule, NgxChartsModule],
+  imports: [NgxChartsModule],
   templateUrl: './department-position-bar-chart.component.html',
   styleUrl: './department-position-bar-chart.component.scss',
 })

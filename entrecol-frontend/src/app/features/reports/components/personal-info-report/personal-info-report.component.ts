@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -16,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { PdfViewerComponent } from '@shared/components/pdf-preview-dialog/pdf-viewer/pdf-viewer.component';
 import { map, startWith } from 'rxjs/operators';
 
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Employee } from '@employees/models/payroll.model';
 import { PayrollService } from '@employees/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
@@ -24,7 +24,8 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
   selector: 'app-personal-info-report',
   standalone: true,
   imports: [
-    CommonModule,
+    CurrencyPipe,
+    DatePipe,
     ReactiveFormsModule,
     MatCardModule,
     MatDividerModule,

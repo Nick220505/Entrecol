@@ -1,11 +1,11 @@
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 
 @Component({
   selector: 'app-top-rated-books-list',
   standalone: true,
-  imports: [CommonModule, DecimalPipe],
+  imports: [DecimalPipe],
   templateUrl: './top-rated-books-list.component.html',
   styleUrl: './top-rated-books-list.component.scss',
 })

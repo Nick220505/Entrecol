@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
@@ -18,7 +17,6 @@ import { EntertainmentReportService } from '../../services/entertainment-report.
   selector: 'app-entertainment-report-filters',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,

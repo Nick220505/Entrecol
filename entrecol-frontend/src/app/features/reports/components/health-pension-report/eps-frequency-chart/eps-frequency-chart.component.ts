@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { PayrollService } from '@employees/services/payroll.service';
 import {
@@ -10,7 +9,7 @@ import {
 @Component({
   selector: 'app-eps-frequency-chart',
   standalone: true,
-  imports: [CommonModule, NgxChartsModule],
+  imports: [NgxChartsModule],
   templateUrl: './eps-frequency-chart.component.html',
   styleUrl: './eps-frequency-chart.component.scss',
 })

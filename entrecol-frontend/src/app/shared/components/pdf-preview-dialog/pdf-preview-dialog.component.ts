@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -9,7 +8,6 @@ import { PdfViewerComponent } from '@shared/components/pdf-preview-dialog/pdf-vi
   selector: 'app-pdf-preview-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule,

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -15,7 +14,6 @@ import { PensionFrequencyChartComponent } from './pension-frequency-chart/pensio
   selector: 'app-health-pension-report',
   standalone: true,
   imports: [
-    CommonModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,

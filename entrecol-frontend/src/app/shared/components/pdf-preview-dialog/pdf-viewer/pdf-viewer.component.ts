@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import {
   NgxExtendedPdfViewerModule,
@@ -8,7 +7,7 @@ import {
 @Component({
   selector: 'app-pdf-viewer',
   standalone: true,
-  imports: [CommonModule, NgxExtendedPdfViewerModule],
+  imports: [NgxExtendedPdfViewerModule],
   templateUrl: './pdf-viewer.component.html',
   styleUrl: './pdf-viewer.component.scss',
 })

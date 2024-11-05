@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import {
   FormControl,
@@ -13,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 
+import { DatePipe } from '@angular/common';
 import { EmployeeNovelty } from '@employees/models/novelty-report.model';
 import { PayrollService } from '@employees/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
@@ -23,7 +23,7 @@ import { NoveltyDepartmentPositionChartComponent } from './novelty-department-po
   selector: 'app-novelty-report',
   standalone: true,
   imports: [
-    CommonModule,
+    DatePipe,
     ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,

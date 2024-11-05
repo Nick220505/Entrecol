@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -13,7 +12,6 @@ import { PersonalInfoReportComponent } from './components/personal-info-report/p
   selector: 'app-reports',
   standalone: true,
   imports: [
-    CommonModule,
     MatTabsModule,
     MatIconModule,
     PayrollReportComponent,
