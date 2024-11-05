@@ -40,6 +40,14 @@ export const routes: Routes = [
         title: 'ENTRECOL - Películas',
       },
       {
+        path: 'empleados',
+        loadComponent: () =>
+          import('./features/employees/employees.component').then(
+            (m) => m.EmployeesComponent,
+          ),
+        title: 'ENTRECOL - Empleados',
+      },
+      {
         path: 'nominas',
         loadComponent: () =>
           import('./features/payrolls/payrolls.component').then(

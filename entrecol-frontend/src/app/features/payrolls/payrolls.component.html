@@ -1,20 +1,4 @@
-<mat-tab-group [(selectedIndex)]="selectedTabIndex">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="tab-icon">upload_file</mat-icon>
-      Cargar Nómina
-    </ng-template>
-    <app-payroll-file-upload></app-payroll-file-upload>
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="tab-icon">list</mat-icon>
-      Lista de Empleados
-    </ng-template>
-    <app-employee-list></app-employee-list>
-  </mat-tab>
-
+<mat-tab-group>
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="tab-icon">insert_chart</mat-icon>
