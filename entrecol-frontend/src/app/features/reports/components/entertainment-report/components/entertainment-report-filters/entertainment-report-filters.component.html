@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" (ngSubmit)="entertainmentReportService.getReport()">
   <div class="form-row">
     <mat-form-field appearance="outline">
       <mat-label>Fecha Inicial</mat-label>
@@ -6,7 +6,6 @@
         matInput
         [matDatepicker]="startPicker"
         formControlName="startDate"
-        (ngModelChange)="entertainmentReportService.startDate.set($event)"
       />
       <mat-datepicker-toggle
         matSuffix
@@ -20,12 +19,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Fecha Final</mat-label>
-      <input
-        matInput
-        [matDatepicker]="endPicker"
-        formControlName="endDate"
-        (ngModelChange)="entertainmentReportService.endDate.set($event)"
-      />
+      <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
       <mat-datepicker-toggle
         matSuffix
         [for]="endPicker"
@@ -38,13 +32,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Top N Libros</mat-label>
-      <input
-        matInput
-        type="number"
-        min="1"
-        formControlName="topN"
-        (ngModelChange)="entertainmentReportService.topN.set($event)"
-      />
+      <input matInput type="number" min="1" formControlName="topN" />
       @if (form.get("topN")?.hasError("required")) {
         <mat-error>El número de libros es requerido</mat-error>
       }
@@ -55,13 +43,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Cantidad de Géneros</mat-label>
-      <input
-        matInput
-        type="number"
-        min="1"
-        formControlName="genreCount"
-        (ngModelChange)="entertainmentReportService.genreCount.set($event)"
-      />
+      <input matInput type="number" min="1" formControlName="genreCount" />
       @if (form.get("genreCount")?.hasError("required")) {
         <mat-error>La cantidad de géneros es requerida</mat-error>
       }
@@ -72,39 +54,19 @@
   </div>
 
   <div class="form-row">
-    <mat-slide-toggle
-      formControlName="moviesByGenreAscending"
-      (ngModelChange)="
-        entertainmentReportService.moviesByGenreAscending.set($event)
-      "
-    >
+    <mat-slide-toggle formControlName="moviesByGenreAscending">
       Ordenar Películas por Género Ascendente
     </mat-slide-toggle>
 
-    <mat-slide-toggle
-      formControlName="topRatedBooksAscending"
-      (ngModelChange)="
-        entertainmentReportService.topRatedBooksAscending.set($event)
-      "
-    >
+    <mat-slide-toggle formControlName="topRatedBooksAscending">
       Ordenar Top Libros Ascendente
     </mat-slide-toggle>
 
-    <mat-slide-toggle
-      formControlName="topBottomBooksByYearAscending"
-      (ngModelChange)="
-        entertainmentReportService.topBottomBooksByYearAscending.set($event)
-      "
-    >
+    <mat-slide-toggle formControlName="topBottomBooksByYearAscending">
       Ordenar Libros por Año Ascendente
     </mat-slide-toggle>
 
-    <mat-slide-toggle
-      formControlName="moviesByGenreCountAscending"
-      (ngModelChange)="
-        entertainmentReportService.moviesByGenreCountAscending.set($event)
-      "
-    >
+    <mat-slide-toggle formControlName="moviesByGenreCountAscending">
       Ordenar Películas por Cantidad de Géneros Ascendente
     </mat-slide-toggle>
   </div>
@@ -122,7 +84,7 @@
       mat-raised-button
       color="accent"
       type="button"
-      (click)="onExportPdf()"
+      (click)="entertainmentReportService.exportToPdf()"
       [disabled]="form.invalid || entertainmentReportService.pdfExporting()"
     >
       {{
