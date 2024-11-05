@@ -14,8 +14,8 @@ import {
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Employee } from '@app/features/employee-reports/models/payroll.model';
-import { PayrollService } from '@app/features/employee-reports/services/payroll.service';
+import { Employee } from '@employees/models/payroll.model';
+import { PayrollService } from '@employees/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { CustomPaginatorIntl } from '@shared/config/paginator-intl.config';
 import { EmptyPipe } from '@shared/pipes/empty.pipe';

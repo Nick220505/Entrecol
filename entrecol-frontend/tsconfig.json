@@ -22,14 +22,13 @@
     "lib": ["ES2022", "dom"],
     "baseUrl": "src",
     "paths": {
+      "@env": ["environments/environment"],
       "@core/*": ["app/core/*"],
       "@shared/*": ["app/shared/*"],
-      "@env": ["environments/environment"],
       "@books/*": ["app/features/books/*"],
-      "@movies/*": ["app/features/movies/*"],
       "@employees/*": ["app/features/employees/*"],
-      "@employee-reports/*": ["app/features/employee-reports/*"],
-      "@entertainment-report/*": ["app/features/entertainment-report/*"],
+      "@movies/*": ["app/features/movies/*"],
+      "@reports/*": ["app/features/reports/*"],
       "@app/*": ["app/*"]
     }
   },

@@ -15,7 +15,7 @@ interface State<T> {
   providedIn: 'root',
 })
 export class MovieService {
-  private readonly apiUrl = `${environment.apiUrl}/api/movies`;
+  private readonly apiUrl = `${environment.apiUrl}/movies`;
   private readonly http = inject(HttpClient);
   private readonly snackBar = inject(MatSnackBar);
 

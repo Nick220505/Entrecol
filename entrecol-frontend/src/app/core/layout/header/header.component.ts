@@ -105,16 +105,7 @@ export class HeaderComponent {
     { label: 'Libros', route: '/libros', icon: 'book' },
     { label: 'Películas', route: '/peliculas', icon: 'movie' },
     { label: 'Empleados', route: '/empleados', icon: 'people' },
-    {
-      label: 'Reportes de Empleados',
-      route: '/reportes-empleados',
-      icon: 'assessment',
-    },
-    {
-      label: 'Reporte de Entretenimiento',
-      route: '/reportes-entretenimiento',
-      icon: 'bar_chart',
-    },
+    { label: 'Reportes', route: '/reportes', icon: 'assessment' },
   ];
 
   readonly drawer = viewChild<MatSidenav>('drawer');
