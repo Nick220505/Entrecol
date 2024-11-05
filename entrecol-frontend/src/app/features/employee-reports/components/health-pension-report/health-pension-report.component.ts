@@ -4,8 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
-import { PayrollService } from '@payrolls/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
+import { PayrollService } from '../../services/payroll.service';
 import { EpsDepartmentBarChartComponent } from './eps-department-bar-chart/eps-department-bar-chart.component';
 import { EpsFrequencyChartComponent } from './eps-frequency-chart/eps-frequency-chart.component';
 import { PensionDepartmentBarChartComponent } from './pension-department-bar-chart/pension-department-bar-chart.component';

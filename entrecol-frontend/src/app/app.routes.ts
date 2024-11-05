@@ -48,12 +48,12 @@ export const routes: Routes = [
         title: 'ENTRECOL - Empleados',
       },
       {
-        path: 'nominas',
+        path: 'reportes-empleados',
         loadComponent: () =>
-          import('./features/payrolls/payrolls.component').then(
-            (m) => m.PayrollsComponent,
+          import('./features/employee-reports/employee-reports.component').then(
+            (m) => m.EmployeeReportsComponent,
           ),
-        title: 'ENTRECOL - Nóminas',
+        title: 'ENTRECOL - Reportes de Empleados',
       },
       {
         path: 'reportes',

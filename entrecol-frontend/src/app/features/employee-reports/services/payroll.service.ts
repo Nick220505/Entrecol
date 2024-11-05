@@ -5,12 +5,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
 
 import { environment } from '@env';
-import { EmployeePersonalInfo } from '@payrolls/models/employee-personal-info.model';
-import { PdfPreviewDialogComponent } from '../../../shared/components/pdf-preview-dialog/pdf-preview-dialog.component';
-import { HealthPensionReport } from '../models/health-pension-report.model';
-import { NoveltyReport } from '../models/novelty-report.model';
-import { Employee } from '../models/payroll.model';
-import { EmployeeReport } from '../models/report.model';
+import { EmployeePersonalInfo } from '@app/features/employee-reports/models/employee-personal-info.model';
+import { PdfPreviewDialogComponent } from '@shared/components/pdf-preview-dialog/pdf-preview-dialog.component';
+import { HealthPensionReport } from '@app/features/employee-reports/models/health-pension-report.model';
+import { NoveltyReport } from '@app/features/employee-reports/models/novelty-report.model';
+import { Employee } from '@app/features/employee-reports/models/payroll.model';
+import { EmployeeReport } from '@app/features/employee-reports/models/report.model';
 
 interface State<T> {
   data: T;

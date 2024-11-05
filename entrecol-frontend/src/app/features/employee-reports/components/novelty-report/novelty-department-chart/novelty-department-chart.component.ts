@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { PayrollService } from '@payrolls/services/payroll.service';
+import { PayrollService } from '@app/features/employee-reports/services/payroll.service';
 import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({

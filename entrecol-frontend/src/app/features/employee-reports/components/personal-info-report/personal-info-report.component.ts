@@ -16,8 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { PdfViewerComponent } from '@shared/components/pdf-preview-dialog/pdf-viewer/pdf-viewer.component';
 import { map, startWith } from 'rxjs/operators';
 
-import { Employee } from '@payrolls/models/payroll.model';
-import { PayrollService } from '@payrolls/services/payroll.service';
+import { Employee } from '@app/features/employee-reports/models/payroll.model';
+import { PayrollService } from '@app/features/employee-reports/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 
 @Component({

@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 
-import { PayrollService } from '@payrolls/services/payroll.service';
+import { PayrollService } from '@app/features/employee-reports/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { DepartmentPieChartComponent } from './department-pie-chart/department-pie-chart.component';
 import { DepartmentPositionBarChartComponent } from './department-position-bar-chart/department-position-bar-chart.component';

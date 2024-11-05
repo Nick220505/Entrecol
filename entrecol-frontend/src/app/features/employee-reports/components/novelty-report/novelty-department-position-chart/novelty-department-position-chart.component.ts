@@ -4,7 +4,7 @@ import {
   NgxChartsModule,
   ScaleType,
 } from '@swimlane/ngx-charts';
-import { PayrollService } from '../../../services/payroll.service';
+import { PayrollService } from '@app/features/employee-reports/services/payroll.service';
 
 @Component({
   selector: 'app-novelty-department-position-chart',

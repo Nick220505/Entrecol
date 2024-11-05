@@ -27,7 +27,8 @@
       "@env": ["environments/environment"],
       "@books/*": ["app/features/books/*"],
       "@movies/*": ["app/features/movies/*"],
-      "@payrolls/*": ["app/features/payrolls/*"],
+      "@employees/*": ["app/features/employees/*"],
+      "@employee-reports/*": ["app/features/employee-reports/*"],
       "@entertainment/*": ["app/features/entertainment/*"],
       "@app/*": ["app/*"]
     }

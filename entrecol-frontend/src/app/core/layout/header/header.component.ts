@@ -105,7 +105,11 @@ export class HeaderComponent {
     { label: 'Libros', route: '/libros', icon: 'book' },
     { label: 'Películas', route: '/peliculas', icon: 'movie' },
     { label: 'Empleados', route: '/empleados', icon: 'people' },
-    { label: 'Nóminas', route: '/nominas', icon: 'receipt' },
+    {
+      label: 'Reportes de Empleados',
+      route: '/reportes-empleados',
+      icon: 'assessment',
+    },
     {
       label: 'Reporte de Entretenimiento',
       route: '/reportes/entretenimiento',

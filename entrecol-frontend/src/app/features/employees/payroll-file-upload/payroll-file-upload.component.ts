@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { PayrollService } from '@payrolls/services/payroll.service';
+import { PayrollService } from '@app/features/employee-reports/services/payroll.service';
 import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
 
 @Component({

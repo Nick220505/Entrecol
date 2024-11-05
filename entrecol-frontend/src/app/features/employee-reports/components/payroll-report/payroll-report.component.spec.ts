@@ -5,7 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 
-import { PayrollService } from '@payrolls/services/payroll.service';
+import { PayrollService } from '@app/features/employee-reports/services/payroll.service';
 import { DepartmentPieChartComponent } from './department-pie-chart/department-pie-chart.component';
 import { DepartmentPositionBarChartComponent } from './department-position-bar-chart/department-position-bar-chart.component';
 import { PayrollReportComponent } from './payroll-report.component';

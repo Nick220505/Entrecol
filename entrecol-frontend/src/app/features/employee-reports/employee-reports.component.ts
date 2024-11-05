@@ -9,7 +9,7 @@ import { PayrollReportComponent } from './components/payroll-report/payroll-repo
 import { PersonalInfoReportComponent } from './components/personal-info-report/personal-info-report.component';
 
 @Component({
-  selector: 'app-payrolls',
+  selector: 'app-employee-reports',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,7 +20,7 @@ import { PersonalInfoReportComponent } from './components/personal-info-report/p
     HealthPensionReportComponent,
     NoveltyReportComponent,
   ],
-  templateUrl: './payrolls.component.html',
-  styleUrl: './payrolls.component.scss',
+  templateUrl: './employee-reports.component.html',
+  styleUrl: './employee-reports.component.scss',
 })
-export class PayrollsComponent {}
+export class EmployeeReportsComponent {}
