@@ -99,18 +99,9 @@
 
         <section>
           <h2>Frecuencia de Publicación de Libros</h2>
-          <div class="chart-container">
-            <ngx-charts-bar-vertical
-              [results]="bookPublicationData()"
-              [xAxis]="true"
-              [yAxis]="true"
-              [showXAxisLabel]="true"
-              [showYAxisLabel]="true"
-              xAxisLabel="Año"
-              yAxisLabel="Cantidad"
-            >
-            </ngx-charts-bar-vertical>
-          </div>
+          <app-book-publication-chart
+            [data]="bookPublicationData()"
+          ></app-book-publication-chart>
         </section>
 
         <section>

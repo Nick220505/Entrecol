@@ -16,6 +16,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Book } from '@books/models/book.model';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
+import { BookPublicationChartComponent } from './book-publication-chart/book-publication-chart.component';
 import { MovieGenreChartComponent } from './movie-genre-chart/movie-genre-chart.component';
 
 @Component({
@@ -33,6 +34,7 @@ import { MovieGenreChartComponent } from './movie-genre-chart/movie-genre-chart.
     MatSlideToggleModule,
     NgxChartsModule,
     MovieGenreChartComponent,
+    BookPublicationChartComponent,
   ],
   templateUrl: './entertainment-report.component.html',
   styleUrl: './entertainment-report.component.scss',
