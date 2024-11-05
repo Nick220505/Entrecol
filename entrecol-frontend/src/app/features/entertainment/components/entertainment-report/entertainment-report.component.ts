@@ -18,6 +18,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 import { BookPublicationChartComponent } from './book-publication-chart/book-publication-chart.component';
 import { MovieGenreChartComponent } from './movie-genre-chart/movie-genre-chart.component';
+import { TopRatedBooksListComponent } from './top-rated-books-list/top-rated-books-list.component';
 
 @Component({
   selector: 'app-entertainment-report',
@@ -35,6 +36,7 @@ import { MovieGenreChartComponent } from './movie-genre-chart/movie-genre-chart.
     NgxChartsModule,
     MovieGenreChartComponent,
     BookPublicationChartComponent,
+    TopRatedBooksListComponent,
   ],
   templateUrl: './entertainment-report.component.html',
   styleUrl: './entertainment-report.component.scss',

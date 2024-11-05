@@ -1,0 +1,9 @@
+<h2>Top {{ topN() }} Libros con Mejor Rating</h2>
+<ul class="book-list">
+  @for (book of books(); track book.id) {
+    <li>
+      {{ book.title }}
+      <span class="rating">{{ book.averageRating | number: "1.1-1" }}</span>
+    </li>
+  }
+</ul>

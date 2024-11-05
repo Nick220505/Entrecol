@@ -1,0 +1,41 @@
+.book-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+
+  li {
+    padding: 12px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.02);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.rating {
+  float: right;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:host-context(.dark-theme) {
+  .book-list {
+    li {
+      background-color: rgba(255, 255, 255, 0.05);
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+    }
+  }
+
+  .rating {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}

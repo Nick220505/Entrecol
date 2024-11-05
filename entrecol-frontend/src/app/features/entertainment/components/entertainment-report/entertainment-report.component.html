@@ -105,17 +105,10 @@
         </section>
 
         <section>
-          <h2>Top {{ form.value.topN }} Libros con Mejor Rating</h2>
-          <ul class="book-list">
-            @for (book of topRatedBooks(); track book.id) {
-              <li>
-                {{ book.title }}
-                <span class="rating">{{
-                  book.averageRating | number: "1.1-1"
-                }}</span>
-              </li>
-            }
-          </ul>
+          <app-top-rated-books-list
+            [books]="topRatedBooks()"
+            [topN]="form.value.topN"
+          ></app-top-rated-books-list>
         </section>
 
         <section>
