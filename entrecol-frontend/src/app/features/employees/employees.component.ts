@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { EmployeeListComponent } from './employee-list/employee-list.component';
-import { PayrollFileUploadComponent } from './payroll-file-upload/payroll-file-upload.component';
+import { EmployeeListComponent } from './components/employee-list/employee-list.component';
+import { PayrollFileUploadComponent } from './components/payroll-file-upload/payroll-file-upload.component';
 
 @Component({
   selector: 'app-employees',
