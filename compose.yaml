@@ -15,7 +15,7 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456"]
       interval: 5s
       timeout: 3s
-      retries: 3
+      retries: 5
       start_period: 15s
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -46,8 +46,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 20s
       timeout: 5s
-      retries: 5
-      start_period: 40s
+      retries: 10
+      start_period: 60s
   frontend:
     image: entrecol-frontend
     container_name: entrecol-frontend
