@@ -18,6 +18,10 @@ html {
   @include mat-table-theme.theme(theme.$light-theme);
   @include mat-card-theme.theme(theme.$light-theme);
   @include mat-paginator-theme.theme(theme.$light-theme);
+
+  link[rel="icon"] {
+    filter: none;
+  }
 }
 
 body {
@@ -31,4 +35,8 @@ body {
   @include mat-table-theme.color(theme.$dark-theme);
   @include mat-card-theme.color(theme.$dark-theme);
   @include mat-paginator-theme.color(theme.$dark-theme);
+
+  link[rel="icon"] {
+    filter: brightness(0) invert(1);
+  }
 }
