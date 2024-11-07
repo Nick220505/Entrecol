@@ -33,6 +33,7 @@ services:
     container_name: entrecol-backend
     build:
       context: ./entrecol-backend
+      target: development
     volumes:
       - ./entrecol-backend:/usr/src/app
       - ~/.m2:/root/.m2
@@ -42,6 +43,10 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: ./entrecol-backend
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 20s
