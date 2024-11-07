@@ -48,7 +48,7 @@ Entrecol is a full-stack web application for managing and analyzing entertainmen
 - Docker and Docker Compose
 - Node.js 18+ (for local development)
 - Java 21 JDK (for local development)
-- MySQL 8+ (handled by Docker)
+- MySQL 9+ (handled by Docker)
 
 ## Getting Started
 
