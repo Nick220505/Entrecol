@@ -16,8 +16,7 @@ public class CorsConfig {
 
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("http://localhost:4200");
-        config.addAllowedOriginPattern("https://*.githubpreview.dev");
-        config.addAllowedOriginPattern("https://*.app.github.dev");
+        config.addAllowedOriginPattern("https://*.github.dev");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.addExposedHeader("Content-Disposition");
