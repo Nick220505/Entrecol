@@ -155,4 +155,58 @@ public class MovieService {
 
     private record MovieMapping(Long id, Long originalId) {
     }
+
+    public Movie getMovie(Long id) {
+        return movieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+    }
+
+    @Transactional
+    public Movie createMovie(Movie movie) {
+        if (movie.getOriginalId() == null) {
+            movie.setOriginalId(System.currentTimeMillis());
+        }
+
+        Set<Genre> genres = movie.getGenres();
+        Set<Genre> persistedGenres = new HashSet<>();
+
+        for (Genre genre : genres) {
+            Genre persistedGenre = genreRepository.findByName(genre.getName())
+                    .orElseGet(() -> {
+                        Genre newGenre = new Genre();
+                        newGenre.setName(genre.getName());
+                        return genreRepository.save(newGenre);
+                    });
+            persistedGenres.add(persistedGenre);
+        }
+
+        movie.setGenres(persistedGenres);
+        return movieRepository.save(movie);
+    }
+
+    @Transactional
+    public Movie updateMovie(Long id, Movie movie) {
+        Movie existingMovie = getMovie(id);
+        Set<Genre> genres = movie.getGenres();
+        Set<Genre> persistedGenres = new HashSet<>();
+
+        for (Genre genre : genres) {
+            Genre persistedGenre = genreRepository.findByName(genre.getName())
+                    .orElseGet(() -> {
+                        Genre newGenre = new Genre();
+                        newGenre.setName(genre.getName());
+                        return genreRepository.save(newGenre);
+                    });
+            persistedGenres.add(persistedGenre);
+        }
+
+        existingMovie.setTitle(movie.getTitle());
+        existingMovie.setReleaseYear(movie.getReleaseYear());
+        existingMovie.setGenres(persistedGenres);
+        return movieRepository.save(existingMovie);
+    }
+
+    public void deleteMovie(Long id) {
+        movieRepository.deleteById(id);
+    }
 }

@@ -104,4 +104,46 @@ export class MovieService {
         };
       });
   }
+
+  create(movie: Movie): void {
+    this.movies.update((state) => ({ ...state, loading: true }));
+    this.http.post<Movie>(this.apiUrl, movie).subscribe({
+      next: () => {
+        this.snackBar.open('Película creada exitosamente', 'Cerrar');
+        this.getAll();
+      },
+      error: () => {
+        this.movies.update((state) => ({ ...state, loading: false }));
+        this.snackBar.open('Error al crear la película', 'Cerrar');
+      },
+    });
+  }
+
+  update(id: number, movie: Movie): void {
+    this.movies.update((state) => ({ ...state, loading: true }));
+    this.http.put<Movie>(`${this.apiUrl}/${id}`, movie).subscribe({
+      next: () => {
+        this.snackBar.open('Película actualizada exitosamente', 'Cerrar');
+        this.getAll();
+      },
+      error: () => {
+        this.movies.update((state) => ({ ...state, loading: false }));
+        this.snackBar.open('Error al actualizar la película', 'Cerrar');
+      },
+    });
+  }
+
+  delete(id: number): void {
+    this.movies.update((state) => ({ ...state, loading: true }));
+    this.http.delete<void>(`${this.apiUrl}/${id}`).subscribe({
+      next: () => {
+        this.snackBar.open('Película eliminada exitosamente', 'Cerrar');
+        this.getAll();
+      },
+      error: () => {
+        this.movies.update((state) => ({ ...state, loading: false }));
+        this.snackBar.open('Error al eliminar la película', 'Cerrar');
+      },
+    });
+  }
 }

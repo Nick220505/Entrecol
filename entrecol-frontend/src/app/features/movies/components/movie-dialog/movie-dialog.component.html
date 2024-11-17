@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>{{ data ? "Editar" : "Crear" }} Película</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title" placeholder="Ingrese el título" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Año</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="releaseYear"
+        placeholder="Ingrese el año"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Géneros</mat-label>
+      <mat-select formControlName="genres" multiple>
+        <mat-option value="Action">Acción</mat-option>
+        <mat-option value="Comedy">Comedia</mat-option>
+        <mat-option value="Drama">Drama</mat-option>
+        <mat-option value="Horror">Terror</mat-option>
+        <mat-option value="Sci-Fi">Ciencia Ficción</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!form.valid"
+    >
+      {{ data ? "Actualizar" : "Crear" }}
+    </button>
+  </mat-dialog-actions>
+</form>
