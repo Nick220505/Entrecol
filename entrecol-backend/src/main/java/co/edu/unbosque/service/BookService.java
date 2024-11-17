@@ -24,6 +24,7 @@ import co.edu.unbosque.model.Author;
 import co.edu.unbosque.model.Book;
 import co.edu.unbosque.model.Language;
 import co.edu.unbosque.model.Publisher;
+import co.edu.unbosque.model.Rating;
 import co.edu.unbosque.repository.AuthorRepository;
 import co.edu.unbosque.repository.BookRepository;
 import co.edu.unbosque.repository.LanguageRepository;
@@ -310,5 +311,63 @@ public class BookService {
     }
 
     private record BookIdMapping(Long id, Long originalId) {
+    }
+
+    @Transactional
+    public Book createBook(Book book) {
+        if (book.getOriginalId() == null) {
+            book.setOriginalId(System.currentTimeMillis());
+        }
+        if (book.getAverageRating() == null) {
+            book.setAverageRating(0.0);
+        }
+
+        if (book.getRating() == null) {
+            Rating rating = new Rating();
+            rating.setBook(book);
+            rating.setRatingsCount(0);
+            rating.setTextReviewsCount(0);
+            book.setRating(rating);
+        }
+
+        return bookRepository.save(book);
+    }
+
+    @Transactional
+    public Book updateBook(Book book) {
+        Book existingBook = bookRepository.findById(book.getId())
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        book.setOriginalId(existingBook.getOriginalId());
+
+        if (existingBook.getRating() != null) {
+            Rating existingRating = existingBook.getRating();
+            if (book.getRating() == null) {
+                book.setRating(existingRating);
+            } else {
+                book.getRating().setId(existingRating.getId());
+                book.getRating().setBook(book);
+            }
+        } else if (book.getRating() == null) {
+            Rating rating = new Rating();
+            rating.setBook(book);
+            rating.setRatingsCount(0);
+            rating.setTextReviewsCount(0);
+            book.setRating(rating);
+        }
+
+        return bookRepository.save(book);
+    }
+
+    @Transactional
+    public void deleteBook(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        book.setAuthors(new HashSet<>());
+
+        book.removeRating();
+
+        bookRepository.delete(book);
     }
 }

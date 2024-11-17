@@ -1,26 +1,42 @@
 package co.edu.unbosque.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import co.edu.unbosque.exception.ResourceNotFoundException;
 import co.edu.unbosque.model.Publisher;
 import co.edu.unbosque.repository.PublisherRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PublisherService {
     private final PublisherRepository publisherRepository;
 
-    public PublisherService(PublisherRepository publisherRepository) {
-        this.publisherRepository = publisherRepository;
+    public List<Publisher> findAll() {
+        return publisherRepository.findAll();
     }
 
-    public Page<Publisher> getAllPublishers(Pageable pageable) {
-        return publisherRepository.findAll(pageable);
+    @Transactional
+    public Publisher create(Publisher publisher) {
+        return publisherRepository.save(publisher);
     }
 
-    public Publisher getPublisherById(Long id) {
-        return publisherRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Publisher not found"));
+    @Transactional
+    public Publisher update(Long id, Publisher publisher) {
+        Publisher existingPublisher = publisherRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Publisher not found with id: " + id));
+        existingPublisher.setName(publisher.getName());
+        return publisherRepository.save(existingPublisher);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        if (!publisherRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Publisher not found with id: " + id);
+        }
+        publisherRepository.deleteById(id);
     }
 }

@@ -1,26 +1,42 @@
 package co.edu.unbosque.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import co.edu.unbosque.exception.ResourceNotFoundException;
 import co.edu.unbosque.model.Author;
 import co.edu.unbosque.repository.AuthorRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorService {
     private final AuthorRepository authorRepository;
 
-    public AuthorService(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
+    public List<Author> findAll() {
+        return authorRepository.findAll();
     }
 
-    public Page<Author> getAllAuthors(Pageable pageable) {
-        return authorRepository.findAll(pageable);
+    @Transactional
+    public Author create(Author author) {
+        return authorRepository.save(author);
     }
 
-    public Author getAuthorById(Long id) {
-        return authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+    @Transactional
+    public Author update(Long id, Author author) {
+        Author existingAuthor = authorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));
+        existingAuthor.setName(author.getName());
+        return authorRepository.save(existingAuthor);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        if (!authorRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Author not found with id: " + id);
+        }
+        authorRepository.deleteById(id);
     }
 }

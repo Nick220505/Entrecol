@@ -12,34 +12,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.edu.unbosque.model.Author;
-import co.edu.unbosque.service.AuthorService;
+import co.edu.unbosque.model.Language;
+import co.edu.unbosque.service.LanguageService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/authors")
+@RequestMapping("/api/languages")
 @RequiredArgsConstructor
-public class AuthorController {
-    private final AuthorService authorService;
+public class LanguageController {
+    private final LanguageService languageService;
 
     @GetMapping
-    public ResponseEntity<List<Author>> getAll() {
-        return ResponseEntity.ok(authorService.findAll());
+    public ResponseEntity<List<Language>> getAll() {
+        return ResponseEntity.ok(languageService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Author> create(@RequestBody Author author) {
-        return ResponseEntity.ok(authorService.create(author));
+    public ResponseEntity<Language> create(@RequestBody Language language) {
+        return ResponseEntity.ok(languageService.create(language));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Author> update(@PathVariable Long id, @RequestBody Author author) {
-        return ResponseEntity.ok(authorService.update(id, author));
+    public ResponseEntity<Language> update(@PathVariable Long id, @RequestBody Language language) {
+        return ResponseEntity.ok(languageService.update(id, language));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        authorService.delete(id);
+        languageService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

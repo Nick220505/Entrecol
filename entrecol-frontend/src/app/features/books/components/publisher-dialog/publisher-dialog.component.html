@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>{{ data ? "Editar" : "Crear Nueva" }} Editorial</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" placeholder="Ingrese el nombre" />
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      type="button"
+      (click)="onCancel()"
+      [disabled]="publisherService.creating() || publisherService.updating()"
+    >
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="
+        !form.valid ||
+        publisherService.creating() ||
+        publisherService.updating()
+      "
+    >
+      @if (publisherService.creating() || publisherService.updating()) {
+        <div class="spinner-button-content">
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>{{ data ? "Actualizando..." : "Creando..." }}</span>
+        </div>
+      } @else {
+        {{ data ? "Actualizar" : "Crear" }}
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

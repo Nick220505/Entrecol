@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Book } from '@app/features/books/models/book.model';
+import { Author } from '@books/models/author.model';
+import { Language } from '@books/models/language.model';
+import { Publisher } from '@books/models/publisher.model';
 import { environment } from '@env';
 import { finalize } from 'rxjs';
 
@@ -11,13 +14,25 @@ interface State<T> {
   initialLoad: boolean;
 }
 
+interface BookFormData {
+  title: string;
+  isbn?: string;
+  isbn13?: string;
+  numPages?: number;
+  averageRating?: number;
+  publicationDate?: Date;
+  languageId?: number;
+  publisherId?: number;
+  authorIds?: number[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class BookService {
-  private readonly apiUrl = `${environment.apiUrl}/books`;
   private readonly http = inject(HttpClient);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly apiUrl = `${environment.apiUrl}/books`;
 
   readonly book = signal<State<Book | null>>({
     data: null,
@@ -32,6 +47,9 @@ export class BookService {
   });
 
   readonly uploading = signal(false);
+  readonly creating = signal(false);
+  readonly updating = signal(false);
+  readonly deleting = signal(false);
 
   getAll(): void {
     this.books.update((state) => ({ ...state, loading: true }));
@@ -48,6 +66,45 @@ export class BookService {
         this.snackBar.open('Error al cargar los libros', 'Cerrar');
       },
     });
+  }
+
+  create(bookData: BookFormData): void {
+    this.creating.set(true);
+    const book = this.transformBookData(bookData);
+
+    this.http
+      .post<Book>(`${this.apiUrl}`, book)
+      .pipe(finalize(() => this.creating.set(false)))
+      .subscribe({
+        next: (newBook) => {
+          this.books.update((state) => ({
+            ...state,
+            data: [...state.data, newBook],
+          }));
+          this.snackBar.open('Libro creado exitosamente', 'Cerrar');
+        },
+        error: () => {
+          this.snackBar.open('Error al crear el libro', 'Cerrar');
+        },
+      });
+  }
+
+  private transformBookData(bookData: BookFormData): Partial<Book> {
+    return {
+      title: bookData.title,
+      isbn: bookData.isbn,
+      isbn13: bookData.isbn13,
+      numPages: bookData.numPages,
+      averageRating: bookData.averageRating,
+      publicationDate: bookData.publicationDate,
+      language: bookData.languageId
+        ? ({ id: bookData.languageId } as Language)
+        : undefined,
+      publisher: bookData.publisherId
+        ? ({ id: bookData.publisherId } as Publisher)
+        : undefined,
+      authors: bookData.authorIds?.map((id) => ({ id }) as Author) || [],
+    };
   }
 
   uploadBooks(books: Book[]): void {
@@ -92,5 +149,45 @@ export class BookService {
     };
 
     reader.readAsText(file);
+  }
+
+  update(id: number, bookData: BookFormData): void {
+    this.updating.set(true);
+    const book = this.transformBookData(bookData);
+
+    this.http
+      .put<Book>(`${this.apiUrl}/${id}`, book)
+      .pipe(finalize(() => this.updating.set(false)))
+      .subscribe({
+        next: (updatedBook) => {
+          this.books.update((state) => ({
+            ...state,
+            data: state.data.map((b) => (b.id === id ? updatedBook : b)),
+          }));
+          this.snackBar.open('Libro actualizado exitosamente', 'Cerrar');
+        },
+        error: () => {
+          this.snackBar.open('Error al actualizar el libro', 'Cerrar');
+        },
+      });
+  }
+
+  delete(id: number): void {
+    this.deleting.set(true);
+    this.http
+      .delete(`${this.apiUrl}/${id}`)
+      .pipe(finalize(() => this.deleting.set(false)))
+      .subscribe({
+        next: () => {
+          this.books.update((state) => ({
+            ...state,
+            data: state.data.filter((b) => b.id !== id),
+          }));
+          this.snackBar.open('Libro eliminado exitosamente', 'Cerrar');
+        },
+        error: () => {
+          this.snackBar.open('Error al eliminar el libro', 'Cerrar');
+        },
+      });
   }
 }

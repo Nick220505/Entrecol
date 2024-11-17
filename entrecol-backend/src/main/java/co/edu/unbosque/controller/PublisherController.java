@@ -1,35 +1,45 @@
 package co.edu.unbosque.controller;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unbosque.model.Publisher;
 import co.edu.unbosque.service.PublisherService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/publishers")
+@RequiredArgsConstructor
 public class PublisherController {
     private final PublisherService publisherService;
 
-    public PublisherController(PublisherService publisherService) {
-        this.publisherService = publisherService;
-    }
-
     @GetMapping
-    public ResponseEntity<Page<Publisher>> getAllPublishers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(publisherService.getAllPublishers(PageRequest.of(page, size)));
+    public ResponseEntity<List<Publisher>> getAll() {
+        return ResponseEntity.ok(publisherService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Publisher> getPublisherById(@PathVariable Long id) {
-        return ResponseEntity.ok(publisherService.getPublisherById(id));
+    @PostMapping
+    public ResponseEntity<Publisher> create(@RequestBody Publisher publisher) {
+        return ResponseEntity.ok(publisherService.create(publisher));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Publisher> update(@PathVariable Long id, @RequestBody Publisher publisher) {
+        return ResponseEntity.ok(publisherService.update(id, publisher));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        publisherService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

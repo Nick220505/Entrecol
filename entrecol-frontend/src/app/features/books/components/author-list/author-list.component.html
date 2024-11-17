@@ -1,0 +1,78 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Lista de Autores</mat-card-title>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Crear Autor
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    @let authors = authorService.authors();
+    @if (authors.initialLoad && authors.loading) {
+      <app-loading-spinner
+        loadingText="Cargando autores..."
+      ></app-loading-spinner>
+    } @else {
+      @if (authors.data.length === 0) {
+        <div class="no-data">
+          <mat-icon>people</mat-icon>
+          <p>No hay autores registrados</p>
+          <p>Agrega algunos autores para comenzar</p>
+        </div>
+      } @else {
+        <mat-form-field appearance="outline">
+          <mat-label>Filtrar autores</mat-label>
+          <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Buscar por nombre..."
+            #filterInput
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        @let displayedColumns = ["name", "actions"];
+        <table mat-table [dataSource]="dataSource()" matSort>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+            <td mat-cell *matCellDef="let author">{{ author.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let author">
+              <button
+                mat-icon-button
+                color="primary"
+                matTooltip="Editar"
+                (click)="openEditDialog(author)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                matTooltip="Eliminar"
+                (click)="deleteAuthor(author)"
+                [disabled]="authorService.deleting()"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          aria-label="Seleccionar página"
+        ></mat-paginator>
+      }
+    }
+  </mat-card-content>
+</mat-card>

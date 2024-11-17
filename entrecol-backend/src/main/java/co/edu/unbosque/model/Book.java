@@ -62,6 +62,13 @@ public class Book {
     private Set<Author> authors;
 
     @JsonManagedReference
-    @OneToOne(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Rating rating;
+
+    public void removeRating() {
+        if (this.rating != null) {
+            this.rating.setBook(null);
+            this.rating = null;
+        }
+    }
 }

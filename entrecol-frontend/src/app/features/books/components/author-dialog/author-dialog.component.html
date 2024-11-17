@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>{{ data ? "Editar" : "Crear Nuevo" }} Autor</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" placeholder="Ingrese el nombre" />
+      @if (
+        form.get("name")?.hasError("required") && form.get("name")?.touched
+      ) {
+        <mat-error>El nombre es requerido</mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      type="button"
+      (click)="onCancel()"
+      [disabled]="authorService.creating() || authorService.updating()"
+    >
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="
+        !form.valid || authorService.creating() || authorService.updating()
+      "
+    >
+      @if (authorService.creating() || authorService.updating()) {
+        <div class="spinner-button-content">
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>{{ data ? "Actualizando..." : "Creando..." }}</span>
+        </div>
+      } @else {
+        {{ data ? "Actualizar" : "Crear" }}
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

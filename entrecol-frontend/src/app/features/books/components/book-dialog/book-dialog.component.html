@@ -1,0 +1,227 @@
+<h2 mat-dialog-title>{{ data ? "Editar" : "Crear Nuevo" }} Libro</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title" placeholder="Ingrese el título" />
+      <mat-icon matPrefix>book</mat-icon>
+      @if (
+        form.get("title")?.hasError("required") && form.get("title")?.touched
+      ) {
+        <mat-error>Este campo es requerido</mat-error>
+      } @else if (
+        form.get("title")?.hasError("minlength") && form.get("title")?.touched
+      ) {
+        <mat-error>El título debe tener al menos 3 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>ISBN</mat-label>
+        <input matInput formControlName="isbn" placeholder="Ingrese el ISBN" />
+        <mat-icon matPrefix>qr_code</mat-icon>
+        @if (
+          form.get("isbn")?.hasError("required") && form.get("isbn")?.touched
+        ) {
+          <mat-error>Este campo es requerido</mat-error>
+        } @else if (
+          form.get("isbn")?.hasError("pattern") && form.get("isbn")?.touched
+        ) {
+          <mat-error>El ISBN debe tener 10 dígitos</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>ISBN13</mat-label>
+        <input
+          matInput
+          formControlName="isbn13"
+          placeholder="Ingrese el ISBN13"
+        />
+        <mat-icon matPrefix>qr_code_2</mat-icon>
+        @if (
+          form.get("isbn13")?.hasError("required") &&
+          form.get("isbn13")?.touched
+        ) {
+          <mat-error>Este campo es requerido</mat-error>
+        } @else if (
+          form.get("isbn13")?.hasError("pattern") && form.get("isbn13")?.touched
+        ) {
+          <mat-error>El ISBN13 debe tener 13 dígitos</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Número de páginas</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="numPages"
+          placeholder="Ingrese el número de páginas"
+          min="1"
+          max="10000"
+        />
+        <mat-icon matPrefix>auto_stories</mat-icon>
+        @if (
+          form.get("numPages")?.hasError("required") &&
+          form.get("numPages")?.touched
+        ) {
+          <mat-error>Este campo es requerido</mat-error>
+        } @else if (
+          form.get("numPages")?.hasError("min") && form.get("numPages")?.touched
+        ) {
+          <mat-error>El número de páginas debe ser mayor a 0</mat-error>
+        } @else if (
+          form.get("numPages")?.hasError("max") && form.get("numPages")?.touched
+        ) {
+          <mat-error>El número de páginas no puede ser mayor a 10000</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Calificación promedio</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="averageRating"
+          placeholder="Ingrese la calificación"
+          min="0"
+          max="5"
+          step="0.1"
+        />
+        <mat-icon matPrefix>star_rate</mat-icon>
+        @if (
+          form.get("averageRating")?.hasError("required") &&
+          form.get("averageRating")?.touched
+        ) {
+          <mat-error>Este campo es requerido</mat-error>
+        } @else if (
+          form.get("averageRating")?.hasError("min") &&
+          form.get("averageRating")?.touched
+        ) {
+          <mat-error>La calificación debe ser mayor o igual a 0</mat-error>
+        } @else if (
+          form.get("averageRating")?.hasError("max") &&
+          form.get("averageRating")?.touched
+        ) {
+          <mat-error>La calificación debe ser menor o igual a 5</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de publicación</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="publicationDate"
+          placeholder="DD/MM/YYYY"
+        />
+        <mat-icon matPrefix>calendar_today</mat-icon>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if (
+          form.get("publicationDate")?.hasError("required") &&
+          form.get("publicationDate")?.touched
+        ) {
+          <mat-error>Este campo es requerido</mat-error>
+        } @else if (
+          form.get("publicationDate")?.hasError("matDatepickerParse") &&
+          form.get("publicationDate")?.touched
+        ) {
+          <mat-error>Fecha inválida</mat-error>
+        } @else if (
+          form.get("publicationDate")?.hasError("futureDate") &&
+          form.get("publicationDate")?.touched
+        ) {
+          <mat-error>La fecha no puede ser futura</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Idioma</mat-label>
+        <mat-select formControlName="languageId">
+          @for (
+            language of languageService.languages().data;
+            track language.id
+          ) {
+            <mat-option [value]="language.id">{{ language.code }}</mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>language</mat-icon>
+        @if (
+          form.get("languageId")?.hasError("required") &&
+          form.get("languageId")?.touched
+        ) {
+          <mat-error>Debe seleccionar un idioma</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Editorial</mat-label>
+        <mat-select formControlName="publisherId">
+          @for (
+            publisher of publisherService.publishers().data;
+            track publisher.id
+          ) {
+            <mat-option [value]="publisher.id">{{ publisher.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>business</mat-icon>
+        @if (
+          form.get("publisherId")?.hasError("required") &&
+          form.get("publisherId")?.touched
+        ) {
+          <mat-error>Debe seleccionar una editorial</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Autores</mat-label>
+        <mat-select formControlName="authorIds" multiple>
+          @for (author of authorService.authors().data; track author.id) {
+            <mat-option [value]="author.id">{{ author.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>people</mat-icon>
+        @if (
+          form.get("authorIds")?.hasError("required") &&
+          form.get("authorIds")?.touched
+        ) {
+          <mat-error>Debe seleccionar al menos un autor</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      type="button"
+      (click)="onCancel()"
+      [disabled]="bookService.creating() || bookService.updating()"
+    >
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="
+        !form.valid || bookService.creating() || bookService.updating()
+      "
+    >
+      @if (bookService.creating() || bookService.updating()) {
+        <div class="spinner-button-content">
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>{{ data ? "Actualizando..." : "Creando..." }}</span>
+        </div>
+      } @else {
+        {{ data ? "Actualizar" : "Crear" }}
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

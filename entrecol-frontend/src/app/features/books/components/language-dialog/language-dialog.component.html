@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>{{ data ? "Editar" : "Crear Nuevo" }} Idioma</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="code" placeholder="Ingrese el código" />
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      type="button"
+      (click)="onCancel()"
+      [disabled]="languageService.creating() || languageService.updating()"
+    >
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="
+        !form.valid || languageService.creating() || languageService.updating()
+      "
+    >
+      @if (languageService.creating() || languageService.updating()) {
+        <div class="spinner-button-content">
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>{{ data ? "Actualizando..." : "Creando..." }}</span>
+        </div>
+      } @else {
+        {{ data ? "Actualizar" : "Crear" }}
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

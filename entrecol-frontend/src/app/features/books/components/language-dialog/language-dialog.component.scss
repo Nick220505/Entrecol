@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-dialog-content {
+  padding: 24px;
+  min-width: 400px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+  margin: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  gap: 16px;
+
+  button {
+    min-width: 120px;
+    height: 40px;
+  }
+}
+
+.spinner-button-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+:host-context(.dark-theme) {
+  mat-dialog-actions {
+    border-top-color: rgba(255, 255, 255, 0.12);
+  }
+}

@@ -1,0 +1,78 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Lista de Idiomas</mat-card-title>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Crear Idioma
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    @let languages = languageService.languages();
+    @if (languages.initialLoad && languages.loading) {
+      <app-loading-spinner
+        loadingText="Cargando idiomas..."
+      ></app-loading-spinner>
+    } @else {
+      @if (languages.data.length === 0) {
+        <div class="no-data">
+          <mat-icon>language</mat-icon>
+          <p>No hay idiomas registrados</p>
+          <p>Agrega algunos idiomas para comenzar</p>
+        </div>
+      } @else {
+        <mat-form-field appearance="outline">
+          <mat-label>Filtrar idiomas</mat-label>
+          <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Buscar por código..."
+            #filterInput
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        @let displayedColumns = ["code", "actions"];
+        <table mat-table [dataSource]="dataSource()" matSort>
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+            <td mat-cell *matCellDef="let language">{{ language.code }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let language">
+              <button
+                mat-icon-button
+                color="primary"
+                matTooltip="Editar"
+                (click)="openEditDialog(language)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                matTooltip="Eliminar"
+                (click)="deleteLanguage(language)"
+                [disabled]="languageService.deleting()"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          aria-label="Seleccionar página"
+        ></mat-paginator>
+      }
+    }
+  </mat-card-content>
+</mat-card>

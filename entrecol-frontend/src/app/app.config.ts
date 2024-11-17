@@ -23,7 +23,7 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: MatPaginatorIntl,
-      useClass: CustomPaginatorIntl
-    }
+      useClass: CustomPaginatorIntl,
+    },
   ],
 };

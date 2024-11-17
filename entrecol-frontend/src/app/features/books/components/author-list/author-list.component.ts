@@ -1,5 +1,4 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, computed, inject, OnInit, viewChild } from '@angular/core';
+import { Component, OnInit, computed, inject, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,15 +10,14 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Book } from '@books/models/book.model';
-import { BookService } from '@books/services/book.service';
+import { Author } from '@books/models/author.model';
+import { AuthorService } from '@books/services/author.service';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
-import { EmptyPipe } from '@shared/pipes/empty.pipe';
-import { BookDialogComponent } from '../book-dialog/book-dialog.component';
+import { AuthorDialogComponent } from '../author-dialog/author-dialog.component';
 
 @Component({
-  selector: 'app-book-list',
+  selector: 'app-author-list',
   standalone: true,
   imports: [
     FormsModule,
@@ -32,77 +30,66 @@ import { BookDialogComponent } from '../book-dialog/book-dialog.component';
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
-    DatePipe,
-    DecimalPipe,
     LoadingSpinnerComponent,
-    EmptyPipe,
     MatDialogModule,
   ],
-  templateUrl: './book-list.component.html',
-  styleUrl: './book-list.component.scss',
+  templateUrl: './author-list.component.html',
+  styleUrl: './author-list.component.scss',
 })
-export class BookListComponent implements OnInit {
-  protected readonly bookService = inject(BookService);
+export class AuthorListComponent implements OnInit {
+  protected readonly authorService = inject(AuthorService);
   protected readonly paginator = viewChild(MatPaginator);
   protected readonly sort = viewChild(MatSort);
   protected readonly dataSource = computed(() =>
-    Object.assign(new MatTableDataSource<Book>(this.bookService.books().data), {
-      paginator: this.paginator(),
-      sort: this.sort(),
-    }),
+    Object.assign(
+      new MatTableDataSource<Author>(this.authorService.authors().data),
+      {
+        paginator: this.paginator(),
+        sort: this.sort(),
+      },
+    ),
   );
   private readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
-    this.bookService.getAll();
+    this.authorService.getAll();
   }
 
-  applyFilter(event: KeyboardEvent): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource().filter = filterValue.trim().toLowerCase();
-    this.dataSource().paginator.firstPage();
-  }
-
-  getAuthorsNames(book: Book): string {
-    return book.authors.map((a) => a.name).join(', ');
-  }
-
-  openCreateDialog(): void {
-    const dialogRef = this.dialog.open(BookDialogComponent, {
-      width: '900px',
+  protected openCreateDialog(): void {
+    const dialogRef = this.dialog.open(AuthorDialogComponent, {
+      width: '500px',
       maxWidth: '95vw',
       maxHeight: '95vh',
-      panelClass: 'book-dialog',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.bookService.getAll();
+        this.authorService.getAll();
       }
     });
   }
 
-  protected openEditDialog(book: Book): void {
-    const dialogRef = this.dialog.open(BookDialogComponent, {
-      width: '900px',
+  protected openEditDialog(author: Author): void {
+    const dialogRef = this.dialog.open(AuthorDialogComponent, {
+      width: '500px',
       maxWidth: '95vw',
       maxHeight: '95vh',
-      data: book,
+      data: author,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.bookService.getAll();
+        this.authorService.getAll();
       }
     });
   }
 
-  protected deleteBook(book: Book): void {
+  protected deleteAuthor(author: Author): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: {
-        title: 'Eliminar Libro',
-        message: `¿Estás seguro de que deseas eliminar el libro "${book.title}"?`,
+        title: 'Eliminar Autor',
+        message: `¿Estás seguro de que deseas eliminar el autor "${author.name}"?`,
         confirmText: 'Eliminar',
         cancelText: 'Cancelar',
       },
@@ -110,8 +97,14 @@ export class BookListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.bookService.delete(book.id);
+        this.authorService.delete(author.id);
       }
     });
+  }
+
+  protected applyFilter(event: KeyboardEvent): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource().filter = filterValue.trim().toLowerCase();
+    this.dataSource().paginator.firstPage();
   }
 }
