@@ -7,6 +7,9 @@ import { Language } from '@books/models/language.model';
 import { Publisher } from '@books/models/publisher.model';
 import { environment } from '@env';
 import { finalize } from 'rxjs';
+import { AuthorService } from './author.service';
+import { LanguageService } from './language.service';
+import { PublisherService } from './publisher.service';
 
 interface State<T> {
   data: T;
@@ -32,6 +35,9 @@ interface BookFormData {
 export class BookService {
   private readonly http = inject(HttpClient);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly languageService = inject(LanguageService);
+  private readonly publisherService = inject(PublisherService);
+  private readonly authorService = inject(AuthorService);
   private readonly apiUrl = `${environment.apiUrl}/books`;
 
   readonly book = signal<State<Book | null>>({
@@ -123,6 +129,9 @@ export class BookService {
           );
           this.books.update((state) => ({ ...state, initialLoad: true }));
           this.getAll();
+          this.languageService.getAll();
+          this.publisherService.getAll();
+          this.authorService.getAll();
         },
         error: () => {
           this.books.update((state) => ({ ...state, loading: false }));
