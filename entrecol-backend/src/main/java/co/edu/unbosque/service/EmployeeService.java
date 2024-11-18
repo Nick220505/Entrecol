@@ -27,6 +27,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import co.edu.unbosque.dto.EmployeeDTO;
 import co.edu.unbosque.dto.EmployeeNoveltyDTO;
 import co.edu.unbosque.dto.EmployeePersonalInfoDTO;
 import co.edu.unbosque.dto.HealthPensionReportDTO;
@@ -1435,5 +1437,89 @@ public class EmployeeService {
         chartCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         chartCell.setPaddingBottom(20);
         table.addCell(chartCell);
+    }
+
+    @Transactional
+    public Employee createEmployee(EmployeeDTO dto) {
+        Employee employee = new Employee();
+        employee.setCode(dto.getCode());
+        employee.setFullName(dto.getFullName());
+        employee.setHireDate(dto.getHireDate());
+        employee.setSalary(dto.getSalary());
+
+        Department department = departmentRepository.findById(dto.getDepartmentId())
+                .orElseThrow(() -> new RuntimeException("Departamento no encontrado"));
+        Position position = positionRepository.findById(dto.getPositionId())
+                .orElseThrow(() -> new RuntimeException("Cargo no encontrado"));
+        EPS eps = epsRepository.findById(dto.getEpsId())
+                .orElseThrow(() -> new RuntimeException("EPS no encontrada"));
+        ARL arl = arlRepository.findById(dto.getArlId())
+                .orElseThrow(() -> new RuntimeException("ARL no encontrada"));
+        PensionFund pensionFund = pensionFundRepository.findById(dto.getPensionFundId())
+                .orElseThrow(() -> new RuntimeException("Fondo de pensión no encontrado"));
+
+        employee.setDepartment(department);
+        employee.setPosition(position);
+        employee.setEps(eps);
+        employee.setArl(arl);
+        employee.setPensionFund(pensionFund);
+
+        if (employeeRepository.existsByCode(employee.getCode())) {
+            throw new RuntimeException("Ya existe un empleado con este código");
+        }
+
+        return employeeRepository.save(employee);
+    }
+
+    @Transactional
+    public Employee updateEmployee(Long id, EmployeeDTO dto) {
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+
+        if (!existingEmployee.getCode().equals(dto.getCode()) &&
+                employeeRepository.existsByCode(dto.getCode())) {
+            throw new RuntimeException("Ya existe un empleado con este código");
+        }
+
+        Department department = departmentRepository.findById(dto.getDepartmentId())
+                .orElseThrow(() -> new RuntimeException("Departamento no encontrado"));
+        Position position = positionRepository.findById(dto.getPositionId())
+                .orElseThrow(() -> new RuntimeException("Cargo no encontrado"));
+        EPS eps = epsRepository.findById(dto.getEpsId())
+                .orElseThrow(() -> new RuntimeException("EPS no encontrada"));
+        ARL arl = arlRepository.findById(dto.getArlId())
+                .orElseThrow(() -> new RuntimeException("ARL no encontrada"));
+        PensionFund pensionFund = pensionFundRepository.findById(dto.getPensionFundId())
+                .orElseThrow(() -> new RuntimeException("Fondo de pensión no encontrado"));
+
+        existingEmployee.setCode(dto.getCode());
+        existingEmployee.setFullName(dto.getFullName());
+        existingEmployee.setDepartment(department);
+        existingEmployee.setPosition(position);
+        existingEmployee.setHireDate(dto.getHireDate());
+        existingEmployee.setEps(eps);
+        existingEmployee.setArl(arl);
+        existingEmployee.setPensionFund(pensionFund);
+        existingEmployee.setSalary(dto.getSalary());
+
+        return employeeRepository.save(existingEmployee);
+    }
+
+    @Transactional
+    public void deleteEmployee(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Empleado no encontrado con ID: " + id));
+
+        try {
+            employeeRepository.delete(employee);
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("No se puede eliminar el empleado porque tiene registros asociados");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Employee getEmployeeById(Long id) {
+        return employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Empleado no encontrado con ID: " + id));
     }
 }

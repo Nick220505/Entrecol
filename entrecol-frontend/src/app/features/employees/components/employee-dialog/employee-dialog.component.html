@@ -1,0 +1,94 @@
+<h2 mat-dialog-title>{{ data ? "Editar" : "Crear Nuevo" }} Empleado</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre Completo</mat-label>
+        <input matInput formControlName="fullName" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Código</mat-label>
+        <input matInput formControlName="code" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Departamento</mat-label>
+        <mat-select formControlName="departmentId" required>
+          @for (dept of departmentService.departments().data; track dept.id) {
+            <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Cargo</mat-label>
+        <mat-select formControlName="positionId" required>
+          @for (pos of positionService.positions().data; track pos.id) {
+            <mat-option [value]="pos.id">{{ pos.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de Contratación</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="hireDate"
+          required
+        />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>EPS</mat-label>
+        <mat-select formControlName="epsId" required>
+          @for (eps of epsService.epsList().data; track eps.id) {
+            <mat-option [value]="eps.id">{{ eps.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>ARL</mat-label>
+        <mat-select formControlName="arlId" required>
+          @for (arl of arlService.arlList().data; track arl.id) {
+            <mat-option [value]="arl.id">{{ arl.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fondo de Pensión</mat-label>
+        <mat-select formControlName="pensionFundId" required>
+          @for (fund of pensionFundService.pensionFunds().data; track fund.id) {
+            <mat-option [value]="fund.id">{{ fund.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Salario</mat-label>
+        <input matInput type="number" formControlName="salary" required />
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="!form.valid"
+    >
+      {{ data ? "Guardar" : "Crear" }}
+    </button>
+  </mat-dialog-actions>
+</form>

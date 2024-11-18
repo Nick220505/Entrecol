@@ -1,7 +1,7 @@
 package co.edu.unbosque.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.model.Position;
@@ -15,8 +15,8 @@ public class PositionService {
         this.positionRepository = positionRepository;
     }
 
-    public Page<Position> getAllPositions(Pageable pageable) {
-        return positionRepository.findAll(pageable);
+    public List<Position> getAllPositions() {
+        return positionRepository.findAll();
     }
 
     public Position getPositionById(Long id) {

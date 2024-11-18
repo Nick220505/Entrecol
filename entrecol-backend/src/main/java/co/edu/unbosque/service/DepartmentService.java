@@ -1,7 +1,7 @@
 package co.edu.unbosque.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.model.Department;
@@ -15,8 +15,8 @@ public class DepartmentService {
         this.departmentRepository = departmentRepository;
     }
 
-    public Page<Department> getAllDepartments(Pageable pageable) {
-        return departmentRepository.findAll(pageable);
+    public List<Department> getAllDepartments() {
+        return departmentRepository.findAll();
     }
 
     public Department getDepartmentById(Long id) {

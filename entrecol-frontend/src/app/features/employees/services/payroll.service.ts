@@ -27,7 +27,11 @@ export class PayrollService {
   private readonly dialog = inject(MatDialog);
   private readonly apiUrl = `${environment.apiUrl}/employees`;
 
-  readonly employees = signal<State<Employee[]>>({
+  readonly employees = signal<{
+    data: Employee[];
+    loading: boolean;
+    initialLoad: boolean;
+  }>({
     data: [],
     loading: false,
     initialLoad: true,
@@ -78,24 +82,78 @@ export class PayrollService {
 
   readonly pdfExportingNovelty = signal(false);
 
+  readonly creating = signal(false);
+  readonly updating = signal(false);
+  readonly deleting = signal(false);
+
   getAll(): void {
     this.employees.update((state) => ({ ...state, loading: true }));
     this.http.get<Employee[]>(this.apiUrl).subscribe({
-      next: (employees) => {
-        this.employees.set({
-          data: employees,
+      next: (data) => {
+        this.employees.update((state) => ({
+          ...state,
+          data,
           loading: false,
           initialLoad: false,
-        });
+        }));
       },
       error: () => {
         this.employees.update((state) => ({
           ...state,
           loading: false,
+          initialLoad: false,
         }));
         this.snackBar.open('Error al cargar los empleados', 'Cerrar');
       },
     });
+  }
+
+  create(employee: Partial<Employee>): void {
+    this.creating.set(true);
+    this.http
+      .post<Employee>(this.apiUrl, employee)
+      .pipe(finalize(() => this.creating.set(false)))
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Empleado creado exitosamente', 'Cerrar');
+          this.getAll();
+        },
+        error: () => {
+          this.snackBar.open('Error al crear el empleado', 'Cerrar');
+        },
+      });
+  }
+
+  update(id: number, employee: Partial<Employee>): void {
+    this.updating.set(true);
+    this.http
+      .put<Employee>(`${this.apiUrl}/${id}`, employee)
+      .pipe(finalize(() => this.updating.set(false)))
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Empleado actualizado exitosamente', 'Cerrar');
+          this.getAll();
+        },
+        error: () => {
+          this.snackBar.open('Error al actualizar el empleado', 'Cerrar');
+        },
+      });
+  }
+
+  delete(id: number): void {
+    this.deleting.set(true);
+    this.http
+      .delete(`${this.apiUrl}/${id}`)
+      .pipe(finalize(() => this.deleting.set(false)))
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Empleado eliminado exitosamente', 'Cerrar');
+          this.getAll();
+        },
+        error: () => {
+          this.snackBar.open('Error al eliminar el empleado', 'Cerrar');
+        },
+      });
   }
 
   uploadEmployeeFile(file: File): void {
