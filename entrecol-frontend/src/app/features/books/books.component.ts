@@ -6,16 +6,15 @@ import { LanguageListComponent } from './components/language-list/language-list.
 import { PublisherListComponent } from './components/publisher-list/publisher-list.component';
 
 @Component({
-  selector: 'app-books',
-  standalone: true,
-  imports: [
-    BookFileUploadComponent,
-    BookListComponent,
-    LanguageListComponent,
-    AuthorListComponent,
-    PublisherListComponent,
-  ],
-  templateUrl: './books.component.html',
-  styleUrl: './books.component.scss',
+    selector: 'app-books',
+    imports: [
+        BookFileUploadComponent,
+        BookListComponent,
+        LanguageListComponent,
+        AuthorListComponent,
+        PublisherListComponent,
+    ],
+    templateUrl: './books.component.html',
+    styleUrl: './books.component.scss'
 })
 export class BooksComponent {}

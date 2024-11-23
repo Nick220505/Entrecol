@@ -13,18 +13,17 @@ import { Movie } from '@movies/models/movie.model';
 import { MovieService } from '@movies/services/movie.service';
 
 @Component({
-  selector: 'app-movie-dialog',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-  ],
-  templateUrl: './movie-dialog.component.html',
-  styleUrl: './movie-dialog.component.scss',
+    selector: 'app-movie-dialog',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+    ],
+    templateUrl: './movie-dialog.component.html',
+    styleUrl: './movie-dialog.component.scss'
 })
 export class MovieDialogComponent {
   private readonly fb = inject(FormBuilder);

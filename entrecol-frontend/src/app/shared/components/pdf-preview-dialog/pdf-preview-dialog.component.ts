@@ -5,16 +5,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { PdfViewerComponent } from '@shared/components/pdf-preview-dialog/pdf-viewer/pdf-viewer.component';
 
 @Component({
-  selector: 'app-pdf-preview-dialog',
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
-    PdfViewerComponent,
-  ],
-  templateUrl: './pdf-preview-dialog.component.html',
-  styleUrl: './pdf-preview-dialog.component.scss',
+    selector: 'app-pdf-preview-dialog',
+    imports: [
+        MatDialogModule,
+        MatButtonModule,
+        MatIconModule,
+        PdfViewerComponent,
+    ],
+    templateUrl: './pdf-preview-dialog.component.html',
+    styleUrl: './pdf-preview-dialog.component.scss'
 })
 export class PdfPreviewDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<PdfPreviewDialogComponent>);

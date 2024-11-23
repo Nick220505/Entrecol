@@ -17,24 +17,23 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
 import { PublisherDialogComponent } from '../publisher-dialog/publisher-dialog.component';
 
 @Component({
-  selector: 'app-publisher-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
-    MatTooltipModule,
-    LoadingSpinnerComponent,
-    MatDialogModule,
-  ],
-  templateUrl: './publisher-list.component.html',
-  styleUrl: './publisher-list.component.scss',
+    selector: 'app-publisher-list',
+    imports: [
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatTooltipModule,
+        LoadingSpinnerComponent,
+        MatDialogModule,
+    ],
+    templateUrl: './publisher-list.component.html',
+    styleUrl: './publisher-list.component.scss'
 })
 export class PublisherListComponent implements OnInit {
   protected readonly publisherService = inject(PublisherService);

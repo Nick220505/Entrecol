@@ -7,11 +7,10 @@ import {
 } from '@swimlane/ngx-charts';
 
 @Component({
-  selector: 'app-pension-frequency-chart',
-  standalone: true,
-  imports: [NgxChartsModule],
-  templateUrl: './pension-frequency-chart.component.html',
-  styleUrl: './pension-frequency-chart.component.scss',
+    selector: 'app-pension-frequency-chart',
+    imports: [NgxChartsModule],
+    templateUrl: './pension-frequency-chart.component.html',
+    styleUrl: './pension-frequency-chart.component.scss'
 })
 export class PensionFrequencyChartComponent {
   private readonly payrollService = inject(PayrollService);

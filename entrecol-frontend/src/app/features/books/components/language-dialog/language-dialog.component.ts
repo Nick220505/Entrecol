@@ -18,18 +18,17 @@ import { Language } from '@books/models/language.model';
 import { LanguageService } from '@books/services/language.service';
 
 @Component({
-  selector: 'app-language-dialog',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-  ],
-  templateUrl: './language-dialog.component.html',
-  styleUrl: './language-dialog.component.scss',
+    selector: 'app-language-dialog',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+    ],
+    templateUrl: './language-dialog.component.html',
+    styleUrl: './language-dialog.component.scss'
 })
 export class LanguageDialogComponent {
   private readonly fb = inject(FormBuilder);

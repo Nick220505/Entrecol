@@ -7,11 +7,10 @@ import {
 } from '@swimlane/ngx-charts';
 
 @Component({
-  selector: 'app-eps-frequency-chart',
-  standalone: true,
-  imports: [NgxChartsModule],
-  templateUrl: './eps-frequency-chart.component.html',
-  styleUrl: './eps-frequency-chart.component.scss',
+    selector: 'app-eps-frequency-chart',
+    imports: [NgxChartsModule],
+    templateUrl: './eps-frequency-chart.component.html',
+    styleUrl: './eps-frequency-chart.component.scss'
 })
 export class EpsFrequencyChartComponent {
   private readonly payrollService = inject(PayrollService);

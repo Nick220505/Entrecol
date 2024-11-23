@@ -10,19 +10,18 @@ import { PayrollReportComponent } from './components/payroll-report/payroll-repo
 import { PersonalInfoReportComponent } from './components/personal-info-report/personal-info-report.component';
 
 @Component({
-  selector: 'app-reports',
-  standalone: true,
-  imports: [
-    MatTabsModule,
-    MatIconModule,
-    PayrollReportComponent,
-    PersonalInfoReportComponent,
-    HealthPensionReportComponent,
-    NoveltyReportComponent,
-    EntertainmentReportComponent,
-  ],
-  templateUrl: './reports.component.html',
-  styleUrl: './reports.component.scss',
+    selector: 'app-reports',
+    imports: [
+        MatTabsModule,
+        MatIconModule,
+        PayrollReportComponent,
+        PersonalInfoReportComponent,
+        HealthPensionReportComponent,
+        NoveltyReportComponent,
+        EntertainmentReportComponent,
+    ],
+    templateUrl: './reports.component.html',
+    styleUrl: './reports.component.scss'
 })
 export class ReportsComponent {
   private readonly payrollService = inject(PayrollService);

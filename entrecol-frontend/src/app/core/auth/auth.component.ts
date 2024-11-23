@@ -15,23 +15,22 @@ import { RegisterCredentials } from './models/register-credentials.model';
 import { AuthService } from './services/auth.service';
 
 @Component({
-  selector: 'app-auth',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    AlertMessageComponent,
-    LoadingSpinnerComponent,
-    RecaptchaModule,
-    RecaptchaFormsModule,
-    RouterLink,
-  ],
-  templateUrl: './auth.component.html',
-  styleUrl: './auth.component.scss',
+    selector: 'app-auth',
+    imports: [
+        ReactiveFormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        AlertMessageComponent,
+        LoadingSpinnerComponent,
+        RecaptchaModule,
+        RecaptchaFormsModule,
+        RouterLink,
+    ],
+    templateUrl: './auth.component.html',
+    styleUrl: './auth.component.scss'
 })
 export class AuthComponent {
   private readonly formBuilder = inject(FormBuilder);

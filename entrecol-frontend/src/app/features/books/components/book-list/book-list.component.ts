@@ -19,27 +19,26 @@ import { EmptyPipe } from '@shared/pipes/empty.pipe';
 import { BookDialogComponent } from '../book-dialog/book-dialog.component';
 
 @Component({
-  selector: 'app-book-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
-    MatTooltipModule,
-    DatePipe,
-    DecimalPipe,
-    LoadingSpinnerComponent,
-    EmptyPipe,
-    MatDialogModule,
-  ],
-  templateUrl: './book-list.component.html',
-  styleUrl: './book-list.component.scss',
+    selector: 'app-book-list',
+    imports: [
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatTooltipModule,
+        DatePipe,
+        DecimalPipe,
+        LoadingSpinnerComponent,
+        EmptyPipe,
+        MatDialogModule,
+    ],
+    templateUrl: './book-list.component.html',
+    styleUrl: './book-list.component.scss'
 })
 export class BookListComponent implements OnInit {
   protected readonly bookService = inject(BookService);

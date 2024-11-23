@@ -5,11 +5,10 @@ import {
 } from 'ngx-extended-pdf-viewer';
 
 @Component({
-  selector: 'app-pdf-viewer',
-  standalone: true,
-  imports: [NgxExtendedPdfViewerModule],
-  templateUrl: './pdf-viewer.component.html',
-  styleUrl: './pdf-viewer.component.scss',
+    selector: 'app-pdf-viewer',
+    imports: [NgxExtendedPdfViewerModule],
+    templateUrl: './pdf-viewer.component.html',
+    styleUrl: './pdf-viewer.component.scss'
 })
 export class PdfViewerComponent {
   readonly src = input.required<string>();

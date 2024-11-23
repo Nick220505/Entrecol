@@ -3,11 +3,10 @@ import { Component, computed, inject } from '@angular/core';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 
 @Component({
-  selector: 'app-top-rated-books-list',
-  standalone: true,
-  imports: [DecimalPipe],
-  templateUrl: './top-rated-books-list.component.html',
-  styleUrl: './top-rated-books-list.component.scss',
+    selector: 'app-top-rated-books-list',
+    imports: [DecimalPipe],
+    templateUrl: './top-rated-books-list.component.html',
+    styleUrl: './top-rated-books-list.component.scss'
 })
 export class TopRatedBooksListComponent {
   private readonly entertainmentReportService = inject(

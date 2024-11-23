@@ -18,18 +18,17 @@ import { Author } from '@books/models/author.model';
 import { AuthorService } from '@books/services/author.service';
 
 @Component({
-  selector: 'app-author-dialog',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-  ],
-  templateUrl: './author-dialog.component.html',
-  styleUrl: './author-dialog.component.scss',
+    selector: 'app-author-dialog',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+    ],
+    templateUrl: './author-dialog.component.html',
+    styleUrl: './author-dialog.component.scss'
 })
 export class AuthorDialogComponent {
   private readonly fb = inject(FormBuilder);

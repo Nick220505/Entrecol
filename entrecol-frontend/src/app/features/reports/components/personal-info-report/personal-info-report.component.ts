@@ -21,25 +21,24 @@ import { PayrollService } from '@employees/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
-  selector: 'app-personal-info-report',
-  standalone: true,
-  imports: [
-    CurrencyPipe,
-    DatePipe,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatDividerModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatButtonModule,
-    MatDialogModule,
-    PdfViewerComponent,
-    LoadingSpinnerComponent,
-  ],
-  templateUrl: './personal-info-report.component.html',
-  styleUrl: './personal-info-report.component.scss',
+    selector: 'app-personal-info-report',
+    imports: [
+        CurrencyPipe,
+        DatePipe,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatDividerModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatAutocompleteModule,
+        MatButtonModule,
+        MatDialogModule,
+        PdfViewerComponent,
+        LoadingSpinnerComponent,
+    ],
+    templateUrl: './personal-info-report.component.html',
+    styleUrl: './personal-info-report.component.scss'
 })
 export class PersonalInfoReportComponent {
   protected readonly payrollService = inject(PayrollService);

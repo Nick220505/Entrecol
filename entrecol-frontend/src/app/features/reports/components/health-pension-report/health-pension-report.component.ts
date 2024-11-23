@@ -11,20 +11,19 @@ import { PensionDepartmentBarChartComponent } from './pension-department-bar-cha
 import { PensionFrequencyChartComponent } from './pension-frequency-chart/pension-frequency-chart.component';
 
 @Component({
-  selector: 'app-health-pension-report',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    LoadingSpinnerComponent,
-    EpsDepartmentBarChartComponent,
-    PensionDepartmentBarChartComponent,
-    EpsFrequencyChartComponent,
-    PensionFrequencyChartComponent,
-  ],
-  templateUrl: './health-pension-report.component.html',
-  styleUrl: './health-pension-report.component.scss',
+    selector: 'app-health-pension-report',
+    imports: [
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        LoadingSpinnerComponent,
+        EpsDepartmentBarChartComponent,
+        PensionDepartmentBarChartComponent,
+        EpsFrequencyChartComponent,
+        PensionFrequencyChartComponent,
+    ],
+    templateUrl: './health-pension-report.component.html',
+    styleUrl: './health-pension-report.component.scss'
 })
 export class HealthPensionReportComponent {
   protected readonly payrollService = inject(PayrollService);

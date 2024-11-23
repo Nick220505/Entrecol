@@ -14,19 +14,18 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 
 @Component({
-  selector: 'app-entertainment-report-filters',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatButtonModule,
-    MatSlideToggleModule,
-  ],
-  templateUrl: './entertainment-report-filters.component.html',
-  styleUrl: './entertainment-report-filters.component.scss',
+    selector: 'app-entertainment-report-filters',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatButtonModule,
+        MatSlideToggleModule,
+    ],
+    templateUrl: './entertainment-report-filters.component.html',
+    styleUrl: './entertainment-report-filters.component.scss'
 })
 export class EntertainmentReportFiltersComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);

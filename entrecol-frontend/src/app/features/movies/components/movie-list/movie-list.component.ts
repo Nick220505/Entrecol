@@ -18,25 +18,24 @@ import { EmptyPipe } from '@shared/pipes/empty.pipe';
 import { MovieDialogComponent } from '../movie-dialog/movie-dialog.component';
 
 @Component({
-  selector: 'app-movie-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
-    MatTooltipModule,
-    LoadingSpinnerComponent,
-    EmptyPipe,
-    MatDialogModule,
-  ],
-  templateUrl: './movie-list.component.html',
-  styleUrl: './movie-list.component.scss',
+    selector: 'app-movie-list',
+    imports: [
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatTooltipModule,
+        LoadingSpinnerComponent,
+        EmptyPipe,
+        MatDialogModule,
+    ],
+    templateUrl: './movie-list.component.html',
+    styleUrl: './movie-list.component.scss'
 })
 export class MovieListComponent implements OnInit {
   protected readonly movieService = inject(MovieService);

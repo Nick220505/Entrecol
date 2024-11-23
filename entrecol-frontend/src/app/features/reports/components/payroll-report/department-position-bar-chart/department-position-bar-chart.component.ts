@@ -7,11 +7,10 @@ import {
 } from '@swimlane/ngx-charts';
 
 @Component({
-  selector: 'app-department-position-bar-chart',
-  standalone: true,
-  imports: [NgxChartsModule],
-  templateUrl: './department-position-bar-chart.component.html',
-  styleUrl: './department-position-bar-chart.component.scss',
+    selector: 'app-department-position-bar-chart',
+    imports: [NgxChartsModule],
+    templateUrl: './department-position-bar-chart.component.html',
+    styleUrl: './department-position-bar-chart.component.scss'
 })
 export class DepartmentPositionBarChartComponent {
   private readonly payrollService = inject(PayrollService);

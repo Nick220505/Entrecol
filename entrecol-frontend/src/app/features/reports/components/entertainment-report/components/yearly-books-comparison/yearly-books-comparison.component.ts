@@ -4,11 +4,10 @@ import { Book } from '@books/models/book.model';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 
 @Component({
-  selector: 'app-yearly-books-comparison',
-  standalone: true,
-  imports: [DecimalPipe],
-  templateUrl: './yearly-books-comparison.component.html',
-  styleUrl: './yearly-books-comparison.component.scss',
+    selector: 'app-yearly-books-comparison',
+    imports: [DecimalPipe],
+    templateUrl: './yearly-books-comparison.component.html',
+    styleUrl: './yearly-books-comparison.component.scss'
 })
 export class YearlyBooksComparisonComponent {
   private readonly entertainmentReportService = inject(

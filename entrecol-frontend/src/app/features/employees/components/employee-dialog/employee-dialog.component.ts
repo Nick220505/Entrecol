@@ -27,22 +27,21 @@ import { PensionFundService } from '@employees/services/pension-fund.service';
 import { PositionService } from '@employees/services/position.service';
 
 @Component({
-  selector: 'app-employee-dialog',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-  ],
-  templateUrl: './employee-dialog.component.html',
-  styleUrl: './employee-dialog.component.scss',
+    selector: 'app-employee-dialog',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+    ],
+    templateUrl: './employee-dialog.component.html',
+    styleUrl: './employee-dialog.component.scss'
 })
 export class EmployeeDialogComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

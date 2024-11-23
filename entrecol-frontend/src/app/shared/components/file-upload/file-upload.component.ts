@@ -15,17 +15,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-file-upload',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatTooltipModule,
-  ],
-  templateUrl: './file-upload.component.html',
-  styleUrl: './file-upload.component.scss',
+    selector: 'app-file-upload',
+    imports: [
+        MatButtonModule,
+        MatCardModule,
+        MatIconModule,
+        MatProgressBarModule,
+        MatTooltipModule,
+    ],
+    templateUrl: './file-upload.component.html',
+    styleUrl: './file-upload.component.scss'
 })
 export class FileUploadComponent {
   private readonly snackBar = inject(MatSnackBar);

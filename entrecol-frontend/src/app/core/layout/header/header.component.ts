@@ -29,68 +29,60 @@ import { AuthService } from '../../auth/services/auth.service';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [
-    RouterModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatListModule,
-    MatSlideToggleModule,
-    MatTooltipModule,
-  ],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
-  animations: [
-    trigger('toolbarAnimation', [
-      state('top', style({ height: '64px' })),
-      state('scrolled', style({ height: '56px' })),
-      transition('top <=> scrolled', animate('300ms ease-in-out')),
-    ]),
-    trigger('logoAnimation', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(-20px)' }),
-        animate('300ms', style({ opacity: 1, transform: 'translateY(0)' })),
-      ]),
-    ]),
-    trigger('fadeAnimation', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 })),
-      ]),
-    ]),
-    trigger('contentAnimation', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('300ms', style({ opacity: 1, transform: 'translateY(0)' })),
-      ]),
-    ]),
-    trigger('rotateAnimation', [
-      state('closed', style({ transform: 'rotate(0deg)' })),
-      state('open', style({ transform: 'rotate(180deg)' })),
-      transition('closed <=> open', animate('300ms ease-in-out')),
-    ]),
-    trigger('staggerAnimation', [
-      transition('* => *', [
-        query(
-          ':enter',
-          [
-            style({ opacity: 0, transform: 'translateY(-15px)' }),
-            stagger('50ms', [
-              animate(
-                '300ms ease-out',
-                style({ opacity: 1, transform: 'translateY(0)' }),
-              ),
+    selector: 'app-header',
+    imports: [
+        RouterModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+        MatSidenavModule,
+        MatListModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+    ],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.scss',
+    animations: [
+        trigger('toolbarAnimation', [
+            state('top', style({ height: '64px' })),
+            state('scrolled', style({ height: '56px' })),
+            transition('top <=> scrolled', animate('300ms ease-in-out')),
+        ]),
+        trigger('logoAnimation', [
+            transition(':enter', [
+                style({ opacity: 0, transform: 'translateY(-20px)' }),
+                animate('300ms', style({ opacity: 1, transform: 'translateY(0)' })),
             ]),
-          ],
-          { optional: true },
-        ),
-      ]),
-    ]),
-  ],
+        ]),
+        trigger('fadeAnimation', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('300ms', style({ opacity: 1 })),
+            ]),
+        ]),
+        trigger('contentAnimation', [
+            transition(':enter', [
+                style({ opacity: 0, transform: 'translateY(20px)' }),
+                animate('300ms', style({ opacity: 1, transform: 'translateY(0)' })),
+            ]),
+        ]),
+        trigger('rotateAnimation', [
+            state('closed', style({ transform: 'rotate(0deg)' })),
+            state('open', style({ transform: 'rotate(180deg)' })),
+            transition('closed <=> open', animate('300ms ease-in-out')),
+        ]),
+        trigger('staggerAnimation', [
+            transition('* => *', [
+                query(':enter', [
+                    style({ opacity: 0, transform: 'translateY(-15px)' }),
+                    stagger('50ms', [
+                        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+                    ]),
+                ], { optional: true }),
+            ]),
+        ]),
+    ]
 })
 export class HeaderComponent {
   private readonly breakpointObserver = inject(BreakpointObserver);

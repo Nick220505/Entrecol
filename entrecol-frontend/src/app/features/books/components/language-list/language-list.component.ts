@@ -17,24 +17,23 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
 import { LanguageDialogComponent } from '../language-dialog/language-dialog.component';
 
 @Component({
-  selector: 'app-language-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
-    MatTooltipModule,
-    LoadingSpinnerComponent,
-    MatDialogModule,
-  ],
-  templateUrl: './language-list.component.html',
-  styleUrl: './language-list.component.scss',
+    selector: 'app-language-list',
+    imports: [
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatTooltipModule,
+        LoadingSpinnerComponent,
+        MatDialogModule,
+    ],
+    templateUrl: './language-list.component.html',
+    styleUrl: './language-list.component.scss'
 })
 export class LanguageListComponent implements OnInit {
   protected readonly languageService = inject(LanguageService);

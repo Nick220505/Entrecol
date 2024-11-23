@@ -7,11 +7,10 @@ import {
 } from '@swimlane/ngx-charts';
 
 @Component({
-  selector: 'app-department-pie-chart',
-  standalone: true,
-  imports: [NgxChartsModule],
-  templateUrl: './department-pie-chart.component.html',
-  styleUrl: './department-pie-chart.component.scss',
+    selector: 'app-department-pie-chart',
+    imports: [NgxChartsModule],
+    templateUrl: './department-pie-chart.component.html',
+    styleUrl: './department-pie-chart.component.scss'
 })
 export class DepartmentPieChartComponent {
   private readonly payrollService = inject(PayrollService);

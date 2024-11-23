@@ -20,23 +20,22 @@ import { NoveltyDepartmentChartComponent } from './novelty-department-chart/nove
 import { NoveltyDepartmentPositionChartComponent } from './novelty-department-position-chart/novelty-department-position-chart.component';
 
 @Component({
-  selector: 'app-novelty-report',
-  standalone: true,
-  imports: [
-    DatePipe,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    LoadingSpinnerComponent,
-    NoveltyDepartmentChartComponent,
-    NoveltyDepartmentPositionChartComponent,
-  ],
-  templateUrl: './novelty-report.component.html',
-  styleUrl: './novelty-report.component.scss',
+    selector: 'app-novelty-report',
+    imports: [
+        DatePipe,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatTableModule,
+        LoadingSpinnerComponent,
+        NoveltyDepartmentChartComponent,
+        NoveltyDepartmentPositionChartComponent,
+    ],
+    templateUrl: './novelty-report.component.html',
+    styleUrl: './novelty-report.component.scss'
 })
 export class NoveltyReportComponent {
   protected readonly payrollService = inject(PayrollService);

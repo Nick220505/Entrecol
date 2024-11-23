@@ -10,19 +10,18 @@ import { DepartmentPieChartComponent } from './department-pie-chart/department-p
 import { DepartmentPositionBarChartComponent } from './department-position-bar-chart/department-position-bar-chart.component';
 
 @Component({
-  selector: 'app-payroll-report',
-  templateUrl: './payroll-report.component.html',
-  styleUrl: './payroll-report.component.scss',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatTableModule,
-    MatIconModule,
-    LoadingSpinnerComponent,
-    DepartmentPieChartComponent,
-    DepartmentPositionBarChartComponent,
-  ],
+    selector: 'app-payroll-report',
+    templateUrl: './payroll-report.component.html',
+    styleUrl: './payroll-report.component.scss',
+    imports: [
+        MatCardModule,
+        MatButtonModule,
+        MatTableModule,
+        MatIconModule,
+        LoadingSpinnerComponent,
+        DepartmentPieChartComponent,
+        DepartmentPositionBarChartComponent,
+    ]
 })
 export class PayrollReportComponent {
   protected readonly payrollService = inject(PayrollService);

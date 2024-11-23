@@ -49,10 +49,9 @@ describe('PdfViewerComponent', () => {
   it('should pass src input to PDF viewer', () => {
     const testSrc = 'test-src';
     @Component({
-      template: '<app-pdf-viewer [src]="testSrc" />',
-      standalone: true,
-      imports: [PdfViewerComponent],
-    })
+    template: '<app-pdf-viewer [src]="testSrc" />',
+    imports: [PdfViewerComponent]
+})
     class TestComponent {
       testSrc = testSrc;
     }

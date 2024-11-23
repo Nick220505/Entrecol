@@ -15,10 +15,9 @@ export interface ConfirmDialogData {
 }
 
 @Component({
-  selector: 'app-confirm-dialog',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule, MatIconModule],
-  template: `
+    selector: 'app-confirm-dialog',
+    imports: [MatDialogModule, MatButtonModule, MatIconModule],
+    template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
 
     <mat-dialog-content>
@@ -34,7 +33,7 @@ export interface ConfirmDialogData {
       </button>
     </mat-dialog-actions>
   `,
-  styles: `
+    styles: `
     mat-dialog-content {
       padding: 20px 24px;
       min-width: 300px;
@@ -60,7 +59,7 @@ export interface ConfirmDialogData {
         border-top-color: rgba(255, 255, 255, 0.12);
       }
     }
-  `,
+  `
 })
 export class ConfirmDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);

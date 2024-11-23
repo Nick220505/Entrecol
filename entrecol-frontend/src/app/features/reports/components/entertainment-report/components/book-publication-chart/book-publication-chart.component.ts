@@ -4,11 +4,10 @@ import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { EntertainmentReportService } from '../../services/entertainment-report.service';
 
 @Component({
-  selector: 'app-book-publication-chart',
-  standalone: true,
-  imports: [NgxChartsModule],
-  templateUrl: './book-publication-chart.component.html',
-  styleUrl: './book-publication-chart.component.scss',
+    selector: 'app-book-publication-chart',
+    imports: [NgxChartsModule],
+    templateUrl: './book-publication-chart.component.html',
+    styleUrl: './book-publication-chart.component.scss'
 })
 export class BookPublicationChartComponent {
   private readonly entertainmentReportService = inject(

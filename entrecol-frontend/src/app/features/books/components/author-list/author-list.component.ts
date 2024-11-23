@@ -17,24 +17,23 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
 import { AuthorDialogComponent } from '../author-dialog/author-dialog.component';
 
 @Component({
-  selector: 'app-author-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
-    MatTooltipModule,
-    LoadingSpinnerComponent,
-    MatDialogModule,
-  ],
-  templateUrl: './author-list.component.html',
-  styleUrl: './author-list.component.scss',
+    selector: 'app-author-list',
+    imports: [
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatTooltipModule,
+        LoadingSpinnerComponent,
+        MatDialogModule,
+    ],
+    templateUrl: './author-list.component.html',
+    styleUrl: './author-list.component.scss'
 })
 export class AuthorListComponent implements OnInit {
   protected readonly authorService = inject(AuthorService);

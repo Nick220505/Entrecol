@@ -3,11 +3,10 @@ import { PayrollService } from '@employees/services/payroll.service';
 import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
-  selector: 'app-novelty-department-chart',
-  standalone: true,
-  imports: [NgxChartsModule],
-  templateUrl: './novelty-department-chart.component.html',
-  styleUrl: './novelty-department-chart.component.scss',
+    selector: 'app-novelty-department-chart',
+    imports: [NgxChartsModule],
+    templateUrl: './novelty-department-chart.component.html',
+    styleUrl: './novelty-department-chart.component.scss'
 })
 export class NoveltyDepartmentChartComponent {
   private readonly payrollService = inject(PayrollService);

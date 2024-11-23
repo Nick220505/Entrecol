@@ -12,22 +12,21 @@ import { YearlyBooksComparisonComponent } from './components/yearly-books-compar
 import { EntertainmentReportService } from './services/entertainment-report.service';
 
 @Component({
-  selector: 'app-entertainment-report',
-  standalone: true,
-  imports: [
-    MatCardModule,
-    MatTabsModule,
-    MatIconModule,
-    LoadingSpinnerComponent,
-    EntertainmentReportFiltersComponent,
-    MovieGenreChartComponent,
-    BookPublicationChartComponent,
-    TopRatedBooksListComponent,
-    YearlyBooksComparisonComponent,
-    MoviesByGenreCountComponent,
-  ],
-  templateUrl: './entertainment-report.component.html',
-  styleUrl: './entertainment-report.component.scss',
+    selector: 'app-entertainment-report',
+    imports: [
+        MatCardModule,
+        MatTabsModule,
+        MatIconModule,
+        LoadingSpinnerComponent,
+        EntertainmentReportFiltersComponent,
+        MovieGenreChartComponent,
+        BookPublicationChartComponent,
+        TopRatedBooksListComponent,
+        YearlyBooksComparisonComponent,
+        MoviesByGenreCountComponent,
+    ],
+    templateUrl: './entertainment-report.component.html',
+    styleUrl: './entertainment-report.component.scss'
 })
 export class EntertainmentReportComponent {
   protected readonly entertainmentReportService = inject(

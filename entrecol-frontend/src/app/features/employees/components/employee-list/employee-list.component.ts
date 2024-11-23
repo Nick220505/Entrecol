@@ -19,27 +19,26 @@ import { EmptyPipe } from '@shared/pipes/empty.pipe';
 import { EmployeeDialogComponent } from '../employee-dialog/employee-dialog.component';
 
 @Component({
-  selector: 'app-employee-list',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule,
-    MatTooltipModule,
-    CurrencyPipe,
-    DatePipe,
-    LoadingSpinnerComponent,
-    EmptyPipe,
-    MatDialogModule,
-  ],
-  templateUrl: './employee-list.component.html',
-  styleUrl: './employee-list.component.scss',
+    selector: 'app-employee-list',
+    imports: [
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatTooltipModule,
+        CurrencyPipe,
+        DatePipe,
+        LoadingSpinnerComponent,
+        EmptyPipe,
+        MatDialogModule,
+    ],
+    templateUrl: './employee-list.component.html',
+    styleUrl: './employee-list.component.scss'
 })
 export class EmployeeListComponent implements OnInit {
   protected readonly payrollService = inject(PayrollService);

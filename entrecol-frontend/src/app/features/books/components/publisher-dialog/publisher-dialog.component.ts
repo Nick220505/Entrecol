@@ -18,18 +18,17 @@ import { Publisher } from '@books/models/publisher.model';
 import { PublisherService } from '@books/services/publisher.service';
 
 @Component({
-  selector: 'app-publisher-dialog',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-  ],
-  templateUrl: './publisher-dialog.component.html',
-  styleUrl: './publisher-dialog.component.scss',
+    selector: 'app-publisher-dialog',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+    ],
+    templateUrl: './publisher-dialog.component.html',
+    styleUrl: './publisher-dialog.component.scss'
 })
 export class PublisherDialogComponent {
   private readonly fb = inject(FormBuilder);

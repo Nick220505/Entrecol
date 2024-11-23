@@ -25,22 +25,21 @@ import { LanguageService } from '@books/services/language.service';
 import { PublisherService } from '@books/services/publisher.service';
 
 @Component({
-  selector: 'app-book-dialog',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-  ],
-  templateUrl: './book-dialog.component.html',
-  styleUrl: './book-dialog.component.scss',
+    selector: 'app-book-dialog',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+    ],
+    templateUrl: './book-dialog.component.html',
+    styleUrl: './book-dialog.component.scss'
 })
 export class BookDialogComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
