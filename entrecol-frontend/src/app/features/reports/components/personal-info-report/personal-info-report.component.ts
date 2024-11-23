@@ -12,7 +12,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { PdfViewerComponent } from '@shared/components/pdf-preview-dialog/pdf-viewer/pdf-viewer.component';
 import { map, startWith } from 'rxjs/operators';
 
 import { CurrencyPipe, DatePipe } from '@angular/common';
@@ -21,24 +20,23 @@ import { PayrollService } from '@employees/services/payroll.service';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
-    selector: 'app-personal-info-report',
-    imports: [
-        CurrencyPipe,
-        DatePipe,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatDividerModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatAutocompleteModule,
-        MatButtonModule,
-        MatDialogModule,
-        PdfViewerComponent,
-        LoadingSpinnerComponent,
-    ],
-    templateUrl: './personal-info-report.component.html',
-    styleUrl: './personal-info-report.component.scss'
+  selector: 'app-personal-info-report',
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatDialogModule,
+    LoadingSpinnerComponent,
+  ],
+  templateUrl: './personal-info-report.component.html',
+  styleUrl: './personal-info-report.component.scss',
 })
 export class PersonalInfoReportComponent {
   protected readonly payrollService = inject(PayrollService);
